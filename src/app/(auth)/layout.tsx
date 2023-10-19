@@ -7,7 +7,6 @@ interface AuthLayoutProps {
 }
 
 export default async function AuthLayout({ children }: AuthLayoutProps) {
-
     return (
         <>
             <div className="bg-[#101010] h-screen">
