@@ -3,6 +3,7 @@ import { Input } from '../ui/input'
 import { Button } from '../ui/button'
 import { Card } from '../ui/card'
 import { ChevronRight, Github } from 'lucide-react'
+import { Icons } from '../icons'
 
 export default function LoginForm() {
     return (
@@ -24,10 +25,19 @@ export default function LoginForm() {
             <div className='text-center text-muted-foreground'>
                 Forget password?
             </div>
-            <div className='mt-6 space-y-4 '>
-                <p className='text-muted-foreground'>or</p>
+            <div className='mt-6 space-y-5 '>
+                <div className="relative">
+                    <div className="absolute inset-0 flex items-center">
+                        <span className="w-full border-t" />
+                    </div>
+                    <div className="relative flex justify-center text-xs items-center">
+                        <span className="bg-[#101010] px-3 text-muted-foreground text-base">
+                            or
+                        </span>
+                    </div>
+                </div>
                 <Card className='bg-transparent flex justify-center items-center py-5 px-3 rounded-xl transform active:scale-95 transition-transform cursor-pointer select-none'>
-                    <Github className='h-5 w-5 mr-2' />
+                    <Icons.googleColor className='h-4 w-4 mr-2' />
                     <p>
                         Continue with Google
                     </p>
