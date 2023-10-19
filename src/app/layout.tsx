@@ -4,6 +4,8 @@ import { Inter } from "next/font/google";
 import { headers } from "next/headers";
 
 import { TRPCReactProvider } from "@/trpc/react";
+import { ThemeProvider } from "@/components/providers/theme-provider";
+import ThemeToggle from "@/components/theme-toggle";
 
 const inter = Inter({
   subsets: ["latin"],
@@ -24,7 +26,19 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className={`font-sans ${inter.variable}`}>
-        <TRPCReactProvider headers={headers()}>{children}</TRPCReactProvider>
+        <TRPCReactProvider headers={headers()}>
+          <ThemeProvider
+            attribute="class"
+            defaultTheme="system"
+            enableSystem
+            disableTransitionOnChange
+          >
+            {children}
+            <div className='fixed text-white cursor-pointer  border-[none] right-5 bottom-5 z-50'>
+              <ThemeToggle />
+            </div>
+          </ThemeProvider>
+        </TRPCReactProvider>
       </body>
     </html>
   );
