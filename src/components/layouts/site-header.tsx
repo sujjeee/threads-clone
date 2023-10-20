@@ -5,6 +5,7 @@ import { Icons } from '../icons'
 import Navs from './navs'
 import useWindow from '@/hooks/use-window'
 import FooterNavs from './footer-navs'
+import MenuOptions from '../menu-options'
 
 
 export default function SiteHeader() {
@@ -22,7 +23,7 @@ export default function SiteHeader() {
                             <Icons.logo className='h-9 w-9' />
                         </h2>
                         <Navs />
-                        <Icons.menu className='h-6 w-6 text-[#4B4B4B] hover:text-white cursor-pointer' />
+                        <MenuOptions />
                     </div>
                 </nav>
             </header>
