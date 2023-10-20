@@ -74,3 +74,73 @@
     @apply bg-background text-foreground;
   }
 }
+
+
+/* .thread__carousel {
+  list-style: none;
+  position: relative;
+  display: flex;
+  gap: .5rem;
+  margin-block: .75rem;
+  margin-inline: calc(-1 * (var(--thread-gap) + var(--thread-gap) + var(--avatar-size))) calc(-1 * var(--thread-gap));
+  padding: 0;
+  overflow-x: auto;
+  scrollbar-width: thin;
+  scrollbar-color: transparent transparent;
+}
+.thread__carousel::-webkit-scrollbar {
+height: 10px;
+}
+.thread__carousel::-webkit-scrollbar-track {
+background-color: transparent;
+}
+.thread__carousel::-webkit-scrollbar-thumb {
+background-color: transparent;
+}
+.thread__carousel > * {
+  margin: 0 0 .5rem;
+  padding: 0;
+  flex: 1 0 85%;
+  max-width: 360px;
+  overflow: hidden;
+}
+.thread__carousel > :first-child {
+  margin-inline-start: calc((var(--thread-gap) + var(--thread-gap) + var(--avatar-size)));
+}
+.thread__carousel > :last-child {
+  margin-inline-end: var(--thread-gap);
+}
+.thread__carousel img {
+  display: block;
+  width: 100%;
+  cursor: pointer;
+  border-radius: 0.5rem;
+}
+
+.thread__carousel img {
+  border-radius: 0.5rem;
+} */
+
+.thread__carousel::-webkit-scrollbar {
+  @apply h-2.5;
+}
+.thread__carousel::-webkit-scrollbar-track {
+  @apply bg-transparent;
+}
+.thread__carousel::-webkit-scrollbar-thumb {
+  @apply bg-transparent;
+}
+
+.thread__carousel > * {
+  padding: 0;
+  flex: 1 0 85%;
+  max-width: 360px;
+  overflow: hidden;
+}
+
+.thread__carousel img {
+  display: block;
+  width: 100%;
+  cursor: pointer;
+  border-radius: 0.5rem;
+}

@@ -2,7 +2,7 @@ import Threads from '@/components/threads'
 import { Button } from '@/components/ui/button'
 import { currentUser } from '@clerk/nextjs'
 import React from 'react'
-import Post from 'tests/post'
+import Post from '@/components/post'
 
 export default function page() {
   const user = currentUser()
@@ -25,6 +25,8 @@ export default function page() {
       </div>
       <Threads />
       <Post />
+
+      {/* <Post /> */}
     </div>
   )
 }

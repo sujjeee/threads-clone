@@ -82,7 +82,7 @@ export default function Threads() {
                                     />
                                 </button>
                             </div>
-                            <div className="flex items-start gap-2 text-gray-500 mt-4 text-xs sm:text-[14px] text-center">
+                            <div className="flex items-start gap-2 text-gray-500 mt-4 text-xs sm:text-[14px] text-center ">
                                 <p>12 replies</p>
 
                                 <p>16 likes</p>
