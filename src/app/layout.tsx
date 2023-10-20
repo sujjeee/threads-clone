@@ -7,6 +7,7 @@ import { ThemeProvider } from "@/components/providers/theme-provider";
 import ThemeToggle from "@/components/theme-toggle";
 import { Toaster } from "@/components/ui/toaster";
 import { ClerkProvider } from "@clerk/nextjs";
+import SiteHeader from "@/components/layouts/site-header";
 
 const inter = Inter({
   subsets: ["latin"],
@@ -31,14 +32,15 @@ export default function RootLayout({
           <TRPCReactProvider headers={headers()}>
             <ThemeProvider
               attribute="class"
-              defaultTheme="system"
+              defaultTheme="dark"
               enableSystem
               disableTransitionOnChange
             >
+              <SiteHeader />
               {children}
-              {/* <div className='fixed text-white cursor-pointer  border-[none] right-5 bottom-5 z-50'>
-              <ThemeToggle />
-            </div> */}
+              <div className='fixed text-white cursor-pointer  border-[none] right-5 bottom-5 z-50'>
+                <ThemeToggle />
+              </div>
               <Toaster />
             </ThemeProvider>
           </TRPCReactProvider>
