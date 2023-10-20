@@ -8,10 +8,11 @@ import FooterNavs from './footer-navs'
 
 
 export default function SiteHeader() {
-    const { isDesktop } = useWindow()
+    const { isMobile } = useWindow()
     return (
-        isDesktop
-            ? <header
+        isMobile
+            ? <FooterNavs />
+            : <header
                 aria-label="Header"
                 className="backdrop-blur-xl shadow-md z-40 w-full "
             >
@@ -25,6 +26,5 @@ export default function SiteHeader() {
                     </div>
                 </nav>
             </header>
-            : <FooterNavs />
     )
 }

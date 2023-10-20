@@ -2,7 +2,6 @@ import React from 'react'
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
 import { Icons } from '../icons'
-import { cn } from '@/lib/utils'
 import { useTheme } from 'next-themes'
 
 export default function FooterNavs() {

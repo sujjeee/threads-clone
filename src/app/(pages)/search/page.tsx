@@ -2,6 +2,6 @@ import React from 'react'
 
 export default function page() {
     return (
-        <div>search page</div>
+        <div className='max-w-md'>search page</div>
     )
 }
