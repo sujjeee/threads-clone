@@ -1,14 +1,18 @@
 import React from 'react'
-import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuSeparator, DropdownMenuTrigger } from './ui/dropdown-menu'
+import { DropdownMenu, DropdownMenuContent, DropdownMenuGroup, DropdownMenuItem, DropdownMenuLabel, DropdownMenuRadioGroup, DropdownMenuSeparator, DropdownMenuShortcut, DropdownMenuTrigger } from './ui/dropdown-menu'
 import { Icons } from './icons'
+import { Button } from './ui/button'
+import { LogOut, User } from 'lucide-react'
 
 export default function MenuOptions() {
     return (
         <DropdownMenu>
             <DropdownMenuTrigger asChild>
-                <Icons.menu className='h-6 w-6 text-[#4B4B4B] hover:text-white cursor-pointer' />
+                <div>
+                    <Icons.menu className='h-[22px] w-[22px] text-[#4B4B4B] focus:text-white cursor-pointer' />
+                </div>
             </DropdownMenuTrigger>
-            <DropdownMenuContent align="end" className='bg-[#181818] rounded-2xl max-w-sm w-full'>
+            <DropdownMenuContent align="end" className='bg-[#181818] rounded-2xl max-w-sm w-full mt-1'>
                 <DropdownMenuItem className='focus:bg-transparent px-5 tracking-normal font-semibold py-2'>
                     Switch appearance
                 </DropdownMenuItem>

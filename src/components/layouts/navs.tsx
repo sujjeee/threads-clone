@@ -5,6 +5,7 @@ import { usePathname } from 'next/navigation'
 import { Icons } from '../icons'
 import { cn } from '@/lib/utils'
 import { useTheme } from 'next-themes'
+import NewThreadModal from '../new-thread-modal'
 
 export default function Navs() {
     const path = usePathname()
@@ -14,8 +15,8 @@ export default function Navs() {
         return path === pathname ? 'white' : theme === "light" ? "white" : "#0F0F0F"
     }
     return (
-        <div className='flex justify-center items-center gap-2'>
-            <Link href={'/'} className='hover:bg-[#181818] py-5 px-8 rounded-lg transform transition-all duration-150 ease-out hover:scale-100'>
+        <div className='flex justify-between items-center gap-2 max-w-[480px] w-full'>
+            <Link href={'/'} className='hover:bg-[#1C1C1C]/80 py-5 px-8 rounded-lg transform transition-all duration-150 ease-out hover:scale-100'>
                 <Icons.home
                     className={cn(
                         "h-[26px] w-[26px]  text-lg",
@@ -36,16 +37,7 @@ export default function Navs() {
                     )}
                 />
             </Link>
-            <Link href={'/create'} className='hover:bg-[#181818] py-5 px-8 rounded-lg transform transition-all duration-150 ease-out hover:scale-100'>
-                <Icons.create
-                    className={cn(
-                        "h-6 w-6",
-                        path === '/create'
-                            ? "text-forground"
-                            : "text-[#4D4D4D]",
-                    )}
-                />
-            </Link>
+            <NewThreadModal showIcon={true} />
             <Link href={'/like'} className='hover:bg-[#181818] py-5 px-8 rounded-lg transform transition-all duration-150 ease-out hover:scale-100'>
                 <Icons.like
                     className={cn(

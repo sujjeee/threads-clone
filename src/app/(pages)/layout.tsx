@@ -9,7 +9,6 @@ export default async function PagesLayout({ children }: AuthLayoutProps) {
         <>
             <SiteHeader />
             <main>
-
                 {children}
             </main>
         </>

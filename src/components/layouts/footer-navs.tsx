@@ -26,7 +26,7 @@ export default function FooterNavs() {
                         }`}
                 />
             </Link>
-            <NewThreadModal />
+            <NewThreadModal showIcon={true} />
 
             <Icons.like
                 className={`w-6 h-6 cursor-not-allowed ${path === "/activity" ? "" : "text-muted-foreground"

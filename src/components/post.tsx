@@ -18,7 +18,7 @@ export default function Post() {
         <>
             <Separator />
 
-            <div className="flex w-full gap-2 py-4 px-2">
+            <div className="flex w-full gap-2 py-4">
                 <div className="flex flex-col items-center gap-1.5">
                     <button className='relative '>
                         <div className='h-9 w-9'>
