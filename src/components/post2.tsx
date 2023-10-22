@@ -44,10 +44,10 @@ export default function Post2() {
                     </div>
                 </div>
 
-                <div className="flex flex-col w-full px-2 gap-1.5">
+                <div className="flex flex-col w-full px-2">
 
                     <div className="flex w-full justify-between ">
-                        <h1 className='font-semibold text-base hover:underline'>sujjeee</h1>
+                        <h1 className='font-semibold text-base hover:underline leading-none'>sujjeee</h1>
                         <div className='flex justify-center items-center gap-3'>
                             <time className="text-muted-foreground tracking-wide">2w</time>
                             <button className="flex">

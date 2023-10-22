@@ -38,11 +38,11 @@ export default function Navs() {
                 />
             </Link>
             <NewThreadModal showIcon={true} />
-            <Link href={'/like'} className='hover:bg-[#181818] py-5 px-8 rounded-lg transform transition-all duration-150 ease-out hover:scale-100'>
+            <Link href={'/activity'} className='hover:bg-[#181818] py-5 px-8 rounded-lg transform transition-all duration-150 ease-out hover:scale-100'>
                 <Icons.like
                     className={cn(
                         "h-6 w-6",
-                        path === '/like'
+                        path === '/activity'
                             ? "text-forground"
                             : "text-[#4D4D4D]",
                     )}
