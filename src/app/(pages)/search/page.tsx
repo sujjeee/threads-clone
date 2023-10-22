@@ -15,7 +15,7 @@ export default function page() {
                     placeholder="Search"
                 />
             </div>
-            <div className='flex w-full mt-6'>
+            <div className='flex w-full mt-7'>
                 <Avatar className="h-10 w-10 relative overflow-visible">
                     <AvatarImage src="/avatars/01.png" alt="Avatar" />
                     <AvatarFallback>OM</AvatarFallback>
