@@ -1,4 +1,3 @@
-import React from 'react'
 import {
     DropdownMenu,
     DropdownMenuContent,
@@ -7,9 +6,12 @@ import {
     DropdownMenuTrigger
 } from './ui/dropdown-menu'
 import { Icons } from './icons'
-
+import { useClerk } from "@clerk/nextjs"
+import { useRouter } from 'next/navigation'
 
 export default function MenuOptions() {
+    const router = useRouter()
+    const { signOut } = useClerk();
     return (
         <DropdownMenu>
             <DropdownMenuTrigger asChild>
@@ -31,7 +33,13 @@ export default function MenuOptions() {
                 </DropdownMenuItem>
                 <DropdownMenuSeparator className='bg-muted h-[1.2px]' />
                 <DropdownMenuItem className='focus:bg-transparent px-5 tracking-normal font-semibold py-2'>
-                    Log out
+                    <button
+                        aria-label="Log out"
+
+                        onClick={() => signOut(() => router.push("/"))}
+                    >
+                        Log out
+                    </button>
                 </DropdownMenuItem>
             </DropdownMenuContent>
         </DropdownMenu>
