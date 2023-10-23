@@ -1,8 +1,13 @@
 import React from 'react'
-import { DropdownMenu, DropdownMenuContent, DropdownMenuGroup, DropdownMenuItem, DropdownMenuLabel, DropdownMenuRadioGroup, DropdownMenuSeparator, DropdownMenuShortcut, DropdownMenuTrigger } from './ui/dropdown-menu'
+import {
+    DropdownMenu,
+    DropdownMenuContent,
+    DropdownMenuItem,
+    DropdownMenuSeparator,
+    DropdownMenuTrigger
+} from './ui/dropdown-menu'
 import { Icons } from './icons'
-import { Button } from './ui/button'
-import { LogOut, User } from 'lucide-react'
+
 
 export default function MenuOptions() {
     return (

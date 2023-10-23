@@ -3,7 +3,6 @@
 import React, { useCallback, useLayoutEffect, useRef, useState } from 'react'
 import { Card } from './ui/card'
 import { Avatar, AvatarFallback, AvatarImage } from './ui/avatar'
-import { Image } from 'lucide-react'
 import { Button } from "@/components/ui/button"
 import {
     Dialog,
@@ -93,26 +92,16 @@ export default function NewThreadModal({ showIcon }: { showIcon: boolean }) {
     const highlightMentions = (e: any) => {
         const inputValue = e.target.value;
 
-        const formattedText = inputValue.split(/(@\w+|@\w+)/).map((part: any, index: any) => {
-            if (part.startsWith('@')) {
-                return <span key={index} className="font-semibold text-blue-500">{part}</span>;
-            } else {
-                return <span key={index}>{part}</span>;
-            }
-        });
+        // const formattedText = inputValue.split(/(@\w+|@\w+)/).map((part: any, index: any) => {
+        //     if (part.startsWith('@')) {
+        //         return <span key={index} className="font-semibold text-blue-500">{part}</span>;
+        //     } else {
+        //         return <span key={index}>{part}</span>;
+        //     }
+        // });
 
-        console.log("formattedText", formattedText)
-        // // Regular expression to find mentions starting with @
-        // const mentionRegex = /@(\w+)/g;
-
-        // // Replace mentions with a span element for styling
-        // const highlightedText = inputValue.replace(
-        //     mentionRegex,
-        //     '<span class="text-blue-800 font-bold">@$1</span>'
-        // );
-
-        // Update the state with the highlighted text
-        setInputValue(formattedText);
+        // console.log("formattedText", formattedText)
+        setInputValue(inputValue);
     };
     return (
         <Dialog>
