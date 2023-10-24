@@ -6,6 +6,7 @@ interface AuthLayoutProps {
     children: React.ReactNode
 }
 
+// design: https://excalidraw.com/#json=bvIRLqsPUGGCyDTZsXHjV,Dyv57Q8lQRKZuNh4m1nR9Q
 export default async function AuthLayout({ children }: AuthLayoutProps) {
     return (
         <>
