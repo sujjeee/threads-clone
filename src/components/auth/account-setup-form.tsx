@@ -11,11 +11,16 @@ import { Card } from '../ui/card'
 import { useUser } from '@clerk/nextjs'
 import { RadioGroup, RadioGroupItem } from '../ui/radio-group'
 import { emailToUsername } from '@/lib/utils'
+import { api } from '@/trpc/react'
+import { Icons } from '../icons'
+import { useRouter } from 'next/navigation'
+import { toast } from 'sonner'
+
 
 export default function AccountSetupForm() {
     const { user } = useUser()
+    const router = useRouter()
     const username = emailToUsername(user!)
-    console.log("username", username)
     const [showPrivacyPage, setShowPrivacyPage] = React.useState(false);
 
     const [userAccountData, setUserAccountData] = React.useState({
@@ -25,7 +30,7 @@ export default function AccountSetupForm() {
         public: true
     });
 
-    console.log("userAccountData?", userAccountData)
+    // console.log("userAccountData?", userAccountData)
 
     // ---------------- For textarea autoresize----------------- //
     const textAreaRef = React.useRef<HTMLTextAreaElement>();
@@ -56,6 +61,32 @@ export default function AccountSetupForm() {
             setUserAccountData((prevData) => ({ ...prevData, username }));
         }
     }, [user]);
+
+
+    const { mutate: accountSetup, isLoading } = api.auth.accountSetup.useMutation({
+        onSuccess: ({ success }) => {
+            toast.success("Account created !")
+            if (success) {
+                router.push(origin ? `${origin}` : '/')
+            }
+        },
+        onError: (err) => {
+            toast.error("AuthCallBack: Something went wrong!")
+            if (err.data?.code === 'UNAUTHORIZED') {
+                router.push('/signin')
+            }
+        },
+        retry: false,
+    });
+
+    async function handleAccountSetup() {
+        accountSetup({
+            username: userAccountData.username,
+            bio: userAccountData.bio,
+            link: userAccountData.link,
+            public: userAccountData.public
+        })
+    }
 
     return (
         !showPrivacyPage
@@ -180,7 +211,20 @@ export default function AccountSetupForm() {
                             </Label>
                         </div>
                     </RadioGroup>
-                    <Button className='w-full mt-4' onClick={() => setShowPrivacyPage(true)}>Create my profile</Button>
+                    <Button
+                        className='w-full mt-4'
+                        onClick={handleAccountSetup}
+                        disabled={isLoading}
+                    >
+                        {isLoading && (
+                            <Icons.spinner
+                                className="mr-2 h-4 w-4 animate-spin"
+                                aria-hidden="true"
+                            />
+                        )}
+                        Create my profile
+                        <span className="sr-only">Create my profile</span>
+                    </Button>
                 </div >
             )
     )

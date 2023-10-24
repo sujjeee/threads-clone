@@ -20,11 +20,11 @@ export function TRPCReactProvider(props: {
     api.createClient({
       transformer,
       links: [
-        loggerLink({
-          enabled: (op) =>
-            process.env.NODE_ENV === "development" ||
-            (op.direction === "down" && op.result instanceof Error),
-        }),
+        // loggerLink({
+        //   enabled: (op) =>
+        //     process.env.NODE_ENV === "development" ||
+        //     (op.direction === "down" && op.result instanceof Error),
+        // }),
         unstable_httpBatchStreamLink({
           url: getUrl(),
           headers() {
