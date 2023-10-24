@@ -4,7 +4,6 @@ import React from 'react'
 import { Label } from '@/components/ui/label'
 import { Globe, Lock, Plus, User2 } from 'lucide-react'
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
-import { Textarea } from '../ui/textarea'
 import { Input } from '../ui/input'
 import { Button } from '../ui/button'
 import { Card } from '../ui/card'
@@ -15,6 +14,7 @@ import { api } from '@/trpc/react'
 import { Icons } from '../icons'
 import { useRouter } from 'next/navigation'
 import { toast } from 'sonner'
+import { ResizeTextarea } from '../ui/resize-textarea'
 
 
 export default function AccountSetupForm() {
@@ -24,29 +24,10 @@ export default function AccountSetupForm() {
     const [showPrivacyPage, setShowPrivacyPage] = React.useState(false);
 
     const [userAccountData, setUserAccountData] = React.useState({
-        username,
         bio: "",
         link: "",
         public: true
     });
-
-    // console.log("userAccountData?", userAccountData)
-
-    // ---------------- For textarea autoresize----------------- //
-    const textAreaRef = React.useRef<HTMLTextAreaElement>();
-    function updateTextAreaSize(textArea?: HTMLTextAreaElement) {
-        if (textArea == null) return;
-        textArea.style.height = "0";
-        textArea.style.height = `${textArea.scrollHeight}px`;
-    }
-    const inputRef = React.useCallback((textArea: HTMLTextAreaElement) => {
-        updateTextAreaSize(textArea);
-        textAreaRef.current = textArea;
-    }, []);
-    React.useLayoutEffect(() => {
-        updateTextAreaSize(textAreaRef.current);
-    }, [userAccountData.bio]);
-    // ---------------- For textarea autoresize----------------- //
 
     const handleFieldChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
         const { name, value } = e.target;
@@ -65,10 +46,10 @@ export default function AccountSetupForm() {
 
     const { mutate: accountSetup, isLoading } = api.auth.accountSetup.useMutation({
         onSuccess: ({ success }) => {
-            toast.success("Account created !")
             if (success) {
                 router.push(origin ? `${origin}` : '/')
             }
+            toast.success("Account created !")
         },
         onError: (err) => {
             toast.error("AuthCallBack: Something went wrong!")
@@ -81,7 +62,6 @@ export default function AccountSetupForm() {
 
     async function handleAccountSetup() {
         accountSetup({
-            username: userAccountData.username,
             bio: userAccountData.bio,
             link: userAccountData.link,
             public: userAccountData.public
@@ -98,7 +78,6 @@ export default function AccountSetupForm() {
                     <p className="leading-7 text-muted-foreground ">
                         Customize your Threads profile
                     </p>
-
                     <Card className='w-full p-6 px-8 bg-transparent rounded-2xl my-4 sm:mt-10'>
                         <div className="flex flex-col gap-4">
                             <div className='flex justify-between items-center'>
@@ -126,14 +105,11 @@ export default function AccountSetupForm() {
                             <Label htmlFor="bio">Bio</Label>
                             <div className='flex gap-2 '>
                                 <Plus className="h-4 w-4 text-[#4D4D4D] mt-1" />
-                                <Textarea
+                                <ResizeTextarea
                                     name='bio'
-                                    className='outline-none border-0  ring-0  focus-visible:ring-offset-0 resize-none min-h-min focus-visible:ring-0 p-0 bg-transparent rounded-none '
-                                    ref={inputRef}
-                                    style={{ height: 0 }}
-                                    placeholder="Write bio"
                                     value={userAccountData.bio}
-                                    onChange={handleFieldChange} />
+                                    onChange={handleFieldChange}
+                                    placeholder="Write bio" />
                             </div>
                             <div className="grid gap-2 mt-1">
                                 <Label htmlFor="link">Link</Label>
@@ -141,7 +117,7 @@ export default function AccountSetupForm() {
                                     <Plus className="h-4 w-4 text-[#4D4D4D]" />
                                     <Input
                                         name='link'
-                                        className="outline-none border-0  ring-0  focus-visible:ring-offset-0 resize-none min-h-min focus-visible:ring-0 p-0 bg-transparent rounded-none"
+                                        className="outline-none border-0  ring-0  focus-visible:ring-offset-0 resize-none min-h-min focus-visible:ring-0 p-0 bg-transparent rounded-none placeholder:text-[#777777] text-[15px] text-accent-foreground "
                                         placeholder="Add link"
                                         value={userAccountData.link}
                                         onChange={handleFieldChange}

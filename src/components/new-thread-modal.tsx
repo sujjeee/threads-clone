@@ -1,16 +1,6 @@
 "use client"
 
-import React, { useCallback, useLayoutEffect, useRef, useState } from 'react'
-import { Card } from './ui/card'
-import { Avatar, AvatarFallback, AvatarImage } from './ui/avatar'
-import { Button } from "@/components/ui/button"
-import {
-    Dialog,
-    DialogContent,
-    DialogFooter,
-    DialogTrigger,
-} from "@/components/ui/dialog"
-import { Icons } from './icons'
+import React from 'react'
 import { usePathname } from 'next/navigation'
 import { cn } from '@/lib/utils'
 import {
@@ -19,34 +9,30 @@ import {
     type FileRejection,
 } from "react-dropzone";
 import { toast } from 'sonner'
+import { Card } from '@/components/ui/card'
+import {
+    Avatar,
+    AvatarFallback,
+    AvatarImage
+} from '@/components/ui/avatar'
+import { Button } from "@/components/ui/button"
+import { X } from 'lucide-react'
+import {
+    Dialog,
+    DialogContent,
+    DialogTrigger,
+} from "@/components/ui/dialog"
+import { Icons } from '@/components/icons'
+import { ResizeTextarea } from './ui/resize-textarea';
 
 export default function NewThreadModal({ showIcon }: { showIcon: boolean }) {
 
     const [files, setFiles] = React.useState<File | undefined>(undefined)
-
     const [FileData, setFileData] = React.useState()
-
+    const [inputValue, setInputValue] = React.useState('')
     const [previewURL, setPreviewURL] = React.useState<string | undefined>(undefined)
 
     const path = usePathname()
-    function updateTextAreaSize(textArea?: HTMLTextAreaElement) {
-        if (textArea == null) return;
-        textArea.style.height = "0";
-        textArea.style.height = `${textArea.scrollHeight}px`;
-    }
-
-    const [inputValue, setInputValue] = useState("");
-    const textAreaRef = useRef<HTMLTextAreaElement>();
-    const inputRef = useCallback((textArea: HTMLTextAreaElement) => {
-        updateTextAreaSize(textArea);
-        textAreaRef.current = textArea;
-    }, []);
-
-    useLayoutEffect(() => {
-        updateTextAreaSize(textAreaRef.current);
-    }, [inputValue]);
-
-
     const maxSize = 10 * 1024 * 1024;
 
     const onDrop = React.useCallback(
@@ -91,16 +77,6 @@ export default function NewThreadModal({ showIcon }: { showIcon: boolean }) {
 
     const highlightMentions = (e: any) => {
         const inputValue = e.target.value;
-
-        // const formattedText = inputValue.split(/(@\w+|@\w+)/).map((part: any, index: any) => {
-        //     if (part.startsWith('@')) {
-        //         return <span key={index} className="font-semibold text-blue-500">{part}</span>;
-        //     } else {
-        //         return <span key={index}>{part}</span>;
-        //     }
-        // });
-
-        // console.log("formattedText", formattedText)
         setInputValue(inputValue);
     };
     return (
@@ -136,9 +112,9 @@ export default function NewThreadModal({ showIcon }: { showIcon: boolean }) {
                         <Button size={'sm'} className='rounded-full px-4 font-semibold text-[15px]'> Post</Button>
                     </div>}
             </DialogTrigger>
-            <DialogContent className='border-none bg-transparent  sm:max-w-screen-sm max-w-lg w-full shadow-none'>
+            <DialogContent className='border-none bg-transparent  sm:max-w-[680px] max-w-lg w-full shadow-none '>
                 <h1 className='w-full text-center font-medium'>New Thread</h1>
-                <Card className=" w-full p-0 rounded-2xl border bg-[#181818] ">
+                <Card className=" w-full p-0 rounded-2xl border bg-[#181818] border-[#393939]">
                     <div className='overflow-y-auto no-scrollbar p-6  pb-4 max-h-[70vh] '>
                         <div className="flex space-x-3">
                             <Avatar className='h-9 w-9'>
@@ -146,34 +122,37 @@ export default function NewThreadModal({ showIcon }: { showIcon: boolean }) {
                                 <AvatarFallback>JL</AvatarFallback>
                             </Avatar>
                             <div className='flex flex-col gap-1.5 w-full'>
-                                <p className="text-sm font-medium leading-none">Jackson Lee</p>
-                                <textarea
-                                    ref={inputRef}
-                                    style={{ height: 0 }}
+                                <p className="text-sm font-medium leading-none tracking-normal">Jackson Lee</p>
+                                <ResizeTextarea
                                     value={inputValue}
                                     onChange={highlightMentions}
-                                    className="flex-grow resize-none overflow-hidden outline-none text-[15px] text-accent-foreground break-words bg- w-full bg-transparent"
-                                    placeholder="What's happening?"
+                                    placeholder="Start a thread..."
                                 />
-                                {files && (
-                                    <div className='my-3 overflow-hidden rounded-xl w-fit'>
-                                        <img src={previewURL} alt="" className='object-contain max-h-[500px] max-w-full border' />
+                                <div className='space-y-2 mt-1'>
+                                    {previewURL && (
+                                        <div className='relative overflow-hidden rounded-[12px] border border-[#393939] w-fit'>
+                                            <img src={previewURL} alt="" className='object-contain max-h-[520px] max-w-full  rounded-[12px]' />
+                                            <Button
+                                                onClick={() => setPreviewURL('')}
+                                                variant={"ghost"}
+                                                className="h-6 w-6 p-1 absolute top-2 right-2 z-50 rounded-full bg-black/80 transform active:scale-75 transition-transform cursor-pointer" >
+                                                <X />
+                                            </Button>
+                                        </div>
+                                    )}
+                                    <div {...getRootProps()} className='text-[#777777] flex gap-1  items-center text-[15px]'>
+                                        <input {...getInputProps()} />
+                                        <Icons.image className='h-5 w-5   transform active:scale-75 transition-transform cursor-pointer' />
+                                        {files && 'Add'}
                                     </div>
-                                )}
-                                <div {...getRootProps()}>
-                                    <input {...getInputProps()} />
-                                    <Icons.image className='h-5 w-5 mt-2 text-[#777777]  transform active:scale-75 transition-transform cursor-pointer' />
                                 </div>
-
                             </div>
                         </div>
                     </div>
                     <div className='flex justify-between items-center w-full p-5'>
-                        <p className='text-sm text-[#777777] tracking-normal z-50 px-2'>Anyone can reply</p>
+                        <p className='text-[15px] text-[#777777] tracking-normal z-50 px-2'>Anyone can reply</p>
                         <Button size={'sm'} className='rounded-full px-4 font-semibold'> Post</Button>
                     </div>
-                    <DialogFooter>
-                    </DialogFooter>
                 </Card>
             </DialogContent>
         </Dialog>

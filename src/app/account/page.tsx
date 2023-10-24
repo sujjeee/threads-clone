@@ -16,6 +16,9 @@ export default async function AccountPage() {
             email,
             verified: true
         },
+        select: {
+            verified: true
+        }
     })
 
     if (isVerified) redirect('/')
