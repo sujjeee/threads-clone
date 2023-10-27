@@ -11,34 +11,49 @@ datasource db {
 }
 
 model User {
-    id        String   @id
-    username  String   @unique
-    fullname  String
-    image     String
-    bio       String?
-    link      String?
-    email     String   @unique
-    verified  Boolean? @default(false)
-    public    Boolean? @default(true)
-    threads   Thread[]
-    reposts   Repost[]
-    followers User[]   @relation(name: "Followers")
-    following User[]   @relation(name: "Followers")
+    id          String   @id
+    createdAt   DateTime @default(now()) @map(name: "created_at")
+    updatedAt   DateTime @default(now()) @map(name: "updated_at")
+    username    String   @unique
+    fullname    String
+    image       String
+    bio         String?
+    link        String?
+    email       String   @unique
+    verified    Boolean? @default(false)
+    privacy     Privacy  @default(PUBLIC)
+    followers   User[]   @relation(name: "Followers")
+    following   User[]   @relation(name: "Followers")
+    threads     Thread[]
+    likedTweets Likes[]
+}
+
+enum Privacy {
+    PUBLIC
+    PRIVATE
 }
 
 model Thread {
-    id        String   @id @default(uuid())
-    createdAt DateTime @default(now())
-    text      String
-    author    User     @relation(fields: [authorId], references: [id])
-    authorId  String
-    Repost    Repost?
+    id            String   @id @default(cuid())
+    createdAt     DateTime @default(now())
+    author        User     @relation(fields: [authorId], references: [id], onDelete: Cascade)
+    authorId      String
+    text          String
+    images        String[]
+    likes         Likes[]
+    parentTweetId String?
+    parentTweet   Thread?  @relation("rootTweet", fields: [parentTweetId], references: [id], onDelete: Cascade)
+    replies       Thread[] @relation("rootTweet")
 }
 
-model Repost {
-    id         String @id @default(uuid())
-    thread     Thread @relation(fields: [threadId], references: [id])
-    threadId   String @unique
-    reposter   User   @relation(fields: [reposterId], references: [id])
-    reposterId String
+model Likes {
+    createdAt DateTime @default(now())
+    thread    Thread   @relation(fields: [threadId], references: [id], onDelete: Cascade)
+    threadId  String
+    user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+    userId    String
+
+    @@id([threadId, userId])
+    @@index([userId])
+    @@index([threadId])
 }

@@ -5,6 +5,7 @@ import { currentUser } from "@clerk/nextjs";
 import { emailToUsername, getUserEmail } from "@/lib/utils";
 import { TRPCError } from "@trpc/server";
 import { db } from "@/server/db";
+import { Privacy } from "@prisma/client";
 
 export const authRouter = createTRPCRouter({
     accountSetup: publicProcedure
@@ -12,7 +13,9 @@ export const authRouter = createTRPCRouter({
             z.object({
                 bio: z.string(),
                 link: z.string(),
-                public: z.boolean()
+                privacy:
+                    z.enum(Object.values(Privacy) as [keyof typeof Privacy])
+                        .default('PUBLIC')
             })
         )
         .mutation(async ({ ctx, input }) => {
@@ -37,7 +40,7 @@ export const authRouter = createTRPCRouter({
                         username,
                         fullname,
                         image: user.imageUrl,
-                        public: input.public,
+                        privacy: input.privacy,
                         bio: input.bio,
                         link: input.link,
                         email,

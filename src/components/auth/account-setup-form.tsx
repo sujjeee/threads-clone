@@ -15,16 +15,19 @@ import { Icons } from '@/components/icons'
 import { useRouter } from 'next/navigation'
 import { toast } from 'sonner'
 import { ResizeTextarea } from '@/components/ui/resize-textarea'
+import { User, Privacy } from '@prisma/client'
+
+type UserSetupProps = Pick<User, 'bio' | 'link' | 'privacy'>;
 
 export default function AccountSetupForm() {
     const { user } = useUser()
     const router = useRouter()
     const username = emailToUsername(user!)
     const [showPrivacyPage, setShowPrivacyPage] = React.useState(false);
-    const [userAccountData, setUserAccountData] = React.useState({
+    const [userAccountData, setUserAccountData] = React.useState<UserSetupProps>({
         bio: "",
         link: "",
-        public: true
+        privacy: Privacy.PUBLIC
     });
 
     const handleFieldChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
@@ -60,9 +63,9 @@ export default function AccountSetupForm() {
 
     async function handleAccountSetup() {
         accountSetup({
-            bio: userAccountData.bio,
-            link: userAccountData.link,
-            public: userAccountData.public
+            bio: userAccountData.bio!,
+            link: userAccountData.link!,
+            privacy: userAccountData.privacy
         })
     }
 
@@ -106,7 +109,7 @@ export default function AccountSetupForm() {
                                     <Plus className="h-4 w-4 text-[#4D4D4D] mt-1" />
                                     <ResizeTextarea
                                         name='bio'
-                                        value={userAccountData.bio}
+                                        value={userAccountData.bio!}
                                         onChange={handleFieldChange}
                                         placeholder="Write bio" />
                                 </div>
@@ -118,7 +121,7 @@ export default function AccountSetupForm() {
                                             name='link'
                                             className="outline-none border-0  ring-0  focus-visible:ring-offset-0 resize-none min-h-min focus-visible:ring-0 p-0 bg-transparent rounded-none placeholder:text-[#777777] text-[15px] text-accent-foreground "
                                             placeholder="Add link"
-                                            value={userAccountData.link}
+                                            value={userAccountData.link!}
                                             onChange={handleFieldChange}
                                         />
                                     </div>
@@ -147,7 +150,7 @@ export default function AccountSetupForm() {
                                     onClick={() => (
                                         setUserAccountData({
                                             ...userAccountData,
-                                            public: true,
+                                            privacy: Privacy.PUBLIC,
                                         })
                                     )}
                                 >
@@ -170,7 +173,7 @@ export default function AccountSetupForm() {
                                     onClick={() => (
                                         setUserAccountData({
                                             ...userAccountData,
-                                            public: false,
+                                            privacy: Privacy.PRIVATE,
                                         })
                                     )}
                                 >

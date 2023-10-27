@@ -83,8 +83,6 @@ export default function Post() {
                     </div>
                 </div>
             </div>
-
-
         </>
     )
 }

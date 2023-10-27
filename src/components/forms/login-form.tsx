@@ -15,6 +15,7 @@ export default function LoginForm() {
             <p className='text-accent-foreground font-bold select-none'>Log in with your Instagram account</p>
             <form className='w-full flex flex-col py-4 gap-1.5'>
                 <Input
+                    autoFocus
                     className='h-14 rounded-xl bg-[#1e1e1e] text-[15px] placeholder:text-[#777777] font-medium tracking-normal outline-none ring-0  focus-visible:ring-offset-0 min-h-min border-none focus-visible:ring-1 focus-visible:ring-[#393939]'
                     placeholder='Username, phone or email'
                     type='email' />

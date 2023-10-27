@@ -28,7 +28,6 @@ import { ResizeTextarea } from './ui/resize-textarea';
 export default function NewThreadModal({ showIcon }: { showIcon: boolean }) {
 
     const [files, setFiles] = React.useState<File | undefined>(undefined)
-    const [FileData, setFileData] = React.useState()
     const [inputValue, setInputValue] = React.useState('')
     const [previewURL, setPreviewURL] = React.useState<string | undefined>(undefined)
 
@@ -115,7 +114,7 @@ export default function NewThreadModal({ showIcon }: { showIcon: boolean }) {
             <DialogContent className='border-none bg-transparent  sm:max-w-[680px] max-w-lg w-full shadow-none '>
                 <h1 className='w-full text-center font-medium'>New Thread</h1>
                 <Card className=" w-full p-0 rounded-2xl border bg-[#181818] border-[#393939]">
-                    <div className='overflow-y-auto no-scrollbar p-6  pb-4 max-h-[70vh] '>
+                    <div className='overflow-y-auto no-scrollbar p-6 max-h-[70vh] '>
                         <div className="flex space-x-3">
                             <Avatar className='h-9 w-9'>
                                 <AvatarImage src="https://avatar.vercel.sh/5" />
@@ -149,7 +148,7 @@ export default function NewThreadModal({ showIcon }: { showIcon: boolean }) {
                             </div>
                         </div>
                     </div>
-                    <div className='flex justify-between items-center w-full p-5'>
+                    <div className='flex justify-between items-center w-full p-6'>
                         <p className='text-[15px] text-[#777777] tracking-normal z-50 px-2'>Anyone can reply</p>
                         <Button size={'sm'} className='rounded-full px-4 font-semibold'> Post</Button>
                     </div>
