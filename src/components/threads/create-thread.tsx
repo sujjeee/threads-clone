@@ -9,6 +9,15 @@ import { Card } from '@/components/ui/card'
 import { Dialog, DialogContent, DialogTrigger } from '@/components/ui/dialog'
 import { usePathname } from 'next/navigation'
 import { cn } from '@/lib/utils'
+import {
+    DropdownMenu,
+    DropdownMenuContent,
+    DropdownMenuItem,
+    DropdownMenuLabel,
+    DropdownMenuSeparator,
+    DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu"
+
 
 interface CreateThreadProps {
     showIcon: boolean
@@ -17,13 +26,22 @@ interface CreateThreadProps {
 const CreateThread: React.FC<CreateThreadProps> = ({ showIcon }) => {
 
     const path = usePathname()
-    const [inputValue, setInputValue] = React.useState('')
 
-    const handleInputValue = (e: any) => {
-        const inputValue = e.target.value;
-        setInputValue(inputValue);
+    const [threadData, setThreadData] = React.useState({
+        privacy: "Anyone can reply",
+        text: "",
+        images: []
+    })
+
+    const handleFieldChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
+        const { name, value } = e.target;
+        setThreadData({
+            ...threadData,
+            [name]: value,
+        });
     };
 
+    console.log("threadData", threadData)
     return (
         <Dialog>
             <DialogTrigger asChild>
@@ -57,7 +75,7 @@ const CreateThread: React.FC<CreateThreadProps> = ({ showIcon }) => {
                         <Button size={'sm'} className='rounded-full px-4 font-semibold text-[15px]'> Post</Button>
                     </div>}
             </DialogTrigger>
-            <DialogContent className='border-none bg-transparent  sm:max-w-[680px] max-w-lg w-full shadow-none '>
+            <DialogContent className='border-none bg-transparent sm:max-w-[680px] max-w-lg w-full shadow-none'>
                 <h1 className='w-full text-center font-bold mb-2'>New thread</h1>
                 <Card className="ring-offset-0 border-none ring-1 ring-[#393939] bg-[#181818] rounded-2xl">
                     <div className='overflow-y-auto no-scrollbar p-6 max-h-[70vh] '>
@@ -69,24 +87,68 @@ const CreateThread: React.FC<CreateThreadProps> = ({ showIcon }) => {
                             <div className='flex flex-col gap-1.5 w-full'>
                                 <p className="text-[15px] font-medium leading-none tracking-normal">sujjeee</p>
                                 <ResizeTextarea
-                                    value={inputValue}
-                                    onChange={handleInputValue}
+                                    name='text'
+                                    value={threadData.text}
+                                    onChange={handleFieldChange}
                                     placeholder="Start a thread..."
                                 />
                                 <div className='space-y-2 mt-1'>
 
                                     <div className='text-[#777777] flex gap-1  items-center text-[15px]'>
-
                                         <Icons.image className='h-5 w-5   transform active:scale-75 transition-transform cursor-pointer' />
-
                                     </div>
                                 </div>
                             </div>
                         </div>
                     </div>
                     <div className='flex justify-between items-center w-full p-6'>
-                        <p className='text-[15px] text-[#777777] tracking-normal z-50 px-2'>Anyone can reply</p>
-                        <Button size={'sm'} className='rounded-full px-4 font-semibold'> Post </Button>
+                        <DropdownMenu>
+                            <DropdownMenuTrigger asChild className='select-none'>
+                                <button className='text-[15px] text-[#777777] tracking-normal z-50 px-2 cursor-pointer'>{threadData.privacy}</button>
+                            </DropdownMenuTrigger>
+                            <DropdownMenuContent align="start" className='bg-[#181818] rounded-2xl w-[190px] mt-1'>
+                                <DropdownMenuItem
+                                    className='focus:bg-transparent px-4 tracking-normal font-semibold py-2 cursor-pointer text-[15px]'
+                                    onClick={() => {
+                                        setThreadData({
+                                            ...threadData,
+                                            privacy: "Anyone can reply",
+                                        });
+                                    }}
+                                >
+                                    Anyone
+                                </DropdownMenuItem>
+                                <DropdownMenuSeparator className='bg-[#393939] h-[1.2px] ' />
+                                <DropdownMenuItem
+                                    className='focus:bg-transparent px-4 tracking-normal font-semibold py-2 cursor-pointer text-[15px]'
+                                    onClick={() => {
+                                        setThreadData({
+                                            ...threadData,
+                                            privacy: "Profiles you follow can reply",
+                                        });
+                                    }}
+                                >
+                                    Profiles you follow
+                                </DropdownMenuItem>
+                                <DropdownMenuSeparator className='bg-[#393939] h-[1.2px]' />
+                                <DropdownMenuItem
+                                    className='focus:bg-transparent px-4 tracking-normal font-semibold py-2 cursor-pointer text-[15px]'
+                                    onClick={() => {
+                                        setThreadData({
+                                            ...threadData,
+                                            privacy: "Profiles you mention can reply",
+                                        });
+                                    }}>
+                                    Mentioned only
+                                </DropdownMenuItem>
+                            </DropdownMenuContent>
+                        </DropdownMenu>
+                        <Button
+                            size={'sm'}
+                            disabled={threadData.text === ''}
+                            className='rounded-full px-4 font-semibold'>
+                            Post
+                        </Button>
                     </div>
                 </Card>
             </DialogContent>
