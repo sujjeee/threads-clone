@@ -6,6 +6,7 @@ import { Icons } from '../icons'
 import { cn } from '@/lib/utils'
 import { useTheme } from 'next-themes'
 import NewThreadModal from '../new-thread-modal'
+import CreateThread from '../threads/create-thread'
 
 export default function Navs() {
     const path = usePathname()
@@ -37,7 +38,7 @@ export default function Navs() {
                     )}
                 />
             </Link>
-            <NewThreadModal showIcon={true} />
+            <CreateThread showIcon={true} />
             <Link href={'/activity'} className='hover:bg-[#181818] py-5 px-8 rounded-lg transform transition-all duration-150 ease-out hover:scale-100'>
                 <Icons.like
                     className={cn(

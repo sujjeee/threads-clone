@@ -6,6 +6,8 @@ import Post2 from '@/components/post2'
 import { redirect } from 'next/navigation'
 import { getUserEmail } from '@/lib/utils'
 import { db } from '@/server/db'
+import ThreadCard from '@/components/threads/thread-card'
+import CreateThread from '@/components/threads/create-thread'
 
 export default async function page() {
 
@@ -27,7 +29,8 @@ export default async function page() {
 
   return (
     <div className='container max-w-[620px] z-[10] px-6'>
-      <NewThreadModal showIcon={false} />
+      <CreateThread showIcon={false} />
+      <ThreadCard />
       <Post2 />
       <Post />
     </div>

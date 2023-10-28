@@ -4,6 +4,7 @@ import { usePathname } from 'next/navigation'
 import { Icons } from '../icons'
 import { useTheme } from 'next-themes'
 import NewThreadModal from '../new-thread-modal'
+import CreateThread from '../threads/create-thread'
 
 export default function FooterNavs() {
     const path = usePathname()
@@ -26,7 +27,7 @@ export default function FooterNavs() {
                         }`}
                 />
             </Link>
-            <NewThreadModal showIcon={true} />
+            <CreateThread showIcon={true} />
 
             <Icons.like
                 className={`w-6 h-6 cursor-not-allowed ${path === "/activity" ? "" : "text-muted-foreground"
