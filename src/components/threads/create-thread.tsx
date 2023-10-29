@@ -7,16 +7,18 @@ import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
 import { ResizeTextarea } from '@/components/ui/resize-textarea'
 import { Card } from '@/components/ui/card'
 import { Dialog, DialogContent, DialogTrigger } from '@/components/ui/dialog'
-import { usePathname } from 'next/navigation'
+import { usePathname, useRouter } from 'next/navigation'
 import { cn } from '@/lib/utils'
 import {
     DropdownMenu,
     DropdownMenuContent,
     DropdownMenuItem,
-    DropdownMenuLabel,
     DropdownMenuSeparator,
     DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
+import { api } from '@/trpc/react'
+import { toast } from 'sonner'
+import { useUser } from '@clerk/nextjs'
 
 
 interface CreateThreadProps {
@@ -26,6 +28,8 @@ interface CreateThreadProps {
 const CreateThread: React.FC<CreateThreadProps> = ({ showIcon }) => {
 
     const path = usePathname()
+    const router = useRouter()
+    const { user } = useUser()
 
     const [threadData, setThreadData] = React.useState({
         privacy: "Anyone can reply",
@@ -41,12 +45,37 @@ const CreateThread: React.FC<CreateThreadProps> = ({ showIcon }) => {
         });
     };
 
-    console.log("threadData", threadData)
+
+    const { mutate: createThread, isLoading } = api.post.createThread.useMutation({
+        onSuccess: ({ success }) => {
+            if (success) {
+                router.push(origin ? `${origin}` : '/')
+            }
+            toast.success("New thread post created !")
+        },
+        onError: (err) => {
+            toast.error("PostCallbackError: Something went wrong!")
+            if (err.data?.code === 'UNAUTHORIZED') {
+                router.push('/login')
+            }
+        },
+        onSettled(data) {
+            console.log("usernewtweet", data)
+        },
+        retry: false,
+    });
+
+    async function handleCreateThread() {
+        createThread({
+            text: threadData.text
+        })
+    }
+
     return (
         <Dialog>
             <DialogTrigger asChild>
-                {showIcon ?
-                    <div className='hover:bg-[#181818] py-5 px-8 rounded-lg transform transition-all duration-150 ease-out hover:scale-100'>
+                {showIcon
+                    ? <div className='hover:bg-[#181818] py-5 px-8 rounded-lg transform transition-all duration-150 ease-out hover:scale-100'>
                         <Icons.create
                             className={cn(
                                 "h-6 w-6",
@@ -60,7 +89,7 @@ const CreateThread: React.FC<CreateThreadProps> = ({ showIcon }) => {
                         <div className='w-full flex'>
                             <div>
                                 <img
-                                    src='https://avatar.vercel.sh/1'
+                                    src={user?.imageUrl}
                                     width={36}
                                     height={36}
                                     alt="Account Avatar"
@@ -72,7 +101,10 @@ const CreateThread: React.FC<CreateThreadProps> = ({ showIcon }) => {
                                 placeholder="Start a thread..."
                             />
                         </div>
-                        <Button size={'sm'} className='rounded-full px-4 font-semibold text-[15px]'> Post</Button>
+                        <Button
+                            disabled={threadData.text === '' || isLoading}
+                            size={'sm'}
+                            className='rounded-full px-4 font-semibold text-[15px]'> Post</Button>
                     </div>}
             </DialogTrigger>
             <DialogContent className='border-none bg-transparent sm:max-w-[680px] max-w-lg w-full shadow-none'>
@@ -81,7 +113,7 @@ const CreateThread: React.FC<CreateThreadProps> = ({ showIcon }) => {
                     <div className='overflow-y-auto no-scrollbar p-6 max-h-[70vh] '>
                         <div className="flex space-x-3">
                             <Avatar className='h-9 w-9 outline outline-1 outline-[#333333] rounded-full'>
-                                <AvatarImage src="https://avatar.vercel.sh/5" />
+                                <AvatarImage src={user?.imageUrl} />
                                 <AvatarFallback>JL</AvatarFallback>
                             </Avatar>
                             <div className='flex flex-col gap-1.5 w-full'>
@@ -145,9 +177,18 @@ const CreateThread: React.FC<CreateThreadProps> = ({ showIcon }) => {
                         </DropdownMenu>
                         <Button
                             size={'sm'}
-                            disabled={threadData.text === ''}
-                            className='rounded-full px-4 font-semibold'>
+                            onClick={handleCreateThread}
+                            disabled={threadData.text === '' || isLoading}
+                            className='rounded-full px-4 font-semibold'
+                        >
+                            {isLoading && (
+                                <Icons.spinner
+                                    className="mr-2 h-4 w-4 animate-spin"
+                                    aria-hidden="true"
+                                />
+                            )}
                             Post
+                            <span className="sr-only">Post</span>
                         </Button>
                     </div>
                 </Card>

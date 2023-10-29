@@ -5,24 +5,33 @@ import { Separator } from '../ui/separator'
 import { MoreHorizontal, Plus } from 'lucide-react'
 import { Icons } from '../icons'
 import { cn } from '@/lib/utils'
+import { inferRouterOutputs } from '@trpc/server'
+import { AppRouter } from '@/server/api/root'
+import Link from 'next/link'
+import { api } from '@/trpc/react'
 
-interface ThreadCardProps {
+type ArrayElement<ArrayType extends readonly unknown[]> = ArrayType[number];
 
-}
+type RouterOutput = inferRouterOutputs<AppRouter>;
+type ThreadCardProps = ArrayElement<RouterOutput['post']['infiniteFeed']['threads']>;
 
-const ThreadCard: React.FC<ThreadCardProps> = ({ }) => {
+
+const ThreadCard: React.FC<ThreadCardProps> = ({ id, text, createdAt, likeCount, likedByMe, user }) => {
     const [oneThread, setOneThread] = React.useState(true)
+
+    const { mutate: toggleLike } = api.post.toggleLike.useMutation({})
+
     return (
         <>
             <Separator />
             <div className={cn('flex w-full gap-2 pt-4 max-w-[620px]', {
                 'py-4 pb-2': oneThread
             })}>
-                <div className="flex flex-col items-center gap-1.5">
+                <div className="flex flex-col items-center gap-1.5 z-50">
                     <button className='relative '>
                         <div className='h-9 w-9 outline outline-1 outline-[#333333] rounded-full'>
                             <img
-                                src='https://avatar.vercel.sh/1'
+                                src={user.image}
                                 alt="Account Avatar"
                                 className="rounded-full w-full h-full "
                             />
@@ -32,25 +41,34 @@ const ThreadCard: React.FC<ThreadCardProps> = ({ }) => {
                         </div>
                     </button>
                     {!oneThread && <div className="h-full w-0.5 bg-muted rounded-full" />}
-
                 </div>
-                <div className="flex flex-col w-full">
-                    <div className="justify-center items-start self-stretch flex flex-col max-md:max-w-full px-2 ">
+                <div className="flex flex-col w-full px-2">
+                    <div className="justify-center items-start self-stretch flex flex-col max-md:max-w-full  ">
                         <div className="justify-center items-start flex w-full flex-col  pt-0 self-start">
-                            <div className="items-start flex w-full justify-between gap-5 py-px self-start max-md:max-w-full max-md:flex-wrap">
-                                <div className="flex items-center justify-center gap-1.5">
-                                    <h1 className="text-white text-[15px] font-semibold leading-[0px] "> threads </h1>
+                            <div className="items-start flex w-full justify-between gap-5 py-px self-start max-md:max-w-full max-md:flex-wrap z-50">
+                                <span className="flex items-center justify-center gap-1.5 cursor-pointer">
+                                    <h1 className="text-white text-[15px] font-semibold leading-[0px]">
+                                        {user.username}
+                                    </h1>
                                     <Icons.verified className='w-3 h-3' />
-                                </div>
+                                </span>
                                 <div className="justify-between items-center self-stretch flex gap-2.5">
                                     <div className="text-right text-[15px] leading-none self-stretch  text-[#777777]"> 45m</div>
                                     <MoreHorizontal className='aspect-square object-cover object-center h-4 w-4 overflow-hidden flex-1' />
                                 </div>
                             </div>
-                            <div className="text-white text-base leading-5 mt-1 max-md:max-w-full"> This episode had me on the edge of my seat the entire time. </div>
-                            <div className="flex  font-bold -ml-2 mt-2 w-full">
+                            <Link href={`/${id}`} className='w-full'>
+                                <div className="text-white text-base leading-5 mt-1 max-md:max-w-full"> {text} </div>
+                            </Link>
+                            <div className="flex  font-bold -ml-2 mt-2 w-full z-50">
                                 <div className='flex items-center justify-center hover:bg-[#1E1E1E] rounded-full p-2 w-fit h-fit'>
-                                    <Icons.heart className='w-5 h-5 ' />
+                                    <Icons.heart
+                                        onClick={() => toggleLike({ id })}
+                                        fill={likedByMe ? '#ff3040' : 'none'}
+                                        className={cn('w-5 h-5 ', {
+                                            "text-[#ff3040]": likedByMe
+                                        }
+                                        )} />
                                 </div>
                                 <div className='flex items-center justify-center hover:bg-[#1E1E1E] rounded-full p-2 w-fit h-fit'>
                                     <Icons.reply className='w-5 h-5 ' />
@@ -63,13 +81,14 @@ const ThreadCard: React.FC<ThreadCardProps> = ({ }) => {
                                 </div>
                             </div>
                         </div>
-                        {/* <div className="flex items-start gap-2 text-[#777777] text-[15px] text-center mt-0.5 pb-4">
-                            <p>12 replies</p>
-                            <p>16 likes</p>
-                        </div> */}
+                    </div>
+                    <div className="flex items-start gap-2 text-[#777777] text-[15px] text-center mt-0.5 pb-4 z-50">
+                        <p>0 replies</p>
+                        <p>{likeCount} likes</p>
                     </div>
                 </div>
-            </div >
+            </div>
+
             {/* use this in home page */}
             {/* <div className='flex items-center gap-2 mt-0.5 pb-4'>
                 <div className="flex justify-center items-center w-[36px] ">
@@ -83,7 +102,7 @@ const ThreadCard: React.FC<ThreadCardProps> = ({ }) => {
                     <p>12 replies</p>
                     <p>16 likes</p>
                 </div>
-            </div> */}
+          </div> */}
         </>
     )
 }

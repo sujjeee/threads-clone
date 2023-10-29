@@ -25,7 +25,7 @@ model User {
     followers   User[]   @relation(name: "Followers")
     following   User[]   @relation(name: "Followers")
     threads     Thread[]
-    likedTweets Likes[]
+    likedTweets Like[]
 }
 
 enum Privacy {
@@ -40,13 +40,16 @@ model Thread {
     authorId      String
     text          String
     images        String[]
-    likes         Likes[]
+    likes         Like[]
     parentTweetId String?
     parentTweet   Thread?  @relation("rootTweet", fields: [parentTweetId], references: [id], onDelete: Cascade)
     replies       Thread[] @relation("rootTweet")
+
+    @@unique([createdAt, id])
+    @@index([authorId])
 }
 
-model Likes {
+model Like {
     createdAt DateTime @default(now())
     thread    Thread   @relation(fields: [threadId], references: [id], onDelete: Cascade)
     threadId  String

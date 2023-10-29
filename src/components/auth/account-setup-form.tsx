@@ -55,7 +55,7 @@ export default function AccountSetupForm() {
         onError: (err) => {
             toast.error("AuthCallBack: Something went wrong!")
             if (err.data?.code === 'UNAUTHORIZED') {
-                router.push('/signin')
+                router.push('/login')
             }
         },
         retry: false,
@@ -89,7 +89,7 @@ export default function AccountSetupForm() {
                                             <Lock className="h-4 w-4 text-[#4D4D4D]" />
                                             <input
                                                 name='username'
-                                                className="flex-grow resize-none overflow-hidden outline-none text-[15px] text-accent-foreground break-words tracking-wide w-full bg-transparent"
+                                                className="flex-grow resize-none overflow-hidden outline-none text-[15px] text-accent-foreground break-words tracking-wide w-full bg-transparent select-none"
                                                 placeholder="name and username"
                                                 defaultValue={`${user?.firstName} ${user?.lastName}${" "}(${username})`}
                                             />
@@ -109,6 +109,7 @@ export default function AccountSetupForm() {
                                     <Plus className="h-4 w-4 text-[#4D4D4D] mt-1" />
                                     <ResizeTextarea
                                         name='bio'
+                                        className='select-none'
                                         value={userAccountData.bio!}
                                         onChange={handleFieldChange}
                                         placeholder="Write bio" />
@@ -119,7 +120,7 @@ export default function AccountSetupForm() {
                                         <Plus className="h-4 w-4 text-[#4D4D4D]" />
                                         <Input
                                             name='link'
-                                            className="outline-none border-0  ring-0  focus-visible:ring-offset-0 resize-none min-h-min focus-visible:ring-0 p-0 bg-transparent rounded-none placeholder:text-[#777777] text-[15px] text-accent-foreground "
+                                            className="outline-none border-0  ring-0  focus-visible:ring-offset-0 resize-none min-h-min focus-visible:ring-0 p-0 bg-transparent rounded-none placeholder:text-[#777777] text-[15px] text-accent-foreground select-none"
                                             placeholder="Add link"
                                             value={userAccountData.link!}
                                             onChange={handleFieldChange}
