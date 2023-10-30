@@ -31,6 +31,8 @@ const CreateThread: React.FC<CreateThreadProps> = ({ showIcon }) => {
     const router = useRouter()
     const { user } = useUser()
 
+    const [isOpen, setIsOpen] = React.useState(false)
+
     const [threadData, setThreadData] = React.useState({
         privacy: "Anyone can reply",
         text: "",
@@ -45,22 +47,43 @@ const CreateThread: React.FC<CreateThreadProps> = ({ showIcon }) => {
         });
     };
 
+    const trpcUtils = api.useContext();
 
     const { mutate: createThread, isLoading } = api.post.createThread.useMutation({
-        onSuccess: ({ success }) => {
-            if (success) {
-                router.push(origin ? `${origin}` : '/')
-            }
-            toast.success("New thread post created !")
+        onSuccess: (newTweet) => {
+            setIsOpen(false)
+
+            trpcUtils.post.infiniteFeed.setInfiniteData({}, (oldData) => {
+                if (oldData == null || oldData.pages[0] == null) return;
+
+                const newCacheTweet = {
+                    ...newTweet,
+                    likeCount: 0,
+                    likedByMe: false,
+                    user: {
+                        id: user?.id,
+                        username: user?.username || 'sujjeeex',
+                        image: user?.imageUrl || null,
+                    },
+                };
+
+                return {
+                    ...oldData,
+                    pages: [
+                        {
+                            ...oldData.pages[0],
+                            tweets: [newCacheTweet, ...oldData.pages[0].threads],
+                        },
+                        ...oldData.pages.slice(1),
+                    ],
+                };
+            });
         },
         onError: (err) => {
             toast.error("PostCallbackError: Something went wrong!")
             if (err.data?.code === 'UNAUTHORIZED') {
                 router.push('/login')
             }
-        },
-        onSettled(data) {
-            console.log("usernewtweet", data)
         },
         retry: false,
     });
@@ -72,10 +95,15 @@ const CreateThread: React.FC<CreateThreadProps> = ({ showIcon }) => {
     }
 
     return (
-        <Dialog>
+        <Dialog open={isOpen} >
             <DialogTrigger asChild>
                 {showIcon
-                    ? <div className='hover:bg-[#181818] py-5 px-8 rounded-lg transform transition-all duration-150 ease-out hover:scale-100'>
+                    ? <div
+                        onClick={() => {
+                            console.log('hit got open')
+                            setIsOpen(true)
+                        }}
+                        className='hover:bg-[#181818] py-5 px-8 rounded-lg transform transition-all duration-150 ease-out hover:scale-100'>
                         <Icons.create
                             className={cn(
                                 "h-6 w-6",
@@ -135,12 +163,12 @@ const CreateThread: React.FC<CreateThreadProps> = ({ showIcon }) => {
                     </div>
                     <div className='flex justify-between items-center w-full p-6'>
                         <DropdownMenu>
-                            <DropdownMenuTrigger asChild className='select-none'>
-                                <button className='text-[15px] text-[#777777] tracking-normal z-50 px-2 cursor-pointer'>{threadData.privacy}</button>
+                            <DropdownMenuTrigger asChild>
+                                <button className='text-[15px] text-[#777777] tracking-normal z-50 cursor-pointer select-none'>{threadData.privacy}</button>
                             </DropdownMenuTrigger>
                             <DropdownMenuContent align="start" className='bg-[#181818] rounded-2xl w-[190px] mt-1'>
                                 <DropdownMenuItem
-                                    className='focus:bg-transparent px-4 tracking-normal font-semibold py-2 cursor-pointer text-[15px]'
+                                    className='focus:bg-transparent px-4 tracking-normal select-none font-semibold py-2 cursor-pointer text-[15px]'
                                     onClick={() => {
                                         setThreadData({
                                             ...threadData,
@@ -152,7 +180,7 @@ const CreateThread: React.FC<CreateThreadProps> = ({ showIcon }) => {
                                 </DropdownMenuItem>
                                 <DropdownMenuSeparator className='bg-[#393939] h-[1.2px] ' />
                                 <DropdownMenuItem
-                                    className='focus:bg-transparent px-4 tracking-normal font-semibold py-2 cursor-pointer text-[15px]'
+                                    className='focus:bg-transparent px-4 tracking-normal  select-none font-semibold py-2 cursor-pointer text-[15px]'
                                     onClick={() => {
                                         setThreadData({
                                             ...threadData,
@@ -164,7 +192,7 @@ const CreateThread: React.FC<CreateThreadProps> = ({ showIcon }) => {
                                 </DropdownMenuItem>
                                 <DropdownMenuSeparator className='bg-[#393939] h-[1.2px]' />
                                 <DropdownMenuItem
-                                    className='focus:bg-transparent px-4 tracking-normal font-semibold py-2 cursor-pointer text-[15px]'
+                                    className='focus:bg-transparent px-4 tracking-normal select-none font-semibold py-2 cursor-pointer text-[15px]'
                                     onClick={() => {
                                         setThreadData({
                                             ...threadData,
