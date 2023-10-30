@@ -11,21 +11,21 @@ datasource db {
 }
 
 model User {
-    id          String   @id
-    createdAt   DateTime @default(now()) @map(name: "created_at")
-    updatedAt   DateTime @default(now()) @map(name: "updated_at")
-    username    String   @unique
-    fullname    String
-    image       String
-    bio         String?
-    link        String?
-    email       String   @unique
-    verified    Boolean? @default(false)
-    privacy     Privacy  @default(PUBLIC)
-    followers   User[]   @relation(name: "Followers")
-    following   User[]   @relation(name: "Followers")
-    threads     Thread[]
-    likedTweets Like[]
+    id           String   @id
+    createdAt    DateTime @default(now()) @map(name: "created_at")
+    updatedAt    DateTime @default(now()) @map(name: "updated_at")
+    username     String   @unique
+    fullname     String
+    image        String
+    bio          String?
+    link         String?
+    email        String   @unique
+    verified     Boolean? @default(false)
+    privacy      Privacy  @default(PUBLIC)
+    followers    User[]   @relation(name: "followers")
+    following    User[]   @relation(name: "followers")
+    threads      Thread[]
+    likedThreads Like[]
 }
 
 enum Privacy {
@@ -34,16 +34,16 @@ enum Privacy {
 }
 
 model Thread {
-    id            String   @id @default(cuid())
-    createdAt     DateTime @default(now())
-    author        User     @relation(fields: [authorId], references: [id], onDelete: Cascade)
-    authorId      String
-    text          String
-    images        String[]
-    likes         Like[]
-    parentTweetId String?
-    parentTweet   Thread?  @relation("rootTweet", fields: [parentTweetId], references: [id], onDelete: Cascade)
-    replies       Thread[] @relation("rootTweet")
+    id             String   @id @default(cuid())
+    createdAt      DateTime @default(now())
+    author         User     @relation(fields: [authorId], references: [id], onDelete: Cascade)
+    authorId       String
+    text           String
+    images         String[]
+    likes          Like[]
+    parentThreadId String?
+    parentThread   Thread?  @relation("rootThread", fields: [parentThreadId], references: [id], onDelete: Cascade)
+    replies        Thread[] @relation("rootThread")
 
     @@unique([createdAt, id])
     @@index([authorId])

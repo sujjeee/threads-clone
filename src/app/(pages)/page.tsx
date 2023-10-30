@@ -17,7 +17,7 @@ export default function page() {
 
   const allThread = data?.pages.flatMap((page) => page.threads)
 
-  console.log("allThread", allThread)
+  // console.log("allThread", allThread)
   if (isLoading) return <Loading />
   if (isError) return <h1>Error...</h1>;
 

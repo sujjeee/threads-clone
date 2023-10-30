@@ -26,6 +26,7 @@ import { UserResource } from '@clerk/types'
 interface CreateThreadProps {
     showIcon: boolean
     replyThreadInfo?: {
+        id: string
         text: string
         author: AuthorProps
     }
@@ -50,14 +51,14 @@ const CreateThread: React.FC<CreateThreadProps> = ({ showIcon, replyThreadInfo }
     const trpcUtils = api.useContext();
 
     const { mutate: createThread, isLoading } = api.post.createThread.useMutation({
-        onSuccess: (newTweet) => {
+        onSuccess: (newPost) => {
             setIsOpen(false)
 
             trpcUtils.post.infiniteFeed.setInfiniteData({}, (oldData) => {
                 if (oldData == null || oldData.pages[0] == null) return;
 
-                const newCacheTweet = {
-                    ...newTweet,
+                const newCachePost = {
+                    ...newPost,
                     likeCount: 0,
                     likedByMe: false,
                     user: {
@@ -72,7 +73,7 @@ const CreateThread: React.FC<CreateThreadProps> = ({ showIcon, replyThreadInfo }
                     pages: [
                         {
                             ...oldData.pages[0],
-                            tweets: [newCacheTweet, ...oldData.pages[0].threads],
+                            Posts: [newCachePost, ...oldData.pages[0].threads],
                         },
                         ...oldData.pages.slice(1),
                     ],
@@ -88,10 +89,27 @@ const CreateThread: React.FC<CreateThreadProps> = ({ showIcon, replyThreadInfo }
         retry: false,
     });
 
+    const { mutate: replytoThread, isLoading: isReplying } = api.post.replyToThread.useMutation({
+        onError: (err) => {
+            toast.error("PostCallbackError: Something went wrong!")
+            if (err.data?.code === 'UNAUTHORIZED') {
+                router.push('/login')
+            }
+        },
+        retry: false,
+    });
+
     async function handleCreateThread() {
-        createThread({
-            text: threadData.text
-        })
+        if (replyThreadInfo) {
+            replytoThread({
+                text: threadData.text,
+                threadId: replyThreadInfo.id,
+            });
+        } else {
+            createThread({
+                text: threadData.text,
+            });
+        }
     }
 
     const handleFieldChange = (textValue: string) => {
@@ -208,10 +226,10 @@ const CreateThread: React.FC<CreateThreadProps> = ({ showIcon, replyThreadInfo }
                         <Button
                             size={'sm'}
                             onClick={handleCreateThread}
-                            disabled={threadData.text === '' || isLoading}
+                            disabled={threadData.text === '' || isLoading || isReplying}
                             className='rounded-full px-4 font-semibold'
                         >
-                            {isLoading && (
+                            {isLoading || isReplying && (
                                 <Icons.spinner
                                     className="mr-2 h-4 w-4 animate-spin"
                                     aria-hidden="true"
@@ -234,6 +252,7 @@ export default CreateThread
 
 export function InsideCard({ user, onTextareaChange, replyThreadInfo }: {
     replyThreadInfo?: {
+        id: string
         text: string
         author: AuthorProps
     }
@@ -246,7 +265,7 @@ export function InsideCard({ user, onTextareaChange, replyThreadInfo }: {
         onTextareaChange(newValue);
     };
 
-    console.log("is replyThreadInfo?", replyThreadInfo)
+    // console.log("is replyThreadInfo?", replyThreadInfo)
     return (
         <div className={cn('flex space-x-3',
             {

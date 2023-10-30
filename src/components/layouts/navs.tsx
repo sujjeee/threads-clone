@@ -47,7 +47,7 @@ export default function Navs() {
                             ? "text-forground"
                             : "text-[#4D4D4D]",
                     )}
-                    fill={fillIcon("/like")}
+                    fill={fillIcon("/activity")}
                 />
             </Link>
             <Link href={'/profile'} className='hover:bg-[#181818] py-5 px-8 rounded-lg transform transition-all duration-150 ease-out hover:scale-100'>

@@ -2,6 +2,7 @@ import { z } from "zod";
 import { TRPCError } from "@trpc/server";
 import { createTRPCRouter, privateProcedure, publicProcedure } from "@/server/api/trpc";
 import { getUserEmail } from "@/lib/utils";
+import { currentUser } from "@clerk/nextjs";
 
 export const postRouter = createTRPCRouter({
   createThread: privateProcedure
@@ -24,7 +25,7 @@ export const postRouter = createTRPCRouter({
         }
       })
 
-      console.log("dbUser?", dbUser)
+      // console.log("dbUser?", dbUser)
       if (!dbUser) {
         throw new TRPCError({ code: 'NOT_FOUND' })
       }
@@ -52,6 +53,9 @@ export const postRouter = createTRPCRouter({
       const { userId } = ctx;
 
       const allThreads = await ctx.db.thread.findMany({
+        where: {
+          parentThreadId: null
+        },
         take: limit + 1,
         cursor: cursor ? { createdAt_id: cursor } : undefined,
         orderBy: [{ createdAt: "desc" }, { id: "desc" }],
@@ -61,7 +65,8 @@ export const postRouter = createTRPCRouter({
           createdAt: true,
           _count: {
             select: {
-              likes: true
+              likes: true,
+              replies: true
             }
           },
           author: {
@@ -78,7 +83,8 @@ export const postRouter = createTRPCRouter({
             select: {
               userId: true
             }
-          }
+          },
+          parentThreadId: true,
         },
       });
 
@@ -97,8 +103,10 @@ export const postRouter = createTRPCRouter({
             text: thread.text,
             createdAt: thread.createdAt,
             likeCount: thread._count.likes,
+            replyCount: thread._count.replies,
             user: thread.author,
-            likedByMe: thread.likes?.length > 0,
+            parentThreadId: thread.parentThreadId,
+            likes: thread.likes
           };
         }),
         nextCursor,
@@ -139,6 +147,7 @@ export const postRouter = createTRPCRouter({
       })
     )
     .query(async ({ input, ctx }) => {
+      const user = await currentUser()
 
       const threadInfo = await ctx.db.thread.findUnique({
         where: {
@@ -147,7 +156,14 @@ export const postRouter = createTRPCRouter({
         select: {
           id: true,
           text: true,
+          createdAt: true,
           images: true,
+          _count: {
+            select: {
+              likes: true,
+              replies: true
+            }
+          },
           author: {
             select: {
               id: true,
@@ -167,12 +183,15 @@ export const postRouter = createTRPCRouter({
                 select: {
                   id: true,
                   username: true,
+                  fullname: true,
                   image: true,
+                  bio: true,
+                  followers: true
                 }
               }
             }
           },
-          parentTweet: {
+          parentThread: {
             select: {
               id: true,
               text: true,
@@ -191,6 +210,40 @@ export const postRouter = createTRPCRouter({
               },
             },
           },
+          replies: {
+            select: {
+              id: true,
+              text: true,
+              createdAt: true,
+              author: {
+                select: {
+                  id: true,
+                  username: true,
+                  image: true,
+                  bio: true,
+                  _count: {
+                    select: {
+                      followers: true
+                    }
+                  },
+                }
+              },
+              _count: {
+                select: {
+                  likes: true,
+                  replies: true
+                }
+              },
+              likes: {
+                where: {
+                  userId: user?.id
+                },
+                select: {
+                  userId: true
+                }
+              },
+            }
+          }
         }
       });
 
@@ -198,7 +251,69 @@ export const postRouter = createTRPCRouter({
       if (!threadInfo) {
         throw new TRPCError({ code: 'NOT_FOUND' })
       }
+      // if (threadInfo) {
+      // }else{
+      //   return {}
+      // }
+      return {
+        id: threadInfo.id,
+        text: threadInfo.text,
+        createdAt: threadInfo.createdAt,
+        likeCount: threadInfo._count.likes,
+        replyCount: threadInfo._count.replies,
+        user: threadInfo.author,
+        parentThread: threadInfo.parentThread,
+        likes: threadInfo.likes,
+        replies: threadInfo.replies
+      }
 
-      return [threadInfo]
+
+
+    }),
+
+  replyToThread: privateProcedure
+    .input(
+      z.object({
+        threadId: z.string(),
+        text: z.string().min(3, {
+          message: "Text must be at least 3 character",
+        }),
+      })
+    )
+    .mutation(async ({ ctx, input }) => {
+      const { user, userId } = ctx;
+      const email = getUserEmail(user)
+      const dbUser = await ctx.db.user.findUnique({
+        where: {
+          email: email
+        },
+        select: {
+          verified: true
+        }
+      })
+
+      console.log("dbUser?", dbUser)
+      if (!dbUser) {
+        throw new TRPCError({ code: 'NOT_FOUND' })
+      }
+
+      const repliedThreadPost = await ctx.db.thread.create({
+        data: {
+          text: input.text,
+          author: {
+            connect: {
+              id: userId,
+            },
+          },
+          parentThread: {
+            connect: {
+              id: input.threadId
+            }
+          },
+
+        },
+      })
+      // console.log("repliedThreadPost?", repliedThreadPost)
+      return { repliedThreadPost, success: true }
     }),
 });

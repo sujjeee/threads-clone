@@ -8,12 +8,18 @@ import { cn } from '@/lib/utils'
 import Link from 'next/link'
 import { api } from '@/trpc/react'
 import { toast } from 'sonner'
-import { ThreadCardProps } from '@/types'
+import { SingleThreadCardProps, ThreadCardProps } from '@/types'
 import CreateThread from './create-thread'
+import { useUser } from '@clerk/nextjs'
+import { usePathname } from 'next/navigation'
 
-const ThreadCard: React.FC<ThreadCardProps> = ({ id, text, createdAt, likeCount, likedByMe, user, }) => {
+const ThreadCard: React.FC<ThreadCardProps | SingleThreadCardProps> = ({ id, text, createdAt, likeCount, user, replyCount, likes }) => {
 
-    const [oneThread, setOneThread] = React.useState(true)
+    const { user: loginUser } = useUser()
+    const likedByMe = likes.some((like: any) => like?.userId || like?.user?.id === loginUser?.id);
+    console.log('is liked my me ', likedByMe)
+    console.log('ichecks all like ', likes)
+    console.log('logged user', loginUser?.id)
 
     const likeUpdate = React.useRef({
         likedByMe,
@@ -44,9 +50,7 @@ const ThreadCard: React.FC<ThreadCardProps> = ({ id, text, createdAt, likeCount,
     return (
         <>
             <Separator />
-            <div className={cn('flex w-full gap-2 pt-4 max-w-[620px]', {
-                'py-4 pb-2': oneThread
-            })}>
+            <div className='flex w-full gap-2 pt-4'>
                 <div className="flex flex-col items-center gap-1.5 z-50">
                     <button className='relative '>
                         <div className='h-9 w-9 outline outline-1 outline-[#333333] rounded-full'>
@@ -60,7 +64,7 @@ const ThreadCard: React.FC<ThreadCardProps> = ({ id, text, createdAt, likeCount,
                             <Plus className='h-4 w-4 p-0.5' />
                         </div>
                     </button>
-                    {!oneThread && <div className="h-full w-0.5 bg-muted rounded-full" />}
+                    {replyCount > 0 && <div className="h-full w-0.5 bg-muted rounded-full" />}
                 </div>
                 <div className="flex flex-col w-full px-2">
                     <div className="justify-center items-start self-stretch flex flex-col max-md:max-w-full  ">
@@ -93,6 +97,7 @@ const ThreadCard: React.FC<ThreadCardProps> = ({ id, text, createdAt, likeCount,
                                         )} />
                                 </div>
                                 <CreateThread showIcon={true} replyThreadInfo={{
+                                    id,
                                     text,
                                     author: {
                                         id: user.id,
@@ -112,30 +117,31 @@ const ThreadCard: React.FC<ThreadCardProps> = ({ id, text, createdAt, likeCount,
                             </div>
                         </div>
                     </div>
-
-                    <div className="flex items-start gap-2 text-[#777777] text-[15px] text-center mt-0.5 pb-4 z-50">
-                        {/* <p>0 replies</p> */}
-                        {likeUpdate.current.likeCount > 0 &&
-                            <p>{likeUpdate.current.likeCount} likes</p>
-                        }
-                    </div>
                 </div>
             </div>
 
-            {/* use this in home page */}
-            {/* <div className='flex items-center gap-2 mt-0.5 pb-4'>
-                <div className="flex justify-center items-center w-[36px] ">
+
+            <div className='flex items-center gap-2 pb-4 select-none'>
+
+                <div className={cn("flex invisible justify-center items-center w-[36px] ",
+                    {
+                        "visible": replyCount > 0
+                    }
+                )}>
                     <img
                         src='https://avatar.vercel.sh/1'
                         alt="Account Avatar"
                         className="rounded-full  h-4 w-4"
                     />
                 </div>
-                <div className="flex items-start gap-2 text-[#777777] text-[15px] text-center px-2 ">
-                    <p>12 replies</p>
-                    <p>16 likes</p>
-                </div>
-          </div> */}
+                <Link href={`/@${user.username}/post/${id}`} className="flex items-center gap-2 text-[#777777] text-[15px] text-center px-2 z-50">
+                    {replyCount > 0 && <p className='hover:underline '>{replyCount} replies</p>}
+                    {replyCount > 0 && likeUpdate.current.likeCount > 0 && <p> · </p>}
+                    {likeUpdate.current.likeCount > 0 &&
+                        <p className='hover:underline'>{likeUpdate.current.likeCount} likes</p>
+                    }
+                </Link>
+            </div >
         </>
     )
 }
