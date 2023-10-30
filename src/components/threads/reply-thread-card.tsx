@@ -94,7 +94,7 @@ const ReplyThreadCard: React.FC<SingleThreadCardProps> = ({ text, likes, author,
                             {/* <div className='flex items-center justify-center hover:bg-[#1E1E1E] rounded-full p-2 w-fit h-fit'>
                                 <Icons.reply className='w-5 h-5 ' />
                             </div> */}
-                            <CreateThread showIcon={false} replyThreadInfo={{
+                            <CreateThread showIcon={true} replyThreadInfo={{
                                 text,
                                 author
                             }} />

@@ -112,12 +112,13 @@ const ThreadCard: React.FC<ThreadCardProps> = ({ id, text, createdAt, likeCount,
                             </div>
                         </div>
                     </div>
-                    {likeUpdate.current.likeCount > 0 &&
-                        <div className="flex items-start gap-2 text-[#777777] text-[15px] text-center mt-0.5 pb-4 z-50">
-                            <p>0 replies</p>
+
+                    <div className="flex items-start gap-2 text-[#777777] text-[15px] text-center mt-0.5 pb-4 z-50">
+                        {/* <p>0 replies</p> */}
+                        {likeUpdate.current.likeCount > 0 &&
                             <p>{likeUpdate.current.likeCount} likes</p>
-                        </div>
-                    }
+                        }
+                    </div>
                 </div>
             </div>
 

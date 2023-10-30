@@ -248,15 +248,18 @@ export function InsideCard({ user, onTextareaChange, replyThreadInfo }: {
 
     console.log("is replyThreadInfo?", replyThreadInfo)
     return (
-        <div className="flex space-x-3">
-            <div className='relative'>
-                <Avatar className='h-9 w-9 outline outline-1 outline-[#333333] rounded-full'>
+        <div className={cn('flex space-x-3',
+            {
+                'mt-1': !replyThreadInfo
+            })}>
+            <div className='relative flex flex-col items-center'>
+                <Avatar className='h-9 w-9 outline outline-1 outline-[#333333] rounded-full '>
                     <AvatarImage src={user?.imageUrl} />
                     <AvatarFallback>JL</AvatarFallback>
                 </Avatar>
-                {replyThreadInfo?.text && <div className="h-full w-0.5 bg-muted rounded-full" />}
+                {replyThreadInfo?.text && <div className="h-full w-0.5 bg-muted rounded-full mt-1.5" />}
             </div>
-            <div className='flex flex-col gap-1.5 w-full'>
+            <div className='flex flex-col gap-1.5 w-full pb-4'>
                 <p className="text-[15px] font-medium leading-none tracking-normal">sujjeee</p>
                 {replyThreadInfo ? <p className='flex-grow resize-none overflow-hidden outline-none text-[15px] text-accent-foreground break-words placeholder:text-[#777777] w-full tracking-normal'>
                     {replyThreadInfo.text}
