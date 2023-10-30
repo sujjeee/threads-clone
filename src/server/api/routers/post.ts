@@ -153,6 +153,12 @@ export const postRouter = createTRPCRouter({
               id: true,
               username: true,
               image: true,
+              bio: true,
+              _count: {
+                select: {
+                  followers: true
+                }
+              },
             }
           },
           likes: {

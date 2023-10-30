@@ -8,7 +8,7 @@ import { api } from '@/trpc/react'
 import { toast } from 'sonner'
 import { cn } from '@/lib/utils'
 import { useUser } from '@clerk/nextjs'
-
+import CreateThread from './create-thread'
 
 const ReplyThreadCard: React.FC<SingleThreadCardProps> = ({ text, likes, author, id, }) => {
 
@@ -91,9 +91,13 @@ const ReplyThreadCard: React.FC<SingleThreadCardProps> = ({ text, likes, author,
                                     }
                                     )} />
                             </div>
-                            <div className='flex items-center justify-center hover:bg-[#1E1E1E] rounded-full p-2 w-fit h-fit'>
+                            {/* <div className='flex items-center justify-center hover:bg-[#1E1E1E] rounded-full p-2 w-fit h-fit'>
                                 <Icons.reply className='w-5 h-5 ' />
-                            </div>
+                            </div> */}
+                            <CreateThread showIcon={false} replyThreadInfo={{
+                                text,
+                                author
+                            }} />
                             <div className='flex items-center justify-center hover:bg-[#1E1E1E] rounded-full p-2 w-fit h-fit'>
                                 <Icons.repost className='w-5 h-5 ' />
                             </div>

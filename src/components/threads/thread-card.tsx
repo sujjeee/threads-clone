@@ -9,8 +9,9 @@ import Link from 'next/link'
 import { api } from '@/trpc/react'
 import { toast } from 'sonner'
 import { ThreadCardProps } from '@/types'
+import CreateThread from './create-thread'
 
-const ThreadCard: React.FC<ThreadCardProps> = ({ id, text, createdAt, likeCount, likedByMe, user }) => {
+const ThreadCard: React.FC<ThreadCardProps> = ({ id, text, createdAt, likeCount, likedByMe, user, }) => {
 
     const [oneThread, setOneThread] = React.useState(true)
 
@@ -91,9 +92,17 @@ const ThreadCard: React.FC<ThreadCardProps> = ({ id, text, createdAt, likeCount,
                                         }
                                         )} />
                                 </div>
-                                <div className='flex items-center justify-center hover:bg-[#1E1E1E] rounded-full p-2 w-fit h-fit'>
-                                    <Icons.reply className='w-5 h-5 ' />
-                                </div>
+                                <CreateThread showIcon={true} replyThreadInfo={{
+                                    text,
+                                    author: {
+                                        id: user.id,
+                                        image: user.image,
+                                        username: user.username,
+                                        _count: {
+                                            followers: 12
+                                        }
+                                    }
+                                }} />
                                 <div className='flex items-center justify-center hover:bg-[#1E1E1E] rounded-full p-2 w-fit h-fit'>
                                     <Icons.repost className='w-5 h-5 ' />
                                 </div>

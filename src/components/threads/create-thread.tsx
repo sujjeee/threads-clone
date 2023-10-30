@@ -19,13 +19,19 @@ import {
 import { api } from '@/trpc/react'
 import { toast } from 'sonner'
 import { useUser } from '@clerk/nextjs'
+import { AuthorProps } from '@/types'
+import { UserResource } from '@clerk/types'
 
 
 interface CreateThreadProps {
     showIcon: boolean
+    replyThreadInfo?: {
+        text: string
+        author: AuthorProps
+    }
 }
 
-const CreateThread: React.FC<CreateThreadProps> = ({ showIcon }) => {
+const CreateThread: React.FC<CreateThreadProps> = ({ showIcon, replyThreadInfo }) => {
 
     const path = usePathname()
     const router = useRouter()
@@ -39,13 +45,7 @@ const CreateThread: React.FC<CreateThreadProps> = ({ showIcon }) => {
         images: []
     })
 
-    const handleFieldChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
-        const { name, value } = e.target;
-        setThreadData({
-            ...threadData,
-            [name]: value,
-        });
-    };
+
 
     const trpcUtils = api.useContext();
 
@@ -94,75 +94,74 @@ const CreateThread: React.FC<CreateThreadProps> = ({ showIcon }) => {
         })
     }
 
+    const handleFieldChange = (textValue: string) => {
+        setThreadData({
+            ...threadData,
+            text: textValue,
+        });
+    };
+
     return (
         <Dialog open={isOpen} onOpenChange={setIsOpen}>
             <DialogTrigger asChild>
-                {showIcon
-                    ? <div
-                        onClick={() => {
-                            setIsOpen(true)
-                        }}
-                        className='hover:bg-[#181818] py-5 px-8 rounded-lg transform transition-all duration-150 ease-out hover:scale-100'>
-                        <Icons.create
-                            className={cn(
-                                "h-6 w-6",
-                                path === '/create'
-                                    ? "text-forground"
-                                    : "text-[#4D4D4D]",
-                            )}
-                        />
-                    </div>
-                    : <div
-                        onClick={() => {
-                            setIsOpen(true)
-                        }}
-                        className='flex w-full my-4 '>
-                        <div className='w-full flex'>
-                            <div>
-                                <img
-                                    src={user?.imageUrl}
-                                    width={36}
-                                    height={36}
-                                    alt="Account Avatar"
-                                    className="rounded-full mr-4"
-                                />
-                            </div>
-                            <input
-                                className=" mini-scrollbar resize-none bg-transparent w-full placeholder:text-[#777777] outline-none placeholder:text-[15px]"
-                                placeholder="Start a thread..."
+                {showIcon ? (
+                    !replyThreadInfo?.text ? (
+                        <div
+                            onClick={() => {
+                                setIsOpen(true)
+                            }}
+                            className='hover:bg-[#181818] py-5 px-8 rounded-lg transform transition-all duration-150 ease-out hover:scale-100'>
+                            <Icons.create
+                                className={cn(
+                                    "h-6 w-6",
+                                    path === '/create'
+                                        ? "text-forground"
+                                        : "text-[#4D4D4D]",
+                                )}
                             />
                         </div>
-                        <Button
-                            disabled={threadData.text === '' || isLoading}
-                            size={'sm'}
-                            className='rounded-full px-4 font-semibold text-[15px]'> Post</Button>
-                    </div>}
-            </DialogTrigger>
-            <DialogContent className='border-none bg-transparent sm:max-w-[680px] max-w-lg w-full shadow-none'>
-                <h1 className='w-full text-center font-bold mb-2'>New thread</h1>
-                <Card className="ring-offset-0 border-none ring-1 ring-[#393939] bg-[#181818] rounded-2xl">
-                    <div className='overflow-y-auto no-scrollbar p-6 max-h-[70vh] '>
-                        <div className="flex space-x-3">
-                            <Avatar className='h-9 w-9 outline outline-1 outline-[#333333] rounded-full'>
-                                <AvatarImage src={user?.imageUrl} />
-                                <AvatarFallback>JL</AvatarFallback>
-                            </Avatar>
-                            <div className='flex flex-col gap-1.5 w-full'>
-                                <p className="text-[15px] font-medium leading-none tracking-normal">sujjeee</p>
-                                <ResizeTextarea
-                                    name='text'
-                                    value={threadData.text}
-                                    onChange={handleFieldChange}
-                                    placeholder="Start a thread..."
-                                />
-                                <div className='space-y-2 mt-1'>
-
-                                    <div className='text-[#777777] flex gap-1  items-center text-[15px]'>
-                                        <Icons.image className='h-5 w-5   transform active:scale-75 transition-transform cursor-pointer' />
-                                    </div>
-                                </div>
-                            </div>
+                    ) : (
+                        <div className='flex items-center justify-center hover:bg-[#1E1E1E] rounded-full p-2 w-fit h-fit'>
+                            <Icons.reply className='w-5 h-5 ' />
                         </div>
+                    )
+                ) : <div
+                    onClick={() => {
+                        setIsOpen(true)
+                    }}
+                    className='flex w-full my-4 '>
+                    <div className='w-full flex'>
+                        <div>
+                            <img
+                                src={user?.imageUrl}
+                                width={36}
+                                height={36}
+                                alt="Account Avatar"
+                                className="rounded-full mr-4"
+                            />
+                        </div>
+                        <input
+                            className=" mini-scrollbar resize-none bg-transparent w-full placeholder:text-[#777777] outline-none placeholder:text-[15px]"
+                            placeholder="Start a thread..."
+                        />
+                    </div>
+                    <Button
+                        disabled={threadData.text === '' || isLoading}
+                        size={'sm'}
+                        className='rounded-full px-4 font-semibold text-[15px]'> Post</Button>
+                </div>
+                }
+            </DialogTrigger>
+            <DialogContent className='border-none bg-transparent sm:max-w-[680px] max-w-lg w-full shadow-none select-none'>
+                <h1 className='w-full text-center font-bold mb-2'>New thread</h1>
+                <Card className="ring-offset-0 border-none ring-1 ring-[#393939] bg-[#181818] rounded-2xl ">
+                    <div className='overflow-y-auto no-scrollbar p-6 max-h-[70vh] '>
+                        {
+                            replyThreadInfo &&
+                            <InsideCard user={user!} onTextareaChange={handleFieldChange} replyThreadInfo={replyThreadInfo} />
+                        }
+
+                        <InsideCard user={user!} onTextareaChange={handleFieldChange} />
                     </div>
                     <div className='flex justify-between items-center w-full p-6'>
                         <DropdownMenu>
@@ -229,3 +228,54 @@ const CreateThread: React.FC<CreateThreadProps> = ({ showIcon }) => {
 }
 
 export default CreateThread
+
+
+
+
+export function InsideCard({ user, onTextareaChange, replyThreadInfo }: {
+    replyThreadInfo?: {
+        text: string
+        author: AuthorProps
+    }
+    user: UserResource
+    onTextareaChange: (textValue: string) => void;
+}) {
+
+    const handleResizeTextareaChange = (event: React.ChangeEvent<HTMLTextAreaElement>) => {
+        const newValue = event.target.value;
+        onTextareaChange(newValue);
+    };
+
+    console.log("is replyThreadInfo?", replyThreadInfo)
+    return (
+        <div className="flex space-x-3">
+            <div className='relative'>
+                <Avatar className='h-9 w-9 outline outline-1 outline-[#333333] rounded-full'>
+                    <AvatarImage src={user?.imageUrl} />
+                    <AvatarFallback>JL</AvatarFallback>
+                </Avatar>
+                {replyThreadInfo?.text && <div className="h-full w-0.5 bg-muted rounded-full" />}
+            </div>
+            <div className='flex flex-col gap-1.5 w-full'>
+                <p className="text-[15px] font-medium leading-none tracking-normal">sujjeee</p>
+                {replyThreadInfo ? <p className='flex-grow resize-none overflow-hidden outline-none text-[15px] text-accent-foreground break-words placeholder:text-[#777777] w-full tracking-normal'>
+                    {replyThreadInfo.text}
+                </p>
+                    : <ResizeTextarea
+                        name='text'
+                        onChange={handleResizeTextareaChange}
+                        placeholder="Start a thread..."
+                    />
+                }
+
+                {!replyThreadInfo?.text &&
+                    <div className='space-y-2 mt-1'>
+                        <div className='text-[#777777] flex gap-1  items-center text-[15px]'>
+                            <Icons.image className='h-5 w-5   transform active:scale-75 transition-transform cursor-pointer' />
+                        </div>
+                    </div>
+                }
+            </div>
+        </div>
+    )
+}
