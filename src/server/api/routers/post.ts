@@ -43,7 +43,6 @@ export const postRouter = createTRPCRouter({
   infiniteFeed: privateProcedure
     .input(
       z.object({
-        onlyFollowing: z.boolean().optional(),
         limit: z.number().optional(),
         cursor: z.object({ id: z.string(), createdAt: z.date() }).optional(),
       })

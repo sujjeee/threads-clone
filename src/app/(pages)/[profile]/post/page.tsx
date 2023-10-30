@@ -10,7 +10,7 @@ interface pageProps {
 const page: React.FC<pageProps> = ({ params }) => {
     const decodedProfile = decodeURIComponent(params.profile);
     if (decodedProfile) {
-        redirect(decodedProfile)
+        redirect(`/${decodedProfile}`)
     }
     return <div>params page</div>
 }

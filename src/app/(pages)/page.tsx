@@ -6,18 +6,19 @@ import InfiniteScroll from 'react-infinite-scroll-component'
 import ThreadCard from '@/components/threads/thread-card'
 import { Icons } from '@/components/icons'
 import CreateThread from '@/components/threads/create-thread'
+import Loading from './loading'
 
 export default function page() {
 
-  const { data, isLoading, isError, hasNextPage, fetchNextPage } = api.post.infiniteFeed
-    .useInfiniteQuery({}, {
-      getNextPageParam: (lastPage) => lastPage.nextCursor
-    })
+  const { data, isLoading, isError, hasNextPage, fetchNextPage } = api.post.infiniteFeed.useInfiniteQuery({}, {
+    getNextPageParam: (lastPage) => lastPage.nextCursor
+  })
+
 
   const allThread = data?.pages.flatMap((page) => page.threads)
 
   console.log("allThread", allThread)
-  if (isLoading) return <h1>Loading...</h1>
+  if (isLoading) return <Loading />
   if (isError) return <h1>Error...</h1>;
 
   return (
@@ -38,24 +39,3 @@ export default function page() {
     </div>
   )
 }
-
-// function RecentTweets() {
-//   const tweets = aawaitpi.thre
-//   { getNextPageParam: (lastPage) => lastPage.nextCursor }
-//   );
-
-//   return (
-//     <InfiniteTweetList
-//       tweets={tweets.data?.pages.flatMap((page) => page.tweets)}
-//       isError={tweets.isError}
-//       isLoading={tweets.isLoading}
-//       hasMore={tweets.hasNextPage}
-//       fetchNewTweets={tweets.fetchNextPage}
-//     />
-//   );
-// }
-
-{/* <CreateThread showIcon={false} />
-      <ThreadCard />
-      <Post2 />
-      <Post /> */}

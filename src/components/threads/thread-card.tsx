@@ -9,6 +9,7 @@ import { inferRouterOutputs } from '@trpc/server'
 import { AppRouter } from '@/server/api/root'
 import Link from 'next/link'
 import { api } from '@/trpc/react'
+import { toast } from 'sonner'
 
 type ArrayElement<ArrayType extends readonly unknown[]> = ArrayType[number];
 
@@ -17,9 +18,37 @@ type ThreadCardProps = ArrayElement<RouterOutput['post']['infiniteFeed']['thread
 
 
 const ThreadCard: React.FC<ThreadCardProps> = ({ id, text, createdAt, likeCount, likedByMe, user }) => {
+
+    const backupLike = React.useRef('')
+    // const trpcUtils = api.useContext();
+
     const [oneThread, setOneThread] = React.useState(true)
 
-    const { mutate: toggleLike } = api.post.toggleLike.useMutation({})
+    const likeUpdate = React.useRef({
+        likedByMe,
+        likeCount
+    });
+
+    const { mutate: toggleLike } = api.post.toggleLike.useMutation({
+        onMutate: async ({ id }) => {
+            // Save the current values for potential rollback
+            const previousLikedByMe = likeUpdate.current.likedByMe;
+            const previousLikeCount = likeUpdate.current.likeCount;
+
+            likeUpdate.current.likedByMe = !likeUpdate.current.likedByMe;
+            likeUpdate.current.likeCount = likeUpdate.current.likedByMe ? likeUpdate.current.likeCount + 1 : likeUpdate.current.likeCount - 1;
+
+
+            return { previousLikedByMe, previousLikeCount };
+        },
+        onError: (error, variables, context) => {
+            // Rollback to previous values
+            likeUpdate.current.likedByMe = context?.previousLikedByMe!;
+            likeUpdate.current.likeCount = context?.previousLikeCount!;
+
+            toast.error("LikeCallBack: Something went wrong!")
+        }
+    });
 
     return (
         <>
@@ -63,10 +92,12 @@ const ThreadCard: React.FC<ThreadCardProps> = ({ id, text, createdAt, likeCount,
                             <div className="flex  font-bold -ml-2 mt-2 w-full z-50">
                                 <div className='flex items-center justify-center hover:bg-[#1E1E1E] rounded-full p-2 w-fit h-fit'>
                                     <Icons.heart
-                                        onClick={() => toggleLike({ id })}
-                                        fill={likedByMe ? '#ff3040' : 'none'}
+                                        onClick={() => {
+                                            toggleLike({ id })
+                                        }}
+                                        fill={likeUpdate.current.likedByMe ? '#ff3040' : 'none'}
                                         className={cn('w-5 h-5 ', {
-                                            "text-[#ff3040]": likedByMe
+                                            "text-[#ff3040]": likeUpdate.current.likedByMe
                                         }
                                         )} />
                                 </div>
@@ -84,7 +115,7 @@ const ThreadCard: React.FC<ThreadCardProps> = ({ id, text, createdAt, likeCount,
                     </div>
                     <div className="flex items-start gap-2 text-[#777777] text-[15px] text-center mt-0.5 pb-4 z-50">
                         <p>0 replies</p>
-                        <p>{likeCount} likes</p>
+                        <p>{likeUpdate.current.likeCount} likes</p>
                     </div>
                 </div>
             </div>

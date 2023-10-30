@@ -10,7 +10,6 @@ import { TRPCError, initTRPC } from "@trpc/server";
 import { type NextRequest } from "next/server";
 import superjson from "superjson";
 import { ZodError } from "zod";
-
 import { db } from "@/server/db";
 import { currentUser } from "@clerk/nextjs";
 
@@ -85,7 +84,7 @@ const t = initTRPC.context<typeof createTRPCContext>().create({
  * These are the pieces you use to build your tRPC API. You should import these a lot in the
  * "/src/server/api/routers" directory.
  */
-const middleware = t.middleware
+export const middleware = t.middleware
 
 const isAuth = middleware(async (opts) => {
   const user = await currentUser()

@@ -3,11 +3,11 @@ import { db } from "@/server/db"
 import { currentUser } from "@clerk/nextjs"
 import { redirect } from "next/navigation"
 
-interface AuthLayoutProps {
+interface PagesLayoutProps {
     children: React.ReactNode
 }
 
-export default async function PagesLayout({ children }: AuthLayoutProps) {
+export default async function PagesLayout({ children }: PagesLayoutProps) {
 
     const user = await currentUser()
 

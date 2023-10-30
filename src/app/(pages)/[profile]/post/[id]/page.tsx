@@ -1,3 +1,6 @@
+"use client"
+
+import { usePathname, useRouter } from 'next/navigation'
 import React from 'react'
 
 interface pageProps {
@@ -5,6 +8,14 @@ interface pageProps {
 }
 
 const page: React.FC<pageProps> = ({ }) => {
+    const path = usePathname()
+    const router = useRouter()
+
+    if (!path.startsWith('/@')) {
+        const newPath = '/@' + path.replace(/^\//, '')
+        router.push(newPath);
+        return null;
+    }
     return (
         <div className="flex flex-col items-start gap-1">
             <div className="flex flex-col items-start gap-3">

@@ -42,3 +42,5 @@ yarn-error.log*
 *.tsbuildinfo
 
 tests
+
+/src/app/test
