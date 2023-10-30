@@ -5,22 +5,12 @@ import { Separator } from '../ui/separator'
 import { MoreHorizontal, Plus } from 'lucide-react'
 import { Icons } from '../icons'
 import { cn } from '@/lib/utils'
-import { inferRouterOutputs } from '@trpc/server'
-import { AppRouter } from '@/server/api/root'
 import Link from 'next/link'
 import { api } from '@/trpc/react'
 import { toast } from 'sonner'
-
-type ArrayElement<ArrayType extends readonly unknown[]> = ArrayType[number];
-
-type RouterOutput = inferRouterOutputs<AppRouter>;
-type ThreadCardProps = ArrayElement<RouterOutput['post']['infiniteFeed']['threads']>;
-
+import { ThreadCardProps } from '@/types'
 
 const ThreadCard: React.FC<ThreadCardProps> = ({ id, text, createdAt, likeCount, likedByMe, user }) => {
-
-    const backupLike = React.useRef('')
-    // const trpcUtils = api.useContext();
 
     const [oneThread, setOneThread] = React.useState(true)
 
@@ -86,7 +76,7 @@ const ThreadCard: React.FC<ThreadCardProps> = ({ id, text, createdAt, likeCount,
                                     <MoreHorizontal className='aspect-square object-cover object-center h-4 w-4 overflow-hidden flex-1' />
                                 </div>
                             </div>
-                            <Link href={`/${id}`} className='w-full'>
+                            <Link href={`/@${user.username}/post/${id}`} className='w-full'>
                                 <div className="text-white text-base leading-5 mt-1 max-md:max-w-full"> {text} </div>
                             </Link>
                             <div className="flex  font-bold -ml-2 mt-2 w-full z-50">
@@ -113,10 +103,12 @@ const ThreadCard: React.FC<ThreadCardProps> = ({ id, text, createdAt, likeCount,
                             </div>
                         </div>
                     </div>
-                    <div className="flex items-start gap-2 text-[#777777] text-[15px] text-center mt-0.5 pb-4 z-50">
-                        <p>0 replies</p>
-                        <p>{likeUpdate.current.likeCount} likes</p>
-                    </div>
+                    {likeUpdate.current.likeCount > 0 &&
+                        <div className="flex items-start gap-2 text-[#777777] text-[15px] text-center mt-0.5 pb-4 z-50">
+                            <p>0 replies</p>
+                            <p>{likeUpdate.current.likeCount} likes</p>
+                        </div>
+                    }
                 </div>
             </div>
 

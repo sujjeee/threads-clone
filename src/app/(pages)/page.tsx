@@ -22,7 +22,7 @@ export default function page() {
   if (isError) return <h1>Error...</h1>;
 
   return (
-    <div className='container max-w-[620px] z-[10] px-6'>
+    <div className=' z-[10] '>
       <CreateThread showIcon={false} />
       <InfiniteScroll
         dataLength={allThread?.length!}

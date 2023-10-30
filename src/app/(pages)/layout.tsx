@@ -26,7 +26,7 @@ export default async function PagesLayout({ children }: PagesLayoutProps) {
     return (
         <>
             <SiteHeader />
-            <main>
+            <main className="container max-w-[620px] px-6">
                 {children}
             </main>
         </>

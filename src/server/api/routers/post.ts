@@ -131,4 +131,68 @@ export const postRouter = createTRPCRouter({
         return { addedLike: false };
       }
     }),
+
+  getsThreadInfo: publicProcedure
+    .input(
+      z.object({
+        id: z.string(),
+      })
+    )
+    .query(async ({ input, ctx }) => {
+
+      const threadInfo = await ctx.db.thread.findUnique({
+        where: {
+          id: input.id
+        },
+        select: {
+          id: true,
+          text: true,
+          images: true,
+          author: {
+            select: {
+              id: true,
+              username: true,
+              image: true,
+            }
+          },
+          likes: {
+            select: {
+              user: {
+                select: {
+                  id: true,
+                  username: true,
+                  image: true,
+                }
+              }
+            }
+          },
+          parentTweet: {
+            select: {
+              id: true,
+              text: true,
+              createdAt: true,
+              _count: {
+                select: {
+                  likes: true
+                }
+              },
+              author: {
+                select: {
+                  id: true,
+                  username: true,
+                  image: true,
+                }
+              },
+            },
+          },
+        }
+      });
+
+
+      if (!threadInfo) {
+        throw new TRPCError({ code: 'NOT_FOUND' })
+      }
+
+      return [threadInfo]
+    }),
 });

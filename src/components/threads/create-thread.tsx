@@ -95,12 +95,11 @@ const CreateThread: React.FC<CreateThreadProps> = ({ showIcon }) => {
     }
 
     return (
-        <Dialog open={isOpen} >
+        <Dialog open={isOpen} onOpenChange={setIsOpen}>
             <DialogTrigger asChild>
                 {showIcon
                     ? <div
                         onClick={() => {
-                            console.log('hit got open')
                             setIsOpen(true)
                         }}
                         className='hover:bg-[#181818] py-5 px-8 rounded-lg transform transition-all duration-150 ease-out hover:scale-100'>
@@ -113,7 +112,11 @@ const CreateThread: React.FC<CreateThreadProps> = ({ showIcon }) => {
                             )}
                         />
                     </div>
-                    : <div className='flex w-full my-4 '>
+                    : <div
+                        onClick={() => {
+                            setIsOpen(true)
+                        }}
+                        className='flex w-full my-4 '>
                         <div className='w-full flex'>
                             <div>
                                 <img
