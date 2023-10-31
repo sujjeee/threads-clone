@@ -59,6 +59,7 @@ const page: React.FC<pageProps> = ({ }) => {
                         }}
                         parentThreadId="skdll"
                         likes={post.likes}
+                        replies={data.replies}
                     />
                 );
             })}

@@ -352,4 +352,137 @@ export const postRouter = createTRPCRouter({
         nextCursor,
       };
     }),
+  getUserThreads: privateProcedure
+    .input(
+      z.object({
+        username: z.string()
+      })
+    )
+    .query(async ({ input, ctx }) => {
+      const { userId } = ctx;
+      const userThreads = await ctx.db.thread.findMany({
+        where: {
+          author: {
+            username: input.username
+          }
+        },
+        select: {
+          id: true,
+          text: true,
+          createdAt: true,
+          _count: {
+            select: {
+              likes: true,
+              replies: true
+            }
+          },
+          author: {
+            select: {
+              id: true,
+              username: true,
+              image: true,
+            }
+          },
+          likes: {
+            where: {
+              userId
+            },
+            select: {
+              userId: true
+            }
+          },
+          parentThreadId: true,
+          replies: {
+            select: {
+              author: {
+                select: {
+                  id: true,
+                  username: true,
+                  image: true
+                }
+              }
+            }
+          }
+        },
+      });
+      return {
+        userThreads: userThreads.map((thread) => {
+          return {
+            id: thread.id,
+            text: thread.text,
+            createdAt: thread.createdAt,
+            likeCount: thread._count.likes,
+            replyCount: thread._count.replies,
+            user: thread.author,
+            likes: thread.likes,
+            replies: thread.replies
+          };
+        }),
+      };
+    }),
+  getUserProfileInfo: privateProcedure
+    .input(
+      z.object({
+        username: z.string()
+      })
+    )
+    .query(async ({ input, ctx }) => {
+      const { userId } = ctx;
+      const userProfileInfo = await ctx.db.user.findUnique({
+        where: {
+          username: input.username
+        },
+        // include: {
+        // followers:true,
+        // following:true,
+        // threads: {
+        //   select: {
+        //     id: true,
+        //     text: true,
+        //     createdAt: true,
+        //     _count: {
+        //       select: {
+        //         likes: true,
+        //         replies: true
+        //       }
+        //     },
+        //     author: {
+        //       select: {
+        //         id: true,
+        //         username: true,
+        //         image: true,
+        //       }
+        //     },
+        //     likes: {
+        //       where: {
+        //         userId
+        //       },
+        //       select: {
+        //         userId: true
+        //       }
+        //     },
+        //     parentThreadId: true,
+        //     replies: {
+        //       select: {
+        //         author: {
+        //           select: {
+        //             id: true,
+        //             username: true,
+        //             image: true
+        //           }
+        //         }
+        //       }
+        //     }
+        //   },
+        // },
+        // }
+      });
+      if (userProfileInfo) {
+        return userProfileInfo
+      } else {
+
+        throw new TRPCError({ code: 'NOT_FOUND' })
+
+      }
+    }),
 });

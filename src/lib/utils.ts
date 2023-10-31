@@ -29,3 +29,20 @@ export function emailToUsername(user: UserResource | User | null) {
     return `${firstName}${lastName}`.toLowerCase();
   }
 }
+
+export function formatURL(originalURL: string) {
+  // Remove 'http://' or 'https://' if it exists
+  let cleanedURL = originalURL.replace(/^(https?:\/\/)?(www\.)?/, '');
+
+  // Remove leading 'www.'
+  cleanedURL = cleanedURL.replace(/^(www\.)?/, '');
+
+  // Extract the domain/route
+  const parts = cleanedURL.split('/');
+  if (parts.length >= 2) {
+    // Join the first two parts to get 'domain/route'
+    return parts.slice(0, 2).join('/');
+  } else {
+    return cleanedURL;
+  }
+}

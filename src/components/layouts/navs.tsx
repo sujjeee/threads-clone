@@ -1,11 +1,9 @@
 import React from 'react'
 import Link from 'next/link'
-import useWindow from '@/hooks/use-window'
 import { usePathname } from 'next/navigation'
 import { Icons } from '../icons'
 import { cn } from '@/lib/utils'
 import { useTheme } from 'next-themes'
-import NewThreadModal from '../../../tests/new-thread-modal'
 import CreateThread from '../threads/create-thread'
 
 export default function Navs() {
@@ -50,7 +48,7 @@ export default function Navs() {
                     fill={fillIcon("/activity")}
                 />
             </Link>
-            <Link href={'/profile'} className='hover:bg-[#181818] py-5 px-8 rounded-lg transform transition-all duration-150 ease-out hover:scale-100'>
+            <Link href={'/@'} className='hover:bg-[#181818] py-5 px-8 rounded-lg transform transition-all duration-150 ease-out hover:scale-100'>
                 <Icons.profile
                     className={cn(
                         "h-6 w-6",
