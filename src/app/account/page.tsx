@@ -22,7 +22,7 @@ export default async function AccountPage() {
 
     return (
         <div className='mx-auto flex flex-col gap-6 justify-center w-full max-w-lg items-center h-[95vh]'>
-            <AccountSetupForm />
+            <AccountSetupForm user={user} />
         </div>
     )
 }

@@ -26,6 +26,8 @@ model User {
     following    User[]   @relation(name: "followers")
     threads      Thread[]
     likedThreads Like[]
+
+    @@unique([createdAt, id])
 }
 
 enum Privacy {

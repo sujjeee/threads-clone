@@ -19,7 +19,7 @@ const ThreadCard: React.FC<ThreadCardProps | SingleThreadCardProps> = ({ id, tex
     const { user: loginUser } = useUser()
     const likedByMe = likes.some((like: any) => like?.userId || like?.user?.id === loginUser?.id);
 
-    const allRepliesData = replies.map((reply) => ({
+    const allRepliesData = replies?.map((reply) => ({
         id: reply.author.id,
         username: reply.author.username,
         image: reply.author.image,
@@ -69,6 +69,13 @@ const ThreadCard: React.FC<ThreadCardProps | SingleThreadCardProps> = ({ id, tex
                         </div>
                     </button>
                     {replyCount > 0 && <div className="h-full w-0.5 bg-muted rounded-full" />}
+                    {/* {replyCount > 0 && <div className='flex flex-col'>
+                        <div className="h-full w-0.5 bg-muted rounded-full" />
+                        <svg>
+                            <path d="M18 60C18 46 4 46 4 53.12777C4 60.2555 18 60.9513 18 46" stroke="currentColor" stroke-linecap="round" stroke-width="2"></path>
+                        </svg>
+                    </div>
+                    } */}
                 </div>
                 <div className="flex flex-col w-full px-2">
                     <div className="justify-center items-start self-stretch flex flex-col max-md:max-w-full  ">

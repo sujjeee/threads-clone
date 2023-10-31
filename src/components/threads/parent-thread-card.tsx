@@ -87,8 +87,8 @@ const ParentThreadCard: React.FC<ParentThreadCardProps> = (parentThread) => {
                             <Plus className='h-4 w-4 p-0.5' />
                         </div>
                     </button>
-                    {/* {replyCount > 0 && <Icons.line className='h-full w-2' />} */}
-                    {/* {replyCount > 0 && <div className="h-full w-0.5 bg-muted rounded-full" />} */}
+                    {/* {_count?.replies > 0 && <Icons.line className='h-full w-2' />} */}
+                    {_count?.replies > 0 && <div className="h-full w-0.5 bg-muted rounded-full my-1.5" />}
                 </div>
                 <div className="flex flex-col w-full px-2">
                     <div className="justify-center items-start self-stretch flex flex-col max-md:max-w-full  ">

@@ -8,3 +8,4 @@ export type ThreadCardProps = ArrayElement<RouterOutput['post']['infiniteFeed'][
 export type SingleThreadCardProps = ArrayElement<RouterOutput['post']['getsThreadInfo'][]>;
 export type AuthorProps = Pick<SingleThreadCardProps['user'], '_count' | 'username' | 'image' | 'id'>;
 export type ParentThreadCardProps = ArrayElement<RouterOutput['post']['getsThreadInfo']['parentThread'][]>;
+export type UserCardProps = ArrayElement<RouterOutput['post']['getAllUsers']['allUsers']>;

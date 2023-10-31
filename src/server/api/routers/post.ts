@@ -315,4 +315,41 @@ export const postRouter = createTRPCRouter({
       })
       return { repliedThreadPost, success: true }
     }),
+
+  getAllUsers: privateProcedure
+    .input(
+      z.object({
+        limit: z.number().optional(),
+        cursor: z.object({ id: z.string(), createdAt: z.date() }).optional(),
+      })
+    )
+    .query(async ({ input: { limit = 10, cursor }, ctx }) => {
+      const allUsers = await ctx.db.user.findMany({
+        take: limit + 1,
+        cursor: cursor ? { createdAt_id: cursor } : undefined,
+        orderBy: [{ createdAt: "desc" }, { id: "desc" }],
+        select: {
+          id: true,
+          createdAt: true,
+          username: true,
+          fullname: true,
+          image: true,
+          bio: true,
+          link: true,
+        }
+      });
+
+      let nextCursor: typeof cursor | undefined;
+      if (allUsers.length > limit) {
+        const nextItem = allUsers.pop();
+        if (nextItem != null) {
+          nextCursor = { id: nextItem.id, createdAt: nextItem.createdAt };
+        }
+      }
+
+      return {
+        allUsers,
+        nextCursor,
+      };
+    }),
 });

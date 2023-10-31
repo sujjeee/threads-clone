@@ -70,7 +70,7 @@ const ReplyThreadCard: React.FC<SingleThreadCardProps> = ({ text, likes, user, i
                         </div>
                     </button>
 
-                    <div className="flex w-full justify-between gap-5 ">
+                    <div className="flex w-full justify-between gap-5 pl-1">
                         <span className="flex items-center justify-center gap-1.5 cursor-pointer">
                             <h1 className="text-white text-[15px] font-semibold leading-[0px]">
                                 {user.username}

@@ -16,11 +16,11 @@ import { useRouter } from 'next/navigation'
 import { toast } from 'sonner'
 import { ResizeTextarea } from '@/components/ui/resize-textarea'
 import { User, Privacy } from '@prisma/client'
+import { User as UserType } from "@clerk/nextjs/server"
 
 type UserSetupProps = Pick<User, 'bio' | 'link' | 'privacy'>;
 
-export default function AccountSetupForm() {
-    const { user } = useUser()
+export default function AccountSetupForm({ user }: { user: UserType }) {
     const router = useRouter()
     const username = emailToUsername(user!)
     const [showPrivacyPage, setShowPrivacyPage] = React.useState(false);
@@ -69,6 +69,7 @@ export default function AccountSetupForm() {
         })
     }
 
+    // console.log("use suer ", user)
     return (
         <div className='mx-auto flex flex-col gap-6 justify-center w-full max-w-lg items-center h-[95vh]'>
             {!showPrivacyPage
