@@ -2,6 +2,7 @@
 
 import Loading from '@/app/(pages)/loading'
 import NotFound from '@/app/not-found'
+import TestParent from '@/app/test/page'
 import { Icons } from '@/components/icons'
 import ReplyThreadCard from '@/components/threads/reply-thread-card'
 import ThreadCard from '@/components/threads/thread-card'
@@ -66,30 +67,3 @@ const page: React.FC<pageProps> = ({ }) => {
 }
 
 export default page
-
-
-// createdAt: Date;
-// likeCount: number;
-// replyCount: number;
-// user: {
-//     id: string;
-//     username: string;
-//     image: string;
-// };
-// parentThreadId: string | null;
-// likedByMe: boolean;
-
-
-// author: {
-//     id: string;
-//     _count: {
-//         followers: number;
-//     };
-//     username: string;
-//     image: string;
-//     bio: string | null;
-// };
-// _count: {
-//     likes: number;
-//     replies: number;
-// };

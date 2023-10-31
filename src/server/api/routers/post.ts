@@ -192,23 +192,17 @@ export const postRouter = createTRPCRouter({
             }
           },
           parentThread: {
-            select: {
-              id: true,
-              text: true,
-              createdAt: true,
+            include: {
+              likes: true,
               _count: {
                 select: {
-                  likes: true
+                  likes: true,
+                  replies: true
                 }
               },
-              author: {
-                select: {
-                  id: true,
-                  username: true,
-                  image: true,
-                }
-              },
-            },
+              author: true,
+              parentThread: true
+            }
           },
           replies: {
             select: {
@@ -251,10 +245,7 @@ export const postRouter = createTRPCRouter({
       if (!threadInfo) {
         throw new TRPCError({ code: 'NOT_FOUND' })
       }
-      // if (threadInfo) {
-      // }else{
-      //   return {}
-      // }
+
       return {
         id: threadInfo.id,
         text: threadInfo.text,
@@ -266,9 +257,6 @@ export const postRouter = createTRPCRouter({
         likes: threadInfo.likes,
         replies: threadInfo.replies
       }
-
-
-
     }),
 
   replyToThread: privateProcedure
@@ -313,7 +301,6 @@ export const postRouter = createTRPCRouter({
 
         },
       })
-      // console.log("repliedThreadPost?", repliedThreadPost)
       return { repliedThreadPost, success: true }
     }),
 });
