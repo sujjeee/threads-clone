@@ -1,6 +1,6 @@
 "use client"
 
-import Post2 from '@/components/post2'
+import Post2 from 'tests/post2'
 import { Instagram } from 'lucide-react'
 import Link from 'next/link'
 import { usePathname, useRouter } from 'next/navigation'

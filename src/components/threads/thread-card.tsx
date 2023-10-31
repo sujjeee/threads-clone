@@ -12,14 +12,18 @@ import { SingleThreadCardProps, ThreadCardProps } from '@/types'
 import CreateThread from './create-thread'
 import { useUser } from '@clerk/nextjs'
 import { usePathname } from 'next/navigation'
+import RepliesImageContainer from './replies-image-container'
 
-const ThreadCard: React.FC<ThreadCardProps | SingleThreadCardProps> = ({ id, text, createdAt, likeCount, user, replyCount, likes }) => {
+const ThreadCard: React.FC<ThreadCardProps | SingleThreadCardProps> = ({ id, text, createdAt, likeCount, user, replyCount, likes, replies }) => {
 
     const { user: loginUser } = useUser()
     const likedByMe = likes.some((like: any) => like?.userId || like?.user?.id === loginUser?.id);
-    console.log('is liked my me ', likedByMe)
-    console.log('ichecks all like ', likes)
-    console.log('logged user', loginUser?.id)
+
+    const allRepliesData = replies.map((reply) => ({
+        id: reply.author.id,
+        username: reply.author.username,
+        image: reply.author.image,
+    }));
 
     const likeUpdate = React.useRef({
         likedByMe,
@@ -128,11 +132,7 @@ const ThreadCard: React.FC<ThreadCardProps | SingleThreadCardProps> = ({ id, tex
                         "visible": replyCount > 0
                     }
                 )}>
-                    <img
-                        src='https://avatar.vercel.sh/1'
-                        alt="Account Avatar"
-                        className="rounded-full  h-4 w-4"
-                    />
+                    <RepliesImageContainer author={allRepliesData} />
                 </div>
                 <Link href={`/@${user.username}/post/${id}`} className="flex items-center gap-2 text-[#777777] text-[15px] text-center px-2 z-50">
                     {replyCount > 0 && <p className='hover:underline '>{replyCount} replies</p>}

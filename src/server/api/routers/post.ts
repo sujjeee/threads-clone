@@ -85,6 +85,17 @@ export const postRouter = createTRPCRouter({
             }
           },
           parentThreadId: true,
+          replies: {
+            select: {
+              author: {
+                select: {
+                  id: true,
+                  username: true,
+                  image: true
+                }
+              }
+            }
+          }
         },
       });
 
@@ -106,7 +117,8 @@ export const postRouter = createTRPCRouter({
             replyCount: thread._count.replies,
             user: thread.author,
             parentThreadId: thread.parentThreadId,
-            likes: thread.likes
+            likes: thread.likes,
+            replies: thread.replies
           };
         }),
         nextCursor,

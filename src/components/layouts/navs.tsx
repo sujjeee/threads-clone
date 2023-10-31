@@ -5,7 +5,7 @@ import { usePathname } from 'next/navigation'
 import { Icons } from '../icons'
 import { cn } from '@/lib/utils'
 import { useTheme } from 'next-themes'
-import NewThreadModal from '../new-thread-modal'
+import NewThreadModal from '../../../tests/new-thread-modal'
 import CreateThread from '../threads/create-thread'
 
 export default function Navs() {
