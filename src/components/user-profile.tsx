@@ -51,7 +51,7 @@ const UserProfile: React.FC<UserProfileProps> = ({ bio, createdAt, email, fullna
                         {link &&
                             <>
                                 <p className='text-[#777777]'> · </p>
-                                <Link href={link} className='text-[#777777] text-[15px] hover:underline cursor-pointer'>
+                                <Link href={link} className='text-[#777777] text-[15px] hover:underline cursor-pointer active:text-[#4d4d4d]'>
                                     {formatURL(link)}
                                 </Link>
                             </>

@@ -23,9 +23,16 @@ export default function page() {
     return (
         <div>
             <UserProfile {...data} />
+            {/* {allThread?.map((post) => {
+          return (
+            <ThreadCard key={post.id} {...post} />
+          )
+        })} */}
         </div>
     )
 }
+
+
 
 
 

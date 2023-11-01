@@ -3,8 +3,10 @@ import { TRPCError } from "@trpc/server";
 import { createTRPCRouter, privateProcedure, publicProcedure } from "@/server/api/trpc";
 import { getUserEmail } from "@/lib/utils";
 import { currentUser } from "@clerk/nextjs";
+import { Prisma, Thread } from "@prisma/client";
 
 export const postRouter = createTRPCRouter({
+  testroute: publicProcedure.query(() => 'Say this is test route!'),
   createThread: privateProcedure
     .input(
       z.object({
@@ -428,6 +430,7 @@ export const postRouter = createTRPCRouter({
     )
     .query(async ({ input, ctx }) => {
       const { userId } = ctx;
+
       const userProfileInfo = await ctx.db.user.findUnique({
         where: {
           username: input.username
@@ -480,9 +483,85 @@ export const postRouter = createTRPCRouter({
       if (userProfileInfo) {
         return userProfileInfo
       } else {
-
         throw new TRPCError({ code: 'NOT_FOUND' })
-
       }
     }),
+
+  getNestedThreads: publicProcedure
+    .input(
+      z.object({
+        id: z.string()
+      })
+    )
+    .query(async ({ input, ctx }) => {
+      const { id } = input
+      const getThreads = await ctx.db.thread.findMany({
+        where: {
+          id
+        },
+        select: {
+          id: true,
+          text: true,
+          createdAt: true,
+          _count: {
+            select: {
+              likes: true,
+              replies: true
+            }
+          },
+          author: {
+            select: {
+              id: true,
+              username: true,
+              image: true,
+            }
+          },
+          likes: {
+            select: {
+              userId: true
+            }
+          },
+          replies: {
+            select: {
+              author: {
+                select: {
+                  id: true,
+                  username: true,
+                  image: true
+                }
+              }
+            }
+          }
+        },
+      });
+
+      const getThreadParents = await ctx.db.$queryRaw<Thread>(
+        Prisma.sql`
+          WITH RECURSIVE threads_tree AS (
+            SELECT
+              t.*,
+              0 AS depth
+            FROM "Thread" t
+            WHERE t.id = ${id}
+      
+            UNION ALL
+      
+            SELECT
+              t.*,
+              tt.depth + 1
+            FROM "Thread" t
+            JOIN threads_tree tt ON t.id = tt."parentThreadId"
+          )
+      
+          SELECT *
+          FROM threads_tree
+          ORDER BY depth;
+        `
+      );
+
+      return { getThreads, getThreadParents };
+    }),
 });
+
+
+

@@ -132,7 +132,11 @@ const ThreadCard: React.FC<ThreadCardProps | SingleThreadCardProps> = ({ id, tex
             </div>
 
 
-            <div className='flex items-center gap-2 pb-4 select-none'>
+            <div className={cn('flex items-center select-none ',
+                {
+                    " gap-2 pb-4 ": replyCount > 0 || likeUpdate.current.likeCount > 0
+                }
+            )}>
 
                 <div className={cn("flex invisible justify-center items-center w-[36px] ",
                     {
