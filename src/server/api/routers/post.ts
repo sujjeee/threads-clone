@@ -435,50 +435,50 @@ export const postRouter = createTRPCRouter({
         where: {
           username: input.username
         },
-        // include: {
-        // followers:true,
-        // following:true,
-        // threads: {
-        //   select: {
-        //     id: true,
-        //     text: true,
-        //     createdAt: true,
-        //     _count: {
-        //       select: {
-        //         likes: true,
-        //         replies: true
-        //       }
-        //     },
-        //     author: {
-        //       select: {
-        //         id: true,
-        //         username: true,
-        //         image: true,
-        //       }
-        //     },
-        //     likes: {
-        //       where: {
-        //         userId
-        //       },
-        //       select: {
-        //         userId: true
-        //       }
-        //     },
-        //     parentThreadId: true,
-        //     replies: {
-        //       select: {
-        //         author: {
-        //           select: {
-        //             id: true,
-        //             username: true,
-        //             image: true
-        //           }
-        //         }
-        //       }
-        //     }
-        //   },
-        // },
-        // }
+        include: {
+          // followers:true,
+          // following:true,
+          threads: {
+            select: {
+              id: true,
+              text: true,
+              createdAt: true,
+              _count: {
+                select: {
+                  likes: true,
+                  replies: true
+                }
+              },
+              author: {
+                select: {
+                  id: true,
+                  username: true,
+                  image: true,
+                }
+              },
+              likes: {
+                where: {
+                  userId
+                },
+                select: {
+                  userId: true
+                }
+              },
+              parentThreadId: true,
+              replies: {
+                select: {
+                  author: {
+                    select: {
+                      id: true,
+                      username: true,
+                      image: true
+                    }
+                  }
+                }
+              }
+            },
+          },
+        }
       });
       if (userProfileInfo) {
         return userProfileInfo
@@ -534,25 +534,48 @@ export const postRouter = createTRPCRouter({
           }
         },
       });
-
       const getThreadParents = await ctx.db.$queryRaw<Thread>(
         Prisma.sql`
           WITH RECURSIVE threads_tree AS (
             SELECT
               t.*,
-              0 AS depth
+              0 AS depth,
+              jsonb_build_object(
+                'id', u.id,
+                'username', u.username,
+                'image', u.image,
+                'fullname', u.fullname,
+                'bio', u.bio,
+                'link', u.link
+      
+              ) AS author,
+              (SELECT count(*) FROM "Like" l WHERE l."threadId" = t.id) AS likes,
+              (SELECT count(*) FROM "Thread" r WHERE r."parentThreadId" = t.id) AS replies
             FROM "Thread" t
+            JOIN "User" u ON t."authorId" = u.id
             WHERE t.id = ${id}
-      
+
             UNION ALL
-      
+
             SELECT
               t.*,
-              tt.depth + 1
+              tt.depth + 1,
+              jsonb_build_object(
+                'id', u.id,
+                'username', u.username,
+                'image', u.image,
+                'fullname', u.fullname,
+                'bio', u.bio,
+                'link', u.link
+        
+              ) AS author,
+              (SELECT count(*) FROM "Like" l WHERE l."threadId" = t.id) AS likes,
+              (SELECT count(*) FROM "Thread" r WHERE r."parentThreadId" = t.id) AS replies
             FROM "Thread" t
+            JOIN "User" u ON t."authorId" = u.id
             JOIN threads_tree tt ON t.id = tt."parentThreadId"
           )
-      
+
           SELECT *
           FROM threads_tree
           ORDER BY depth;

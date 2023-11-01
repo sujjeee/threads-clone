@@ -11,7 +11,6 @@ import { toast } from 'sonner'
 import { SingleThreadCardProps, ThreadCardProps } from '@/types'
 import CreateThread from './create-thread'
 import { useUser } from '@clerk/nextjs'
-import { usePathname } from 'next/navigation'
 import RepliesImageContainer from './replies-image-container'
 
 const ThreadCard: React.FC<ThreadCardProps | SingleThreadCardProps> = ({ id, text, createdAt, likeCount, user, replyCount, likes, replies }) => {
@@ -132,7 +131,7 @@ const ThreadCard: React.FC<ThreadCardProps | SingleThreadCardProps> = ({ id, tex
             </div>
 
 
-            <div className={cn('flex items-center select-none ',
+            <div className={cn('flex items-center select-none pb-2',
                 {
                     " gap-2 pb-4 ": replyCount > 0 || likeUpdate.current.likeCount > 0
                 }

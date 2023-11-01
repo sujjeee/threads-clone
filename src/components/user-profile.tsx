@@ -5,14 +5,14 @@ import { Instagram } from 'lucide-react'
 import Link from 'next/link'
 import { usePathname, useRouter } from 'next/navigation'
 import React from 'react'
-import { UserProfileProps } from '@/types'
 import { formatURL } from '@/lib/utils'
 import { Avatar, AvatarFallback, AvatarImage } from './ui/avatar'
 import { Icons } from './icons'
+import { UserProfileInfoProps } from '@/types'
 
 
 
-const UserProfile: React.FC<UserProfileProps> = ({ bio, createdAt, email, fullname, id, image, link, privacy, username }) => {
+const UserProfile: React.FC<UserProfileInfoProps> = ({ bio, createdAt, email, fullname, id, image, link, privacy, username }) => {
     const path = usePathname()
     const router = useRouter()
 
@@ -66,13 +66,13 @@ const UserProfile: React.FC<UserProfileProps> = ({ bio, createdAt, email, fullna
                 </button>
                 <Link
                     href={`${path}/replies`}
-                    className="flex items-center justify-center w-full h-12  font-medium border-b border-[#333333] duration-200 hover:border-neutral-700 hover:text-neutral-500 text-center text-neutral-600"
+                    className="flex items-center justify-center w-full h-12  font-medium  duration-200 hover:border-neutral-700 hover:text-neutral-500 text-center text-neutral-600"
                 >
                     Replies
                 </Link>
                 <Link
                     href={`${path}/repost`}
-                    className="flex items-center justify-center w-full h-12 py-2 font-medium border-b border-[#333333] duration-200 hover:border-neutral-700 hover:text-neutral-500 text-center text-neutral-600"
+                    className="flex items-center justify-center w-full h-12 py-2 font-medium  duration-200 hover:border-neutral-700 hover:text-neutral-500 text-center text-neutral-600"
                 >
                     Reposts
                 </Link>

@@ -9,4 +9,4 @@ export type SingleThreadCardProps = ArrayElement<RouterOutput['post']['getsThrea
 export type AuthorProps = Pick<SingleThreadCardProps['user'], '_count' | 'username' | 'image' | 'id'>;
 export type ParentThreadCardProps = ArrayElement<RouterOutput['post']['getsThreadInfo']['parentThread'][]>;
 export type UserCardProps = ArrayElement<RouterOutput['post']['getAllUsers']['allUsers']>;
-export type UserProfileProps = RouterOutput['post']['getUserProfileInfo'];
+export type UserProfileInfoProps = RouterOutput['post']['getUserProfileInfo'];
