@@ -301,7 +301,7 @@ export function InsideCard({ user, onTextareaChange, replyThreadInfo }: {
                     <AvatarImage src={user?.imageUrl} />
                     <AvatarFallback>JL</AvatarFallback>
                 </Avatar>
-                {replyThreadInfo?.text && <div className="h-full w-0.5 bg-muted rounded-full mt-1.5" />}
+                {replyThreadInfo?.text && <div className="h-full w-0.5 bg-muted rounded-full mt-1.5 my-1" />}
             </div>
             <div className='flex flex-col gap-1.5 w-full pb-4'>
                 <p className="text-[15px] font-medium leading-none tracking-normal">sujjeee</p>

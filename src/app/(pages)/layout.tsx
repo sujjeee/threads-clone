@@ -11,6 +11,8 @@ export default async function PagesLayout({ children }: PagesLayoutProps) {
 
     const user = await currentUser()
 
+    if (!user) redirect('/login')
+
     const dbUser = await db.user.findUnique({
         where: {
             id: user?.id

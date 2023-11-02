@@ -14,7 +14,7 @@ export default function NotFound() {
                     </h4>
                     <p className="text-[15px] text-[#777777] max-w-[350px] w-full text-center">The link you followed may be broken, or the page may have been removed.</p>
                     <Button asChild
-                        className='rounded-xl px-4'
+                        className='rounded-xl px-4 hover:bg-transparent active:scale-90'
                         variant={'outline'}
                         size={'sm'}>
                         <Link href={'/'}>

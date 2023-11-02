@@ -8,6 +8,8 @@ import { Icons } from '@/components/icons'
 import CreateThread from '@/components/threads/create-thread'
 
 import Loading from '@/app/(pages)/loading'
+import NotFound from '../not-found'
+import Error from '../error'
 
 export default function page() {
 
@@ -15,12 +17,10 @@ export default function page() {
     getNextPageParam: (lastPage) => lastPage.nextCursor
   })
 
-
   const allThread = data?.pages.flatMap((page) => page.threads)
 
-  // console.log("allThread", allThread)
   if (isLoading) return <Loading />
-  if (isError) return <h1>Error...</h1>;
+  if (isError) return <Error />
 
   return (
     <div className=' z-[10] '>
@@ -29,7 +29,11 @@ export default function page() {
         dataLength={allThread?.length!}
         next={fetchNextPage}
         hasMore={hasNextPage!}
-        loader={<Icons.spinner className='h-8 w-8' />}
+        loader={
+          <div className="h-[100px] w-full justify-center items-center flex ">
+            <Icons.loading className='h-11 w-11' />
+          </div>
+        }
       >
         {allThread?.map((post) => {
           return (
