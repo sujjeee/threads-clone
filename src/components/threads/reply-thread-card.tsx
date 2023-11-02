@@ -10,7 +10,7 @@ import { cn } from '@/lib/utils'
 import { useUser } from '@clerk/nextjs'
 import CreateThread from './create-thread'
 import Link from 'next/link'
-import TestParent from '@/app/test/page'
+import TestParent from '@/actions/page'
 import ThreadCard from './thread-card'
 import ParentThreadCard from './parent-thread-card'
 

@@ -19,9 +19,9 @@ const RepliesImageContainer: React.FC<RepliesProps> = ({ author }) => {
 
             {author?.length === 2 && (
                 <div className="z-0 flex items-center -space-x-2">
-                    {author.map((authorData) => (
+                    {author.map((authorData, index) => (
                         <div
-                            key={authorData.id}
+                            key={index}
                             className="relative z-0 flex h-4 w-4 shrink-0 select-none items-center justify-center rounded-full ring-1 ring-[#101010]"
                         >
                             <img

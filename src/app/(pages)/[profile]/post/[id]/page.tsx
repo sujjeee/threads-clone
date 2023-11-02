@@ -2,7 +2,7 @@
 
 import Loading from '@/app/(pages)/loading'
 import NotFound from '@/app/not-found'
-import TestParent from '@/app/test/page'
+import TestParent from '@/actions/page'
 import { Icons } from '@/components/icons'
 import ReplyThreadCard from '@/components/threads/reply-thread-card'
 import ThreadCard from '@/components/threads/thread-card'

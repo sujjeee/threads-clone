@@ -153,3 +153,13 @@ background-color: transparent;
   cursor: pointer;
   border-radius: 0.5rem;
 }
+
+@layer components {
+  .zoom-image [data-rmiz-modal-overlay="visible"] {
+    @apply bg-[#101010]/90 backdrop-blur-xl;
+  }
+
+  .zoom-image [data-rmiz-modal-img] {
+    @apply rounded-md lg:rounded-2xl ;
+  }
+}

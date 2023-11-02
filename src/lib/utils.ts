@@ -2,6 +2,9 @@ import { type ClassValue, clsx } from "clsx"
 import { twMerge } from "tailwind-merge"
 import { User } from "@clerk/nextjs/server"
 import { UserResource } from "@clerk/types"
+import * as z from "zod"
+import { toast } from "sonner"
+import { isClerkAPIResponseError } from "@clerk/nextjs"
 
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs))
@@ -44,5 +47,21 @@ export function formatURL(originalURL: string) {
     return parts.slice(0, 2).join('/');
   } else {
     return cleanedURL;
+  }
+}
+
+export function catchClerkError(err: unknown) {
+  console.log('clerk login error ', err)
+  const unknownErr = "Something went wrong, please try again later."
+
+  if (err instanceof z.ZodError) {
+    const errors = err.issues.map((issue) => {
+      return issue.message
+    })
+    return toast(errors.join("\n"))
+  } else if (isClerkAPIResponseError(err)) {
+    return toast.error(err.errors[0]?.longMessage ?? unknownErr)
+  } else {
+    return toast.error(unknownErr)
   }
 }

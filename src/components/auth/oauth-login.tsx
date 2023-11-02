@@ -8,6 +8,7 @@ import {
 import { Button } from "@/components/ui/button"
 import { Icons } from '@/components/icons'
 import { toast } from 'sonner'
+import { catchClerkError } from '@/lib/utils'
 
 
 interface OAuthloginProps { }
@@ -27,12 +28,7 @@ const OAuthLogin: React.FC<OAuthloginProps> = ({ }) => {
             })
         } catch (error) {
             setIsLoading(false)
-
-            const unknownError = "Something went wrong, please try again."
-
-            isClerkAPIResponseError(error)
-                ? toast.error(error.errors[0]?.longMessage ?? unknownError)
-                : toast.error(unknownError)
+            catchClerkError(error)
         }
     }
     return (

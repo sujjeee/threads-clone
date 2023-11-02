@@ -6,7 +6,8 @@ import InfiniteScroll from 'react-infinite-scroll-component'
 import ThreadCard from '@/components/threads/thread-card'
 import { Icons } from '@/components/icons'
 import CreateThread from '@/components/threads/create-thread'
-import Loading from './loading'
+
+import Loading from '@/app/(pages)/loading'
 
 export default function page() {
 
