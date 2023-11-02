@@ -46,45 +46,70 @@ const CreateThread: React.FC<CreateThreadProps> = ({ showIcon, replyThreadInfo }
         images: []
     })
 
-
-
     const trpcUtils = api.useContext();
 
+    const backupText = React.useRef('')
+
     const { mutate: createThread, isLoading } = api.post.createThread.useMutation({
-        onSuccess: (newPost) => {
-            setIsOpen(false)
-
-            trpcUtils.post.infiniteFeed.setInfiniteData({}, (oldData) => {
-                if (oldData == null || oldData.pages[0] == null) return;
-
-                const newCachePost = {
-                    ...newPost,
-                    likeCount: 0,
-                    likedByMe: false,
-                    user: {
-                        id: user?.id,
-                        username: user?.username || 'sujjeeex',
-                        image: user?.imageUrl || null,
-                    },
-                };
-
-                return {
-                    ...oldData,
-                    pages: [
-                        {
-                            ...oldData.pages[0],
-                            Posts: [newCachePost, ...oldData.pages[0].threads],
-                        },
-                        ...oldData.pages.slice(1),
-                    ],
-                };
+        onMutate: async ({ text }) => {
+            backupText.current = text
+            setThreadData({
+                ...threadData,
+                text: '',
             });
-        },
-        onError: (err) => {
-            toast.error("PostCallbackError: Something went wrong!")
-            if (err.data?.code === 'UNAUTHORIZED') {
-                router.push('/login')
+            await trpcUtils.post.infiniteFeed.cancel()
+
+            const previousPostData = trpcUtils.post.infiniteFeed.getInfiniteData()
+
+            trpcUtils.post.infiniteFeed.setInfiniteData(
+                {},
+                (old) => {
+                    if (!old) {
+                        return {
+                            pages: [],
+                            pageParams: []
+                        }
+                    }
+                    let newPages = [...old.pages]
+
+                    let latestPage = newPages[0]!
+
+                    latestPage.threads = [
+                        {
+                            createdAt: new Date(),
+                            id: crypto.randomUUID(),
+                            likeCount: 0,
+                            likes: [],
+                            parentThreadId: null,
+                            replies: [],
+                            replyCount: 0,
+                            text: text,
+                            user: {
+                                id: crypto.randomUUID(),
+                                image: user?.imageUrl!,
+                                username: user?.fullName!
+                            }
+                        },
+                        ...latestPage.threads
+                    ]
+
+                    newPages[0] = latestPage
+
+                    return {
+                        ...old,
+                        pages: newPages
+                    }
+                }
+            )
+            return {
+                previousPostData: previousPostData?.pages.flatMap((page) => page.threads) ?? []
             }
+        },
+        onError: (_, __, context) => {
+            toast.error("PostCallbackError: Something went wrong!")
+        },
+        onSettled: async () => {
+            await trpcUtils.post.infiniteFeed.invalidate()
         },
         retry: false,
     });

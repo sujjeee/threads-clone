@@ -30,7 +30,7 @@ export default function SiteFooter() {
                         Cookies Policy
                     </a>
                 </li>
-                {path === '/' &&
+                {path === '/login' &&
                     <li>
                         <a href="#" className="text-gray-500 transition hover:opacity-75">
                             Report a problem
