@@ -29,7 +29,7 @@ export default function SiteHeader() {
             : <header
                 aria-label="Header"
                 className={cn(
-                    "sticky top-0 z-50 w-full",
+                    "sticky top-0 z-[100] w-full",
                     isScrolled ? "bg-[#0F0F0F]/90  backdrop-blur-2xl" : "bg-transparent"
                 )}
             >
