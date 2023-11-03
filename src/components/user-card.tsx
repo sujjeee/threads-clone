@@ -1,5 +1,4 @@
 import React from 'react'
-import { Icons } from '@/components/icons'
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
 import { Button } from '@/components/ui/button'
 import { Separator } from '@/components/ui/separator'
@@ -7,7 +6,16 @@ import { UserCardProps } from '@/types'
 import Link from 'next/link'
 import Username from '@/components/threads/username'
 
-const UserCard: React.FC<UserCardProps> = ({ id, bio, fullname, createdAt, image, link, username, followers }) => {
+const UserCard: React.FC<UserCardProps> = ({
+    id,
+    bio,
+    fullname,
+    createdAt,
+    image,
+    link,
+    username,
+    followers
+}) => {
     return (
         <div className='flex flex-col w-full'>
             <div className='flex w-full mt-5'>

@@ -642,6 +642,39 @@ export const postRouter = createTRPCRouter({
       }
     }),
 
+  searchUsers: publicProcedure
+    .input(
+      z.object({
+        debouncedSearch: z.string()
+      })
+    )
+    .query(async ({ input, ctx }) => {
+      const user = await ctx.db.user.findMany({
+        where: {
+          OR: [
+            {
+              fullname: {
+                contains: input.debouncedSearch
+              }
+            },
+            {
+              username: {
+                contains: input.debouncedSearch
+              }
+            },
+            {
+              email: {
+                contains: input.debouncedSearch
+              }
+            },
+          ],
+        },
+        select: {
+          ...GET_USER
+        }
+      });
+      return user
+    }),
 });
 
 
