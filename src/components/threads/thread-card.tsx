@@ -19,14 +19,11 @@ import {
     DialogTrigger,
 } from "@/components/ui/dialog"
 import ProfileInfoCard from '@/components/threads/profile-info-card'
-import {
-    HoverCard,
-    HoverCardContent,
-    HoverCardTrigger,
-} from "@/components/ui/hover-card"
 import PostMenu from '@/components/buttons/post-menu'
 import ShareButton from '../buttons/share-button'
 import RepostButton from '../buttons/repost-button'
+import Username from './username'
+import PostActivity from './post-activity'
 
 const ThreadCard: React.FC<ThreadCardProps> = ({
     id,
@@ -60,7 +57,6 @@ const ThreadCard: React.FC<ThreadCardProps> = ({
     const { mutate: toggleLike, isLoading } = api.post.toggleLike.useMutation({
         onMutate: async () => {
 
-            // Save the current values for potential rollback
             const previousLikedByMe = likeUpdate.current.isLikedByMe;
             const previousLikeCount = likeUpdate.current.likeCount;
 
@@ -73,7 +69,6 @@ const ThreadCard: React.FC<ThreadCardProps> = ({
         },
         onError: (error, variables, context) => {
 
-            // Rollback to previous values
             likeUpdate.current.isLikedByMe = context?.previousLikedByMe!;
             likeUpdate.current.likeCount = context?.previousLikeCount!;
 
@@ -117,19 +112,7 @@ const ThreadCard: React.FC<ThreadCardProps> = ({
                     <div className="justify-center items-start self-stretch flex flex-col max-md:max-w-full  ">
                         <div className="justify-center items-start flex w-full flex-col  pt-0 self-start">
                             <div className="items-start flex w-full justify-between gap-5 py-px self-start max-md:max-w-full max-md:flex-wrap ">
-                                <HoverCard>
-                                    <HoverCardTrigger asChild>
-                                        <Link href={`/@${author.username}`} className="flex items-center justify-center gap-1.5 cursor-pointer hover:underline">
-                                            <h1 className="text-white text-[15px] font-semibold leading-[0px]">
-                                                {author.username}
-                                            </h1>
-                                            <Icons.verified className='w-3 h-3' />
-                                        </Link>
-                                    </HoverCardTrigger>
-                                    <HoverCardContent align={"start"} sideOffset={10} className="w-[360px] p-0 rounded-2xl bg-transparent border-none">
-                                        <ProfileInfoCard {...author} />
-                                    </HoverCardContent>
-                                </HoverCard>
+                                <Username author={author} />
                                 <div className="justify-between items-center self-stretch flex gap-3">
                                     <time className="text-right text-[15px] leading-none self-stretch  text-[#777777] cursor-default">
                                         {formatTimeAgo(createdAt)}
@@ -169,7 +152,10 @@ const ThreadCard: React.FC<ThreadCardProps> = ({
                                         }
                                     }} />
                                 <RepostButton id={id} />
-                                <ShareButton id={id} author={author.username} />
+                                <ShareButton
+                                    id={id}
+                                    author={author.username}
+                                />
                             </div>
                         </div>
                     </div>
@@ -187,25 +173,33 @@ const ThreadCard: React.FC<ThreadCardProps> = ({
                     <RepliesImageContainer author={getThreadReplies} />
                 </div>
 
-                <Link
-                    href={`/@${author.username}/post/${id}`}
-                    className="flex items-center gap-2 text-[#777777] text-[15px] text-center px-2">
+                <div className="flex items-center  text-[#777777] text-[15px] text-center px-2">
 
-                    {replyCount > 0 && (
-                        <p className='hover:underline '>
-                            {replyCount} {replyCount === 1 ? 'reply' : 'replies'}
-                        </p>
-                    )}
+                    <Link
+                        href={`/@${author.username}/post/${id}`}>
+                        {replyCount > 0 && (
+                            <p className='hover:underline '>
+                                {replyCount} {replyCount === 1 ? 'reply' : 'replies'}
+                            </p>
+                        )}
+                    </Link>
 
-                    {replyCount > 0 && likeUpdate.current.likeCount > 0 && <p> · </p>}
+                    {replyCount > 0 && likeUpdate.current.likeCount > 0 && <p className='mx-2'> · </p>}
 
-                    {likeUpdate.current.likeCount > 0 && (
+                    {/* {likeUpdate.current.likeCount > 0 && (
                         <p className='hover:underline'>
                             {likeUpdate.current.likeCount} {likeUpdate.current.likeCount === 1 ? 'like' : 'likes'}
                         </p>
+                    )} */}
+                    {likeUpdate.current.likeCount > 0 && (
+                        <PostActivity
+                            author={author}
+                            id={id}
+                            likeCount={likeUpdate.current.likeCount}
+                            text={text}
+                        />
                     )}
-
-                </Link>
+                </div>
             </div >
         </>
     )

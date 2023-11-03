@@ -72,7 +72,7 @@ export const postRouter = createTRPCRouter({
       return { newpost, success: true }
     }),
 
-  infiniteFeed: privateProcedure
+  infiniteFeed: publicProcedure
     .input(
       z.object({
         limit: z.number().optional(),
@@ -368,14 +368,14 @@ export const postRouter = createTRPCRouter({
       };
     }),
 
-  getUserThreads: privateProcedure
+  getUserThreads: publicProcedure
     .input(
       z.object({
         username: z.string()
       })
     )
     .query(async ({ input, ctx }) => {
-      const { userId } = ctx;
+      // const { userId } = ctx;
       const userThreads = await ctx.db.thread.findMany({
         where: {
           author: {
@@ -399,14 +399,14 @@ export const postRouter = createTRPCRouter({
               image: true,
             }
           },
-          likes: {
-            where: {
-              userId
-            },
-            select: {
-              userId: true
-            }
-          },
+          // likes: {
+          //   where: {
+          //     userId
+          //   },
+          //   select: {
+          //     userId: true
+          //   }
+          // },
           parentThreadId: true,
           replies: {
             select: {
@@ -430,21 +430,21 @@ export const postRouter = createTRPCRouter({
             likeCount: thread._count.likes,
             replyCount: thread._count.replies,
             user: thread.author,
-            likes: thread.likes,
+            // likes: thread.likes,
             replies: thread.replies
           };
         }),
       };
     }),
 
-  getUserProfileInfo: privateProcedure
+  getUserProfileInfo: publicProcedure
     .input(
       z.object({
         username: z.string()
       })
     )
     .query(async ({ input, ctx }) => {
-      const { userId } = ctx;
+      // const { userId } = ctx;
 
       const userProfileInfo = await ctx.db.user.findUnique({
         where: {
@@ -471,14 +471,14 @@ export const postRouter = createTRPCRouter({
                   image: true,
                 }
               },
-              likes: {
-                where: {
-                  userId
-                },
-                select: {
-                  userId: true
-                }
-              },
+              // likes: {
+              //   where: {
+              //     userId
+              //   },
+              //   select: {
+              //     userId: true
+              //   }
+              // },
               parentThreadId: true,
               replies: {
                 select: {
@@ -599,6 +599,55 @@ export const postRouter = createTRPCRouter({
 
       return { getThreads, getThreadParents };
     }),
+
+  getLikeInfo: publicProcedure
+    .input(
+      z.object({
+        id: z.string()
+      })
+    )
+    .query(async ({ input, ctx }) => {
+
+      const userProfileInfo = await ctx.db.like.findMany({
+        where: {
+          threadId: input.id
+        },
+        select: {
+          thread: {
+            select: {
+              _count: {
+                select: {
+                  likes: true,
+                  replies: true
+                }
+              }
+            }
+          },
+          user: {
+            select: {
+              id: true,
+              image: true,
+              fullname: true,
+              username: true,
+              bio: true,
+              link: true,
+              followers: {
+                select: {
+                  id: true,
+                  image: true
+                }
+              }
+            }
+          }
+        }
+      });
+      if (userProfileInfo) {
+        return userProfileInfo
+      } else {
+        throw new TRPCError({ code: 'NOT_FOUND' });
+      }
+    }),
+
 });
 
 

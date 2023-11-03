@@ -5,11 +5,11 @@ type ArrayElement<ArrayType extends readonly unknown[]> = ArrayType[number];
 type RouterOutput = inferRouterOutputs<AppRouter>;
 
 export type ThreadCardProps = ArrayElement<RouterOutput['post']['infiniteFeed']['threads']>;
+export type AuthorInfoProps = ThreadCardProps['author'];
 
 export type SingleThreadCardProps = ArrayElement<RouterOutput['post']['getsThreadInfo'][]>;
 
 // export type AuthorProps = Pick<SingleThreadCardProps['user'], '_count' | 'username' | 'image' | 'id'>;
-export type AuthorProps = Pick<SingleThreadCardProps['user'], | 'username' | 'image' | 'id'>;
 
 export type ParentThreadCardProps = ArrayElement<RouterOutput['post']['getsThreadInfo']['parentThread'][]>;
 
