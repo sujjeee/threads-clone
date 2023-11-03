@@ -4,45 +4,53 @@ import React from 'react'
 import Link from 'next/link'
 import { toast } from 'sonner'
 import { Separator } from '@/components/ui/separator'
-import { MoreHorizontal, Plus } from 'lucide-react'
+import { Plus } from 'lucide-react'
 import { Icons } from '@/components/icons'
 import { cn, formatTimeAgo } from '@/lib/utils'
 import { api } from '@/trpc/react'
 import { useUser } from '@clerk/nextjs'
-import { SingleThreadCardProps, ThreadCardProps } from '@/types'
+import { ThreadCardProps } from '@/types'
 import CreateThread from '@/components/threads/create-thread'
 import RepliesImageContainer from '@/components/threads/replies-image-container'
-import { Avatar, AvatarFallback, AvatarImage } from '../ui/avatar'
+import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
+import PostMenuOptions from '../post-menu'
+import {
+    Dialog,
+    DialogContent,
+    DialogTrigger,
+} from "@/components/ui/dialog"
+import ProfileInfoCard from './profile-info-card'
 
-const ThreadCard: React.FC<ThreadCardProps | SingleThreadCardProps> = ({
+const ThreadCard: React.FC<ThreadCardProps> = ({
     id,
     text,
     createdAt,
-    likeCount,
-    user,
-    replyCount,
     likes,
-    replies
+    replies,
+    author,
+    count,
 }) => {
 
-    const { user: loginUser } = useUser()
+    const { user: loggedUser } = useUser()
 
     const isLikedByMe = likes.some((like: any) =>
-        like?.userId || like?.user?.id === loginUser?.id
+        like?.userId || like?.user?.id === loggedUser?.id
     );
 
-    const getReplies = replies?.map((reply) => ({
+    const getThreadReplies = replies?.map((reply) => ({
         id: reply.author.id,
         username: reply.author.username,
         image: reply.author.image,
     }));
+
+    const { likeCount, replyCount } = count
 
     const likeUpdate = React.useRef({
         isLikedByMe,
         likeCount
     });
 
-    const { mutate: toggleLike } = api.post.toggleLike.useMutation({
+    const { mutate: toggleLike, isLoading } = api.post.toggleLike.useMutation({
         onMutate: async () => {
 
             // Save the current values for potential rollback
@@ -64,7 +72,7 @@ const ThreadCard: React.FC<ThreadCardProps | SingleThreadCardProps> = ({
 
             toast.error("LikeCallBack: Something went wrong!")
 
-        }
+        },
     });
 
     return (
@@ -73,17 +81,24 @@ const ThreadCard: React.FC<ThreadCardProps | SingleThreadCardProps> = ({
 
             <div className='flex w-full gap-2 pt-4'>
                 <div className="flex flex-col items-center gap-1.5 ">
-                    <button className='relative '>
-                        <div className='h-9 w-9 outline outline-1 outline-[#333333] rounded-full'>
-                            <Avatar className="rounded-full w-full h-full">
-                                <AvatarImage src={user.image} alt={user.username} />
-                                <AvatarFallback>{user.username?.slice(0, 2).toUpperCase()}</AvatarFallback>
-                            </Avatar>
-                        </div>
-                        <div className='bg-foreground absolute -bottom-0.5 -right-0.5  rounded-2xl border-2 border-background text-background hover:scale-105 active:scale-95'>
-                            <Plus className='h-4 w-4 p-0.5' />
-                        </div>
-                    </button>
+                    <Dialog>
+                        <DialogTrigger asChild>
+                            <button className='relative '>
+                                <div className='h-9 w-9 outline outline-1 outline-[#333333] rounded-full'>
+                                    <Avatar className="rounded-full w-full h-full">
+                                        <AvatarImage src={author.image} alt={author.username} />
+                                        <AvatarFallback>{author.username?.slice(0, 2).toUpperCase()}</AvatarFallback>
+                                    </Avatar>
+                                </div>
+                                <div className='bg-foreground absolute -bottom-0.5 -right-0.5  rounded-2xl border-2 border-background text-background hover:scale-105 active:scale-95'>
+                                    <Plus className='h-4 w-4 p-0.5' />
+                                </div>
+                            </button>
+                        </DialogTrigger>
+                        <DialogContent className='max-w-[360px] w-full p-0 rounded-2xl  border-none'>
+                            <ProfileInfoCard {...author} />
+                        </DialogContent>
+                    </Dialog>
 
                     {replyCount > 0 &&
                         <div className="h-full w-0.5 bg-[#333638] rounded-full my-[1px]" />
@@ -98,34 +113,37 @@ const ThreadCard: React.FC<ThreadCardProps | SingleThreadCardProps> = ({
 
                                 <span className="flex items-center justify-center gap-1.5 cursor-pointer">
                                     <h1 className="text-white text-[15px] font-semibold leading-[0px]">
-                                        {user.username}
+                                        {author.username}
                                     </h1>
                                     <Icons.verified className='w-3 h-3' />
                                 </span>
 
-                                <div className="justify-between items-center self-stretch flex gap-2.5">
-                                    <div className="text-right text-[15px] leading-none self-stretch  text-[#777777]"> {formatTimeAgo(createdAt)} </div>
-                                    <MoreHorizontal className='aspect-square object-cover object-center h-4 w-4 overflow-hidden flex-1' />
+                                <div className="justify-between items-center self-stretch flex gap-3">
+                                    <time className="text-right text-[15px] leading-none self-stretch  text-[#777777] cursor-default">
+                                        {formatTimeAgo(createdAt)}
+                                    </time>
+                                    <PostMenuOptions />
                                 </div>
-
                             </div>
 
-                            <Link href={`/@${user.username}/post/${id}`} className='w-full'>
-                                <div className="text-white text-base leading-5 mt-1 max-md:max-w-full">
+                            <Link href={`/@${author.username}/post/${id}`} className='w-full'>
+                                <div className="text-white text-[15px] leading-5 mt-1 max-md:max-w-full">
                                     {text}
                                 </div>
                             </Link>
 
                             <div className="flex  font-bold -ml-2 mt-2 w-full">
-                                <div className='flex items-center justify-center hover:bg-[#1E1E1E] rounded-full p-2 w-fit h-fit'>
-                                    <Icons.heart
-                                        onClick={() => {
-                                            toggleLike({ id })
-                                        }}
-                                        fill={likeUpdate.current.isLikedByMe ? '#ff3040' : 'none'}
-                                        className={cn('w-5 h-5 ', {
-                                            "text-[#ff3040]": likeUpdate.current.isLikedByMe
-                                        })} />
+                                <div className='flex items-center justify-center hover:bg-[#1E1E1E] rounded-full p-2 w-fit h-fit active:scale-95'>
+                                    <button disabled={isLoading}>
+                                        <Icons.heart
+                                            onClick={() => {
+                                                toggleLike({ id })
+                                            }}
+                                            fill={likeUpdate.current.isLikedByMe ? '#ff3040' : 'none'}
+                                            className={cn('w-5 h-5 ', {
+                                                "text-[#ff3040]": likeUpdate.current.isLikedByMe
+                                            })} />
+                                    </button>
                                 </div>
                                 <CreateThread
                                     showIcon={true}
@@ -133,18 +151,15 @@ const ThreadCard: React.FC<ThreadCardProps | SingleThreadCardProps> = ({
                                         id,
                                         text,
                                         author: {
-                                            id: user.id,
-                                            image: user.image,
-                                            username: user.username,
-                                            _count: {
-                                                followers: 12
-                                            }
+                                            id: author.id,
+                                            image: author.image,
+                                            username: author.username
                                         }
                                     }} />
-                                <div className='flex items-center justify-center hover:bg-[#1E1E1E] rounded-full p-2 w-fit h-fit'>
+                                <div className='flex items-center justify-center hover:bg-[#1E1E1E] rounded-full p-2 w-fit h-fit active:scale-95'>
                                     <Icons.repost className='w-5 h-5 ' />
                                 </div>
-                                <div className='flex items-center justify-center hover:bg-[#1E1E1E] rounded-full p-2 '>
+                                <div className='flex items-center justify-center hover:bg-[#1E1E1E] rounded-full p-2 w-fit h-fit active:scale-95'>
                                     <Icons.share className='w-5 h-5 ' />
                                 </div>
                             </div>
@@ -161,11 +176,11 @@ const ThreadCard: React.FC<ThreadCardProps | SingleThreadCardProps> = ({
                 <div className={cn("flex invisible justify-center items-center w-[36px] ", {
                     "visible": replyCount > 0
                 })}>
-                    <RepliesImageContainer author={getReplies} />
+                    <RepliesImageContainer author={getThreadReplies} />
                 </div>
 
                 <Link
-                    href={`/@${user.username}/post/${id}`}
+                    href={`/@${author.username}/post/${id}`}
                     className="flex items-center gap-2 text-[#777777] text-[15px] text-center px-2">
 
                     {replyCount > 0 && (
@@ -183,7 +198,6 @@ const ThreadCard: React.FC<ThreadCardProps | SingleThreadCardProps> = ({
                     )}
 
                 </Link>
-
             </div >
         </>
     )

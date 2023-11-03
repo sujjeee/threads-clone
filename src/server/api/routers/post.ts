@@ -5,7 +5,36 @@ import { getUserEmail } from "@/lib/utils";
 import { currentUser } from "@clerk/nextjs";
 import { Prisma, Thread } from "@prisma/client";
 
+const GET_AUTHOR = {
+  author: {
+    select: {
+      id: true,
+      image: true,
+      fullname: true,
+      username: true,
+      bio: true,
+      link: true,
+      followers: {
+        select: {
+          id: true,
+          image: true
+        }
+      }
+    }
+  },
+}
+
+const GET_COUNT = {
+  _count: {
+    select: {
+      likes: true,
+      replies: true
+    }
+  },
+}
+
 export const postRouter = createTRPCRouter({
+
   testroute: publicProcedure.query(() => 'Say this is test route!'),
   createThread: privateProcedure
     .input(
@@ -51,9 +80,6 @@ export const postRouter = createTRPCRouter({
       })
     )
     .query(async ({ input: { limit = 10, cursor }, ctx }) => {
-
-      const { userId } = ctx;
-
       const allThreads = await ctx.db.thread.findMany({
         where: {
           parentThreadId: null
@@ -63,25 +89,9 @@ export const postRouter = createTRPCRouter({
         orderBy: [{ createdAt: "desc" }, { id: "desc" }],
         select: {
           id: true,
-          text: true,
           createdAt: true,
-          _count: {
-            select: {
-              likes: true,
-              replies: true
-            }
-          },
-          author: {
-            select: {
-              id: true,
-              username: true,
-              image: true,
-            }
-          },
+          text: true,
           likes: {
-            where: {
-              userId
-            },
             select: {
               userId: true
             }
@@ -93,15 +103,18 @@ export const postRouter = createTRPCRouter({
                 select: {
                   id: true,
                   username: true,
-                  image: true
+                  image: true,
                 }
               }
             }
-          }
+          },
+          ...GET_AUTHOR,
+          ...GET_COUNT,
         },
       });
 
       let nextCursor: typeof cursor | undefined;
+
       if (allThreads.length > limit) {
         const nextItem = allThreads.pop();
         if (nextItem != null) {
@@ -110,19 +123,19 @@ export const postRouter = createTRPCRouter({
       }
 
       return {
-        threads: allThreads.map((thread) => {
-          return {
-            id: thread.id,
-            text: thread.text,
-            createdAt: thread.createdAt,
+        threads: allThreads.map((thread) => ({
+          id: thread.id,
+          createdAt: thread.createdAt,
+          text: thread.text,
+          parentThreadId: thread.parentThreadId,
+          author: thread.author,
+          count: {
             likeCount: thread._count.likes,
             replyCount: thread._count.replies,
-            user: thread.author,
-            parentThreadId: thread.parentThreadId,
-            likes: thread.likes,
-            replies: thread.replies
-          };
-        }),
+          },
+          likes: thread.likes,
+          replies: thread.replies,
+        })),
         nextCursor,
       };
     }),
@@ -354,6 +367,7 @@ export const postRouter = createTRPCRouter({
         nextCursor,
       };
     }),
+
   getUserThreads: privateProcedure
     .input(
       z.object({
@@ -422,6 +436,7 @@ export const postRouter = createTRPCRouter({
         }),
       };
     }),
+
   getUserProfileInfo: privateProcedure
     .input(
       z.object({

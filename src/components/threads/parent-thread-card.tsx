@@ -127,9 +127,6 @@ const ParentThreadCard: React.FC<ParentThreadCardProps> = (parentThread) => {
                                         id: id,
                                         image: image,
                                         username: username,
-                                        _count: {
-                                            followers: 12
-                                        }
                                     }
                                 }} />
                                 <div className='flex items-center justify-center hover:bg-[#1E1E1E] rounded-full p-2 w-fit h-fit'>

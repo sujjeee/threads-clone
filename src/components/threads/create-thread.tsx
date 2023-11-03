@@ -164,7 +164,7 @@ const CreateThread: React.FC<CreateThreadProps> = ({ showIcon, replyThreadInfo }
                             />
                         </div>
                     ) : (
-                        <div className='flex items-center justify-center hover:bg-[#1E1E1E] rounded-full p-2 w-fit h-fit'>
+                        <div className='flex items-center justify-center hover:bg-[#1E1E1E] rounded-full p-2 w-fit h-fit active:scale-95'>
                             <Icons.reply className='w-5 h-5 ' />
                         </div>
                     )

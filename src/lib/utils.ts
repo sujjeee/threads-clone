@@ -88,3 +88,11 @@ export function formatTimeAgo(timestamp: Date): string {
     return `${weeksDiff}w`;
   }
 }
+
+export function truncateText(text: string, maxLength: number) {
+  if (text.length > maxLength) {
+    return text.slice(0, maxLength) + "...";
+  } else {
+    return text;
+  }
+}

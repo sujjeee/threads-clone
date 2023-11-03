@@ -8,7 +8,8 @@ export type ThreadCardProps = ArrayElement<RouterOutput['post']['infiniteFeed'][
 
 export type SingleThreadCardProps = ArrayElement<RouterOutput['post']['getsThreadInfo'][]>;
 
-export type AuthorProps = Pick<SingleThreadCardProps['user'], '_count' | 'username' | 'image' | 'id'>;
+// export type AuthorProps = Pick<SingleThreadCardProps['user'], '_count' | 'username' | 'image' | 'id'>;
+export type AuthorProps = Pick<SingleThreadCardProps['user'], | 'username' | 'image' | 'id'>;
 
 export type ParentThreadCardProps = ArrayElement<RouterOutput['post']['getsThreadInfo']['parentThread'][]>;
 

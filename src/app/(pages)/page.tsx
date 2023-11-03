@@ -2,14 +2,12 @@
 
 import React from 'react'
 import { api } from '@/trpc/react'
-import InfiniteScroll from 'react-infinite-scroll-component'
 import ThreadCard from '@/components/threads/thread-card'
 import { Icons } from '@/components/icons'
 import CreateThread from '@/components/threads/create-thread'
-
 import Loading from '@/app/(pages)/loading'
-import NotFound from '../not-found'
-import Error from '../error'
+import Error from '@/app/error'
+import InfiniteScroll from 'react-infinite-scroll-component'
 
 export default function page() {
 
@@ -23,8 +21,10 @@ export default function page() {
   if (isError) return <Error />
 
   return (
-    <div className=' z-[10] '>
-      <CreateThread showIcon={false} />
+    <>
+      <div className='w-full sm:flex hidden'>
+        <CreateThread showIcon={false} />
+      </div>
       <InfiniteScroll
         dataLength={allThread?.length!}
         next={fetchNextPage}
@@ -41,6 +41,6 @@ export default function page() {
           )
         })}
       </InfiniteScroll>
-    </div>
+    </>
   )
 }
