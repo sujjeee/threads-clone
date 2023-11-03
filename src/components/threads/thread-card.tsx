@@ -13,13 +13,20 @@ import { ThreadCardProps } from '@/types'
 import CreateThread from '@/components/threads/create-thread'
 import RepliesImageContainer from '@/components/threads/replies-image-container'
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
-import PostMenuOptions from '../post-menu'
 import {
     Dialog,
     DialogContent,
     DialogTrigger,
 } from "@/components/ui/dialog"
-import ProfileInfoCard from './profile-info-card'
+import ProfileInfoCard from '@/components/threads/profile-info-card'
+import {
+    HoverCard,
+    HoverCardContent,
+    HoverCardTrigger,
+} from "@/components/ui/hover-card"
+import PostMenu from '@/components/buttons/post-menu'
+import ShareButton from '../buttons/share-button'
+import RepostButton from '../buttons/repost-button'
 
 const ThreadCard: React.FC<ThreadCardProps> = ({
     id,
@@ -110,19 +117,24 @@ const ThreadCard: React.FC<ThreadCardProps> = ({
                     <div className="justify-center items-start self-stretch flex flex-col max-md:max-w-full  ">
                         <div className="justify-center items-start flex w-full flex-col  pt-0 self-start">
                             <div className="items-start flex w-full justify-between gap-5 py-px self-start max-md:max-w-full max-md:flex-wrap ">
-
-                                <span className="flex items-center justify-center gap-1.5 cursor-pointer">
-                                    <h1 className="text-white text-[15px] font-semibold leading-[0px]">
-                                        {author.username}
-                                    </h1>
-                                    <Icons.verified className='w-3 h-3' />
-                                </span>
-
+                                <HoverCard>
+                                    <HoverCardTrigger asChild>
+                                        <Link href={`/@${author.username}`} className="flex items-center justify-center gap-1.5 cursor-pointer hover:underline">
+                                            <h1 className="text-white text-[15px] font-semibold leading-[0px]">
+                                                {author.username}
+                                            </h1>
+                                            <Icons.verified className='w-3 h-3' />
+                                        </Link>
+                                    </HoverCardTrigger>
+                                    <HoverCardContent align={"start"} sideOffset={10} className="w-[360px] p-0 rounded-2xl bg-transparent border-none">
+                                        <ProfileInfoCard {...author} />
+                                    </HoverCardContent>
+                                </HoverCard>
                                 <div className="justify-between items-center self-stretch flex gap-3">
                                     <time className="text-right text-[15px] leading-none self-stretch  text-[#777777] cursor-default">
                                         {formatTimeAgo(createdAt)}
                                     </time>
-                                    <PostMenuOptions />
+                                    <PostMenu id={author.id} />
                                 </div>
                             </div>
 
@@ -156,12 +168,8 @@ const ThreadCard: React.FC<ThreadCardProps> = ({
                                             username: author.username
                                         }
                                     }} />
-                                <div className='flex items-center justify-center hover:bg-[#1E1E1E] rounded-full p-2 w-fit h-fit active:scale-95'>
-                                    <Icons.repost className='w-5 h-5 ' />
-                                </div>
-                                <div className='flex items-center justify-center hover:bg-[#1E1E1E] rounded-full p-2 w-fit h-fit active:scale-95'>
-                                    <Icons.share className='w-5 h-5 ' />
-                                </div>
+                                <RepostButton id={id} />
+                                <ShareButton id={id} author={author.username} />
                             </div>
                         </div>
                     </div>

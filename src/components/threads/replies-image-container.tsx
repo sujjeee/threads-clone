@@ -35,7 +35,7 @@ const RepliesImageContainer: React.FC<RepliesProps> = ({ author }) => {
             )}
 
             {author?.length === 3 && (
-                <div className='relative w-[48px] h-11 left-0 top-2 '>
+                <div className='relative w-[48px] h-9 left-0 top-2 '>
                     <img
                         src={author[0]?.image}
                         alt={author[1]?.username}
