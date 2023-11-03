@@ -148,6 +148,7 @@ const ThreadCard: React.FC<ThreadCardProps> = ({
                                         author: {
                                             id: author.id,
                                             image: author.image,
+                                            createdAt: author.createdAt,
                                             username: author.username,
                                             fullname: author.fullname,
                                             link: '',

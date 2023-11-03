@@ -1,23 +1,22 @@
 "use client"
 
-import { Icons } from '@/components/icons'
-import UserCard from '@/components/user-card'
 import React from 'react'
 import InfiniteScroll from 'react-infinite-scroll-component'
-import Loading from '../loading'
+import { Icons } from '@/components/icons'
+import UserCard from '@/components/user-card'
+import Loading from '@/app/(pages)/loading'
 import { api } from '@/trpc/react'
+import Error from '@/app/error'
 
 export default function page() {
     const { data, isLoading, isError, hasNextPage, fetchNextPage } = api.post.getAllUsers.useInfiniteQuery({}, {
         getNextPageParam: (lastPage) => lastPage.nextCursor
     })
 
-
     const allUsers = data?.pages.flatMap((page) => page.allUsers)
 
-    // console.log("allThread", allThread)
     if (isLoading) return <Loading />
-    if (isError) return <h1>Error...</h1>;
+    if (isError) return <Error />
 
     return (
         <div className=' z-[10] '>

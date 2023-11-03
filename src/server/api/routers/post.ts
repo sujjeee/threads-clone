@@ -5,23 +5,20 @@ import { getUserEmail } from "@/lib/utils";
 import { currentUser } from "@clerk/nextjs";
 import { Prisma, Thread } from "@prisma/client";
 
-const GET_AUTHOR = {
-  author: {
+const GET_USER = {
+  id: true,
+  image: true,
+  fullname: true,
+  username: true,
+  bio: true,
+  link: true,
+  createdAt: true,
+  followers: {
     select: {
       id: true,
-      image: true,
-      fullname: true,
-      username: true,
-      bio: true,
-      link: true,
-      followers: {
-        select: {
-          id: true,
-          image: true
-        }
-      }
+      image: true
     }
-  },
+  }
 }
 
 const GET_COUNT = {
@@ -108,7 +105,11 @@ export const postRouter = createTRPCRouter({
               }
             }
           },
-          ...GET_AUTHOR,
+          author: {
+            select: {
+              ...GET_USER,
+            }
+          },
           ...GET_COUNT,
         },
       });
@@ -344,13 +345,7 @@ export const postRouter = createTRPCRouter({
         cursor: cursor ? { createdAt_id: cursor } : undefined,
         orderBy: [{ createdAt: "desc" }, { id: "desc" }],
         select: {
-          id: true,
-          createdAt: true,
-          username: true,
-          fullname: true,
-          image: true,
-          bio: true,
-          link: true,
+          ...GET_USER
         }
       });
 
@@ -361,7 +356,6 @@ export const postRouter = createTRPCRouter({
           nextCursor = { id: nextItem.id, createdAt: nextItem.createdAt };
         }
       }
-
       return {
         allUsers,
         nextCursor,

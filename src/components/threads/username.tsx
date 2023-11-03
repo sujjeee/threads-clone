@@ -17,8 +17,8 @@ const Username: React.FC<UsernameProps> = ({ author }) => {
     return (
         <HoverCard>
             <HoverCardTrigger asChild>
-                <Link href={`/@${author.username}`} className="flex items-center justify-center gap-1.5 cursor-pointer hover:underline">
-                    <h1 className="text-white text-[15px] font-semibold leading-[0px]">
+                <Link href={`/@${author.username}`} className="flex items-center justify-center gap-1.5 cursor-pointer hover:underline w-fit">
+                    <h1 className="text-white text-[15px] font-semibold leading-[0]">
                         {author.username}
                     </h1>
                     <Icons.verified className='w-3 h-3' />

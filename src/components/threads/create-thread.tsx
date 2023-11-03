@@ -82,6 +82,7 @@ const CreateThread: React.FC<CreateThreadProps> = ({ showIcon, replyThreadInfo }
                             author: {
                                 id: crypto.randomUUID(),
                                 username: user?.username!,
+                                createdAt: user?.createdAt!,
                                 fullname: user?.fullName!,
                                 image: user?.imageUrl!,
                                 link: '',
