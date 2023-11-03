@@ -19,7 +19,7 @@ import {
 import { api } from '@/trpc/react'
 import { toast } from 'sonner'
 import { useUser } from '@clerk/nextjs'
-import { AuthorProps } from '@/types'
+import { AuthorInfoProps } from '@/types'
 import { UserResource } from '@clerk/types'
 
 
@@ -28,7 +28,7 @@ interface CreateThreadProps {
     replyThreadInfo?: {
         id: string
         text: string
-        author: AuthorProps
+        author: AuthorInfoProps
     }
 }
 
@@ -76,19 +76,28 @@ const CreateThread: React.FC<CreateThreadProps> = ({ showIcon, replyThreadInfo }
 
                     latestPage.threads = [
                         {
-                            createdAt: new Date(),
                             id: crypto.randomUUID(),
-                            likeCount: 0,
-                            likes: [],
-                            parentThreadId: null,
-                            replies: [],
-                            replyCount: 0,
+                            createdAt: new Date(),
                             text: text,
-                            user: {
+                            author: {
                                 id: crypto.randomUUID(),
+                                username: user?.username!,
+                                fullname: user?.fullName!,
                                 image: user?.imageUrl!,
-                                username: user?.fullName!
-                            }
+                                link: '',
+                                bio: '',
+                                followers: [{
+                                    id: crypto.randomUUID(),
+                                    image: ''
+                                }]
+                            },
+                            parentThreadId: null,
+                            count: {
+                                likeCount: 0,
+                                replyCount: 0
+                            },
+                            likes: [],
+                            replies: []
                         },
                         ...latestPage.threads
                     ]
@@ -279,7 +288,7 @@ export function InsideCard({ user, onTextareaChange, replyThreadInfo }: {
     replyThreadInfo?: {
         id: string
         text: string
-        author: AuthorProps
+        author: AuthorInfoProps
     }
     user: UserResource
     onTextareaChange: (textValue: string) => void;

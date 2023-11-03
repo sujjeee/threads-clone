@@ -14,7 +14,6 @@ import { Button } from '@/components/ui/button'
 import { api } from '@/trpc/react'
 import { AuthorInfoProps } from '@/types'
 import Username from './username'
-import Loading from '@/app/(pages)/loading'
 
 interface PostActivityProps {
     likeCount: number

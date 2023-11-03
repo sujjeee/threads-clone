@@ -148,7 +148,11 @@ const ThreadCard: React.FC<ThreadCardProps> = ({
                                         author: {
                                             id: author.id,
                                             image: author.image,
-                                            username: author.username
+                                            username: author.username,
+                                            fullname: author.fullname,
+                                            link: '',
+                                            bio: '',
+                                            followers: []
                                         }
                                     }} />
                                 <RepostButton id={id} />

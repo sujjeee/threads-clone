@@ -7,7 +7,6 @@ import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
 import { Input } from '@/components/ui/input'
 import { Button } from '@/components/ui/button'
 import { Card } from '@/components/ui/card'
-import { useUser } from '@clerk/nextjs'
 import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group'
 import { emailToUsername } from '@/lib/utils'
 import { api } from '@/trpc/react'
@@ -17,10 +16,12 @@ import { toast } from 'sonner'
 import { ResizeTextarea } from '@/components/ui/resize-textarea'
 import { User, Privacy } from '@prisma/client'
 import { User as UserType } from "@clerk/nextjs/server"
+import { useUser } from '@clerk/nextjs'
 
 type UserSetupProps = Pick<User, 'bio' | 'link' | 'privacy'>;
 
-export default function AccountSetupForm({ user }: { user: UserType }) {
+export default function AccountSetupForm() {
+    const { user } = useUser()
     const router = useRouter()
     const username = emailToUsername(user!)
     const [showPrivacyPage, setShowPrivacyPage] = React.useState(false);
@@ -120,6 +121,7 @@ export default function AccountSetupForm({ user }: { user: UserType }) {
                                     <div className=" flex items-center gap-2  my-1 h-7">
                                         <Plus className="h-4 w-4 text-[#4D4D4D]" />
                                         <Input
+                                            type='url'
                                             name='link'
                                             className="outline-none border-0  ring-0  focus-visible:ring-offset-0 resize-none min-h-min focus-visible:ring-0 p-0 bg-transparent rounded-none placeholder:text-[#777777] text-[15px] text-accent-foreground select-none"
                                             placeholder="Add link"
@@ -157,13 +159,13 @@ export default function AccountSetupForm({ user }: { user: UserType }) {
                                     )}
                                 >
                                     <div className="flex flex-row items-center justify-between space-y-0 pb-2">
-                                        <h1 className="text-base font-medium">
+                                        <h1 className="text-base text-slate-100 font-medium">
                                             Public profile
                                         </h1>
                                         <Globe className='w-5 h-5' />
                                     </div>
-                                    <p>
-                                        Lorem ipsum dolor sit amet consectetur adipisicing elit. Facere recusandae corporis voluptas culpa quibusdam qui.
+                                    <p className='max-w-[350px]'>
+                                        Anyone on or off Threads can see, share and interact with your content.
                                     </p>
                                 </Label>
                             </div>
@@ -180,13 +182,13 @@ export default function AccountSetupForm({ user }: { user: UserType }) {
                                     )}
                                 >
                                     <div className="flex flex-row items-center justify-between space-y-0 pb-2">
-                                        <h1 className="text-base font-medium">
+                                        <h1 className="text-base text-slate-100  font-medium">
                                             Private profile
                                         </h1>
                                         <Lock className='w-5 h-5' />
                                     </div>
-                                    <p>
-                                        Lorem ipsum dolor sit amet consectetur adipisicing elit. Facere recusandae corporis voluptas culpa quibusdam qui.
+                                    <p className='max-w-[350px]'>
+                                        Only your approved followers can see, share and interact with your content.
                                     </p>
                                 </Label>
                             </div>
