@@ -146,7 +146,9 @@ export const postRouter = createTRPCRouter({
     }),
 
   toggleLike: privateProcedure
-    .input(z.object({ id: z.string() }))
+    .input(z.object({
+      id: z.string()
+    }))
     .mutation(async ({ input: { id }, ctx }) => {
 
       const { userId } = ctx;
@@ -160,15 +162,63 @@ export const postRouter = createTRPCRouter({
       });
 
       if (existingLike == null) {
-        await ctx.db.like.create({ data });
-        return { addedLike: true };
-      } else {
-        await ctx.db.like.delete({
-          where: {
-            threadId_userId: data
-          }
+
+        const transactionResult = await ctx.db.$transaction(async (prisma) => {
+
+          const createdLike = await prisma.like.create({
+            data,
+            select: {
+              thread: {
+                select: {
+                  text: true
+                }
+              }
+            }
+          });
+
+          const createNotification = await prisma.notification.create({
+            data: {
+              type: 'LIKE',
+              userId: data.userId,
+              threadId: data.threadId,
+              message: createdLike.thread.text
+            }
+          });
+
+          return {
+            createdLike,
+            createNotification
+          };
+
         });
+        if (!transactionResult) {
+          throw new TRPCError({ code: 'NOT_IMPLEMENTED' })
+        }
+
+        return { addedLike: true };
+
+      } else {
+        await ctx.db.$transaction(async (prisma) => {
+
+          await prisma.like.delete({
+            where: {
+              threadId_userId: data
+            }
+          });
+
+          await prisma.notification.delete({
+            where: {
+              userId_threadId_type: {
+                userId: data.userId,
+                threadId: data.threadId,
+                type: 'LIKE'
+              }
+            }
+          });
+        });
+
         return { addedLike: false };
+
       }
     }),
 
@@ -623,18 +673,7 @@ export const postRouter = createTRPCRouter({
           },
           user: {
             select: {
-              id: true,
-              image: true,
-              fullname: true,
-              username: true,
-              bio: true,
-              link: true,
-              followers: {
-                select: {
-                  id: true,
-                  image: true
-                }
-              }
+              ...GET_USER
             }
           }
         }

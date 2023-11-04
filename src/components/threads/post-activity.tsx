@@ -14,6 +14,7 @@ import { Button } from '@/components/ui/button'
 import { api } from '@/trpc/react'
 import { AuthorInfoProps } from '@/types'
 import Username from './username'
+import Link from 'next/link'
 
 interface PostActivityProps {
     likeCount: number
@@ -31,12 +32,11 @@ const PostActivity: React.FC<PostActivityProps> = ({ likeCount, id, text, author
                     {likeCount} {likeCount === 1 ? 'like' : 'likes'}
                 </p>
             </DialogTrigger>
-            <DialogContent className='rounded-xl gap-0 p-0 bg-[#181818] border-[#393939]'>
+            <DialogContent className='rounded-xl gap-0 p-0 bg-[#181818] border-[#393939] max-w-[520px] w-full'>
                 <div className='flex items-center  justify-between p-6'>
                     <div className="text-center w-full text-[15px] font-medium tracking-normal">Post activity</div>
                     <div className="text-right tracking-normal text-[15px]">Sort</div>
                 </div>
-
                 <section className='max-h-[80vh] overflow-y-auto no-scrollbar'>
                     <Card className='overflow-hidden p-4 mx-6 mb-2 rounded-lg space-y-1.5 bg-transparent border-[#393939]'>
                         <div className='flex items-center gap-2'>
@@ -74,11 +74,12 @@ const DisplayInsight: React.FC<DisplayInsightProps> = ({ id }) => {
             </div>
         )
     }
+
     return (
         <>
             {data?.map((post) => (
                 <>
-                    <div className='flex items-center w-full p-1 pr-0 '>
+                    <div className='flex items-center w-full pl-1'>
                         <div>
                             <Icons.heart className='h-6 w-6 mr-3 ml-6' />
                         </div>
@@ -92,7 +93,7 @@ const DisplayInsight: React.FC<DisplayInsightProps> = ({ id }) => {
                             </div>
                         </div>
                     </div>
-                    <div className='flex items-center w-full p-1 pr-0 '>
+                    <div className='flex items-center w-full pl-1 '>
                         <div>
                             <Icons.repost className='h-6 w-6 mr-3 ml-6' />
                         </div>
@@ -130,15 +131,17 @@ const DisplayInsight: React.FC<DisplayInsightProps> = ({ id }) => {
                                 <Icons.heart className='h-4 w-4 p-[3px] text-white' />
                             </div>
                         </button>
-                        <div className='flex justify-between items-center w-full border-b border-[#393939] py-5 mr-6'>
-                            <div className='flex flex-col  '>
-                                <span className='text-base font-semibold tracking-normal '>
-                                    {post.user.username}
-                                </span>
-                                <span className=' text-[15px] text-[#777777]'>
-                                    {post.user.fullname}
-                                </span>
-                            </div>
+                        <div className='flex justify-between items-center w-full border-b border-[#393939] py-5 mr-6 '>
+                            <Link href={`/@${post.user.username}`} className="flex flex-col gap-1.5 w-full">
+                                <div className='flex flex-col w-full'>
+                                    <Username
+                                        author={post.user}
+                                    />
+                                    <p className="text-[15px]  text-[#6A6A6A] tracking-wide mt-1">
+                                        {post.user.fullname}
+                                    </p>
+                                </div>
+                            </Link>
                             <Button
                                 className='px-6  rounded-xl focus:bg-transparent hover:bg-transparent'
                                 variant={'outline'}>

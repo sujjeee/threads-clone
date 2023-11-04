@@ -36,11 +36,11 @@ export default function page() {
           </div>
         }
       >
-        {allThread?.map((post) => {
+        {allThread?.map((post, index) => {
           return (
             <>
-              <ThreadCard key={post.id} {...post} />
-              <Separator />
+              <ThreadCard key={index} {...post} />
+              {index !== allThread.length - 1 && <Separator />}
             </>
           )
         })}

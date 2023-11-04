@@ -11,21 +11,23 @@ datasource db {
 }
 
 model User {
-    id           String   @id
-    createdAt    DateTime @default(now()) @map(name: "created_at")
-    updatedAt    DateTime @default(now()) @map(name: "updated_at")
-    username     String   @unique
+    id           String         @id
+    createdAt    DateTime       @default(now()) @map(name: "created_at")
+    updatedAt    DateTime       @default(now()) @map(name: "updated_at")
+    username     String         @unique
     fullname     String
     image        String
     bio          String?
     link         String?
-    email        String   @unique
-    verified     Boolean? @default(false)
-    privacy      Privacy  @default(PUBLIC)
-    followers    User[]   @relation(name: "followers")
-    following    User[]   @relation(name: "followers")
+    email        String         @unique
+    verified     Boolean?       @default(false)
+    privacy      Privacy        @default(PUBLIC)
+    followers    User[]         @relation(name: "followers")
+    following    User[]         @relation(name: "followers")
     threads      Thread[]
     likedThreads Like[]
+    isAdmin      Boolean?       @default(false)
+    notification Notification[]
 
     @@unique([createdAt, id])
 }
@@ -36,16 +38,17 @@ enum Privacy {
 }
 
 model Thread {
-    id             String   @id @default(cuid())
-    createdAt      DateTime @default(now())
-    author         User     @relation(fields: [authorId], references: [id], onDelete: Cascade)
+    id             String         @id @default(cuid())
+    createdAt      DateTime       @default(now())
+    author         User           @relation(fields: [authorId], references: [id], onDelete: Cascade)
     authorId       String
     text           String
     images         String[]
     likes          Like[]
     parentThreadId String?
-    parentThread   Thread?  @relation("rootThread", fields: [parentThreadId], references: [id], onDelete: Cascade)
-    replies        Thread[] @relation("rootThread")
+    parentThread   Thread?        @relation("rootThread", fields: [parentThreadId], references: [id], onDelete: Cascade)
+    replies        Thread[]       @relation("rootThread")
+    notification   Notification[]
 
     @@unique([createdAt, id])
     @@index([authorId])
@@ -61,4 +64,23 @@ model Like {
     @@id([threadId, userId])
     @@index([userId])
     @@index([threadId])
+}
+
+model Notification {
+    createdAt DateTime         @default(now())
+    type      NotificationType
+    userId    String
+    user      User             @relation(fields: [userId], references: [id])
+    threadId  String
+    thread    Thread?          @relation(fields: [threadId], references: [id])
+    message   String?
+
+    @@id([userId, threadId, type])
+    @@index([userId])
+}
+
+enum NotificationType {
+    LIKE
+    REPLY
+    FOLLOW
 }

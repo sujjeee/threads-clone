@@ -22,34 +22,37 @@ export default function page() {
     })
 
     const allUsers = data?.pages.flatMap((page) => page.allUsers)
-
-    if (isLoading) return <Loading />
     if (isError) return <Error />
 
     return (
         <>
             <SearchContainer />
             <div className='pt-16'>
-                {search === null ? (
-                    <InfiniteScroll
-                        dataLength={allUsers?.length!}
-                        next={fetchNextPage}
-                        hasMore={hasNextPage!}
-                        loader={
-                            <div className="h-[100px] w-full justify-center items-center flex ">
-                                <Icons.loading className='h-11 w-11' />
-                            </div>
-                        }
-                    >
-                        {allUsers?.map((user) => {
-                            return (
-                                <UserCard key={user.id} {...user} />
-                            )
-                        })}
-                    </InfiniteScroll>
-                ) : (
-                    <DisplayQueryThreads searchQuery={search} />
-                )}
+                {!isLoading
+                    ? <>
+                        {search === null ? (
+                            <InfiniteScroll
+                                dataLength={allUsers?.length!}
+                                next={fetchNextPage}
+                                hasMore={hasNextPage!}
+                                loader={
+                                    <div className="h-[100px] w-full justify-center items-center flex ">
+                                        <Icons.loading className='h-11 w-11' />
+                                    </div>
+                                }
+                            >
+                                {allUsers?.map((user) => {
+                                    return (
+                                        <UserCard key={user.id} {...user} />
+                                    )
+                                })}
+                            </InfiniteScroll>
+                        ) : (
+                            <DisplayQueryThreads searchQuery={search} />
+                        )}
+                    </>
+                    : <Loading />
+                }
             </div>
         </>
     )
@@ -62,20 +65,17 @@ interface DisplayQueryThreadsProps {
 
 const DisplayQueryThreads: React.FC<DisplayQueryThreadsProps> = ({ searchQuery }) => {
 
+    if (searchQuery === '') return
+
     const { data, isLoading, isError, hasNextPage, fetchNextPage } = api.post.infiniteFeed.useInfiniteQuery({ searchQuery }, {
         getNextPageParam: (lastPage) => lastPage.nextCursor
     })
 
-    console.log('searchQuery', searchQuery)
-    console.log('data', data?.pages[0]?.threads)
     const allThread = data?.pages.flatMap((page) => page.threads)
-    console.log('structure all threds', allThread)
+
     if (isLoading) return <Loading />
-    if (isError) return (
-        <div className="h-[100px] w-full justify-center items-center flex ">
-            <p>No results.</p>
-        </div>
-    )
+    if (isError) return <Error />
+
     if (allThread?.length === 0 || allThread === undefined) {
         return (
             <div className="h-[50vh] w-full justify-center items-center flex text-[#777777]">
@@ -83,6 +83,7 @@ const DisplayQueryThreads: React.FC<DisplayQueryThreadsProps> = ({ searchQuery }
             </div>
         )
     }
+
     return (
         <div className='mt-2'>
             <InfiniteScroll
@@ -94,16 +95,12 @@ const DisplayQueryThreads: React.FC<DisplayQueryThreadsProps> = ({ searchQuery }
                         <Icons.loading className='h-11 w-11' />
                     </div>
                 }
-
             >
                 {allThread?.map((post, index) => {
                     return (
                         <>
-                            <ThreadCard
-                                key={index}
-                                {...post}
-                            />
-
+                            <ThreadCard key={index} {...post} />
+                            {index !== allThread.length - 1 && <Separator />}
                         </>
                     )
                 })}
