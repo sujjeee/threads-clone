@@ -718,6 +718,35 @@ export const postRouter = createTRPCRouter({
       });
       return user
     }),
+  notifications: privateProcedure
+    .input(
+      z.object({
+        id: z.string()
+      })
+    )
+    .query(async ({ input, ctx }) => {
+
+      const notification = await ctx.db.notification.findMany({
+        where: {
+          userId: input.id
+        },
+        select: {
+          user: {
+            select: {
+              ...GET_USER
+            }
+          },
+          createdAt: true,
+          message: true,
+          type: true,
+          threadId: true
+        }
+      });
+
+      return notification
+    }),
+
+
 });
 
 

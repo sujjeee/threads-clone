@@ -73,7 +73,7 @@ model Notification {
     user      User             @relation(fields: [userId], references: [id])
     threadId  String
     thread    Thread?          @relation(fields: [threadId], references: [id])
-    message   String?
+    message   String
 
     @@id([userId, threadId, type])
     @@index([userId])
