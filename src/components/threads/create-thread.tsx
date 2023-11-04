@@ -21,6 +21,8 @@ import { toast } from 'sonner'
 import { useUser } from '@clerk/nextjs'
 import { AuthorInfoProps } from '@/types'
 import { UserResource } from '@clerk/types'
+import { Separator } from '../ui/separator'
+import Username from './username'
 
 
 interface CreateThreadProps {
@@ -178,34 +180,39 @@ const CreateThread: React.FC<CreateThreadProps> = ({ showIcon, replyThreadInfo }
                             <Icons.reply className='w-5 h-5 ' />
                         </div>
                     )
-                ) : <div
-                    onClick={() => {
-                        setIsOpen(true)
-                    }}
-                    className='flex w-full my-4 '>
-                    <div className='w-full flex'>
-                        <div>
-                            <img
-                                src={user?.imageUrl}
-                                width={36}
-                                height={36}
-                                alt="Account Avatar"
-                                className="rounded-full mr-4"
-                            />
+                ) : (
+                    <div className='flex flex-col w-full'>
+                        <div
+                            onClick={() => {
+                                setIsOpen(true)
+                            }}
+                            className='flex w-full my-4 '>
+                            <div className='w-full flex'>
+                                <div>
+                                    <img
+                                        src={user?.imageUrl}
+                                        width={36}
+                                        height={36}
+                                        alt="Account Avatar"
+                                        className="rounded-full mr-4"
+                                    />
+                                </div>
+                                <input
+                                    className=" mini-scrollbar resize-none bg-transparent w-full placeholder:text-[#777777] outline-none placeholder:text-[15px]"
+                                    placeholder="Start a thread..."
+                                />
+                            </div>
+                            <Button
+                                disabled={threadData.text === '' || isLoading}
+                                size={'sm'}
+                                className='rounded-full px-4 font-semibold text-[15px]'>
+                                Post
+                            </Button>
                         </div>
-                        <input
-                            className=" mini-scrollbar resize-none bg-transparent w-full placeholder:text-[#777777] outline-none placeholder:text-[15px]"
-                            placeholder="Start a thread..."
-                        />
-                    </div>
-                    <Button
-                        disabled={threadData.text === '' || isLoading}
-                        size={'sm'}
-                        className='rounded-full px-4 font-semibold text-[15px]'> Post</Button>
-                </div>
-                }
+                        <Separator className='bg-[#333333]' />
+                    </div>)}
             </DialogTrigger>
-            <DialogContent className='border-none bg-transparent sm:max-w-[680px] max-w-lg w-full shadow-none select-none'>
+            <DialogContent className='border-none bg-transparent sm:max-w-[668px] max-w-lg w-full shadow-none select-none'>
                 <h1 className='w-full text-center font-bold mb-2'>New thread</h1>
                 <Card className="ring-offset-0 border-none ring-1 ring-[#393939] bg-[#181818] rounded-2xl ">
                     <div className='overflow-y-auto no-scrollbar p-6 max-h-[70vh] '>
@@ -283,8 +290,6 @@ const CreateThread: React.FC<CreateThreadProps> = ({ showIcon, replyThreadInfo }
 export default CreateThread
 
 
-
-
 export function InsideCard({ user, onTextareaChange, replyThreadInfo }: {
     replyThreadInfo?: {
         id: string
@@ -314,7 +319,11 @@ export function InsideCard({ user, onTextareaChange, replyThreadInfo }: {
                 {replyThreadInfo?.text && <div className="h-full w-0.5 bg-[#333638] rounded-full mt-1.5 my-1" />}
             </div>
             <div className='flex flex-col gap-1.5 w-full pb-4'>
-                <p className="text-[15px] font-medium leading-none tracking-normal">sujjeee</p>
+                {replyThreadInfo ? (
+                    <Username author={replyThreadInfo?.author} />
+                ) : (
+                    <p className="text-[15px] font-medium leading-none tracking-normal">{user.username}</p>
+                )}
                 {replyThreadInfo ? <p className='flex-grow resize-none overflow-hidden outline-none text-[15px] text-accent-foreground break-words placeholder:text-[#777777] w-full tracking-normal'>
                     {replyThreadInfo.text}
                 </p>

@@ -79,8 +79,6 @@ const ThreadCard: React.FC<ThreadCardProps> = ({
 
     return (
         <>
-            <Separator />
-
             <div className='flex w-full gap-2 pt-4'>
                 <div className="flex flex-col items-center gap-1.5 ">
                     <Dialog>

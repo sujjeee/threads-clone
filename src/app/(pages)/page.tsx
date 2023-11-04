@@ -8,6 +8,7 @@ import CreateThread from '@/components/threads/create-thread'
 import Loading from '@/app/(pages)/loading'
 import Error from '@/app/error'
 import InfiniteScroll from 'react-infinite-scroll-component'
+import { Separator } from '@/components/ui/separator'
 
 export default function page() {
 
@@ -37,7 +38,10 @@ export default function page() {
       >
         {allThread?.map((post) => {
           return (
-            <ThreadCard key={post.id} {...post} />
+            <>
+              <ThreadCard key={post.id} {...post} />
+              <Separator />
+            </>
           )
         })}
       </InfiniteScroll>

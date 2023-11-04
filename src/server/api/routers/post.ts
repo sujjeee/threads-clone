@@ -72,13 +72,17 @@ export const postRouter = createTRPCRouter({
   infiniteFeed: publicProcedure
     .input(
       z.object({
+        searchQuery: z.string().optional(),
         limit: z.number().optional(),
         cursor: z.object({ id: z.string(), createdAt: z.date() }).optional(),
       })
     )
-    .query(async ({ input: { limit = 10, cursor }, ctx }) => {
+    .query(async ({ input: { limit = 10, cursor, searchQuery }, ctx }) => {
       const allThreads = await ctx.db.thread.findMany({
         where: {
+          text: {
+            contains: searchQuery
+          },
           parentThreadId: null
         },
         take: limit + 1,

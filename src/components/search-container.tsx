@@ -12,10 +12,11 @@ import { Button } from '@/components/ui/button'
 import { cn } from '@/lib/utils'
 import { useDebounce } from '@/hooks/use-debounce'
 import { api } from '@/trpc/react'
-import { usePathname } from 'next/navigation'
-import Link from 'next/link'
+import { usePathname, useRouter } from 'next/navigation'
+import Username from '@/components/threads/username'
 
 export default function SearchContainer() {
+    const router = useRouter()
     const path = usePathname()
     const [searchValue, setSearchValue] = React.useState('')
     const debouncedSearch = useDebounce(searchValue, 2000)
@@ -25,7 +26,7 @@ export default function SearchContainer() {
     }, [debouncedSearch])
 
     return (
-        <div className={cn('absolute rounded-2xl overflow-hidden border border-[#333333] bg-black max-w-xl w-full mb-3 transition-transform duration-300 z-50',
+        <div className={cn('absolute rounded-2xl  border border-[#333333] bg-black max-w-xl w-full mb-3 transition-transform duration-300 z-50',
             {
                 'scale-105': searchValue !== '',
                 'scale-100': searchValue === '',
@@ -41,15 +42,20 @@ export default function SearchContainer() {
                 />
             </div>
             {searchValue !== '' &&
-                <div className=' flex-1 max-h-[60vh] border-t border-[#333333] overflow-y-auto no-scrollbar'>
+                <div className='flex-1 max-h-[60vh] border-t border-[#333333] overflow-y-auto no-scrollbar'>
                     <div className='flex items-center w-full '>
                         <div className='mx-[30px]'>
                             <Icons.search className='h-4 w-4  text-[#4D4D4D]' />
                         </div>
-                        <div className='flex justify-between items-center w-full py-5 mr-6'>
-                            <Link href={`${path}?=${searchValue}`} className='text-base font-semibold tracking-normal '>
+                        <div
+                            onClick={() => {
+                                router.push(`${path}?q=${searchValue}`)
+                                setSearchValue('')
+                            }}
+                            className='flex justify-between items-center w-full py-5 mr-6 cursor-pointer'>
+                            <div className='text-base font-semibold tracking-normal '>
                                 Search for <span>"{searchValue}"</span>
-                            </Link>
+                            </div>
                             <ChevronRight className='h-5 w-5  ' />
                         </div>
                     </div>
@@ -93,10 +99,8 @@ const DisplaySearchedResults: React.FC<DisplaySearchedResultsProps> = ({ debounc
                     </button>
                     <div className='flex justify-between items-center w-full border-t border-[#393939] py-4 mr-6'>
                         <div className='flex flex-col  '>
-                            <span className='text-base font-semibold tracking-normal '>
-                                {user.username}
-                            </span>
-                            <span className=' text-[15px] text-[#777777]'>
+                            <Username author={user} />
+                            <span className='text-[14px] mt-1 text-[#777777]'>
                                 {user.fullname}
                             </span>
                         </div>
