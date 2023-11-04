@@ -15,7 +15,6 @@ import { useRouter } from 'next/navigation'
 import { toast } from 'sonner'
 import { ResizeTextarea } from '@/components/ui/resize-textarea'
 import { User, Privacy } from '@prisma/client'
-import { User as UserType } from "@clerk/nextjs/server"
 import { useUser } from '@clerk/nextjs'
 
 type UserSetupProps = Pick<User, 'bio' | 'link' | 'privacy'>;
@@ -24,7 +23,9 @@ export default function AccountSetupForm() {
     const { user } = useUser()
     const router = useRouter()
     const username = emailToUsername(user!)
+
     const [showPrivacyPage, setShowPrivacyPage] = React.useState(false);
+
     const [userAccountData, setUserAccountData] = React.useState<UserSetupProps>({
         bio: "",
         link: "",
@@ -89,12 +90,11 @@ export default function AccountSetupForm() {
                                         <Label htmlFor="username">Name</Label>
                                         <div className=" flex items-center gap-2  w-full my-1 h-7">
                                             <Lock className="h-4 w-4 text-[#4D4D4D]" />
-                                            <input
-                                                name='username'
-                                                className="flex-grow resize-none overflow-hidden outline-none text-[15px] text-accent-foreground break-words tracking-wide w-full bg-transparent select-none"
-                                                placeholder="name and username"
-                                                defaultValue={`${user?.firstName} ${user?.lastName}${" "}(${username})`}
-                                            />
+                                            <div
+                                                className="flex-grow overflow-hidden outline-none text-[15px] text-accent-foreground break-words tracking-wide w-fullselect-none"
+                                            >
+                                                {`${user?.firstName} ${user?.lastName}${" "}(${username})`}
+                                            </div>
                                         </div>
                                     </div>
                                     <div className='h-12 w-12'>

@@ -87,6 +87,7 @@ const CreateThread: React.FC<CreateThreadProps> = ({ showIcon, replyThreadInfo }
                                 createdAt: user?.createdAt!,
                                 fullname: user?.fullName!,
                                 image: user?.imageUrl!,
+                                isAdmin: false,
                                 link: '',
                                 bio: '',
                                 followers: [{
@@ -312,15 +313,27 @@ export function InsideCard({ user, onTextareaChange, replyThreadInfo }: {
                 'mt-1': !replyThreadInfo
             })}>
             <div className='relative flex flex-col items-center'>
-                <Avatar className='h-9 w-9 outline outline-1 outline-[#333333] rounded-full '>
-                    <AvatarImage src={user?.imageUrl} />
-                    <AvatarFallback>JL</AvatarFallback>
-                </Avatar>
+                {replyThreadInfo
+                    ?
+                    <Avatar className='h-9 w-9 outline outline-1 outline-[#333333] rounded-full '>
+                        <AvatarImage src={replyThreadInfo.author.image} alt={replyThreadInfo.author.username} className='object-cover' />
+                        <AvatarFallback>{replyThreadInfo.author.username.slice(0, 2).toUpperCase()}</AvatarFallback>
+                    </Avatar>
+                    : <Avatar className='h-9 w-9 outline outline-1 outline-[#333333] rounded-full  '>
+                        <AvatarImage src={user?.imageUrl} className='object-cover' />
+                        <AvatarFallback>JK</AvatarFallback>
+                    </Avatar>
+                }
                 {replyThreadInfo?.text && <div className="h-full w-0.5 bg-[#333638] rounded-full mt-1.5 my-1" />}
             </div>
-            <div className='flex flex-col gap-1.5 w-full pb-4'>
+            <div className='flex flex-col w-full gap-1.5 pb-4'>
                 {replyThreadInfo ? (
-                    <Username author={replyThreadInfo?.author} />
+                    <div className='flex'>
+                        <Username author={replyThreadInfo?.author} />
+                        <div className='w-3 h-3 invisible'>
+                            h
+                        </div>
+                    </div>
                 ) : (
                     <p className="text-[15px] font-medium leading-none tracking-normal">{user.username}</p>
                 )}

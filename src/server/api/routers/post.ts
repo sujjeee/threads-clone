@@ -13,6 +13,7 @@ const GET_USER = {
   bio: true,
   link: true,
   createdAt: true,
+  isAdmin: true,
   followers: {
     select: {
       id: true,
@@ -33,6 +34,7 @@ const GET_COUNT = {
 export const postRouter = createTRPCRouter({
 
   testroute: publicProcedure.query(() => 'Say this is test route!'),
+
   createThread: privateProcedure
     .input(
       z.object({
@@ -718,17 +720,27 @@ export const postRouter = createTRPCRouter({
       });
       return user
     }),
-  notifications: privateProcedure
+  notifications: publicProcedure
     .input(
       z.object({
         id: z.string()
       })
     )
     .query(async ({ input, ctx }) => {
-
       const notification = await ctx.db.notification.findMany({
         where: {
-          userId: input.id
+          OR: [
+            {
+              isPublic: true,
+              NOT: {
+                userId: input.id,
+              },
+            },
+            {
+              isPublic: false,
+              userId: input.id,
+            },
+          ],
         },
         select: {
           user: {
@@ -742,7 +754,6 @@ export const postRouter = createTRPCRouter({
           threadId: true
         }
       });
-
       return notification
     }),
 

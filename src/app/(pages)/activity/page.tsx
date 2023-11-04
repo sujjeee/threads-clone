@@ -12,6 +12,7 @@ import UserAvatar from '@/components/user-avatar'
 import Link from 'next/link'
 
 export default function ActivityPage() {
+
     const { user: loggedUser } = useUser()
     const { data, isLoading } = api.post.notifications.useQuery({ id: loggedUser?.id! })
 
@@ -37,10 +38,15 @@ export default function ActivityPage() {
                                             {formatTimeAgo(activity.createdAt)}
                                         </time>
                                     </div>
-                                    <Link
-                                        href={`/@${activity.user.username}/post/${activity.threadId}`}
-                                        className="text-[15px] text-[#6A6A6A] tracking-wide leading-5">
-                                        {truncateText(activity.message, 100)}
+                                    <Link href={`/@${activity.user.username}/post/${activity.threadId}`}>
+                                        {activity.type !== "ADMIN"
+                                            ? <p className="text-[15px] text-[#6A6A6A] tracking-wide leading-5">
+                                                {truncateText(activity.message, 100)}
+                                            </p>
+                                            : <p className="text-[15px] text-accent-foreground tracking-wide leading-5">
+                                                {activity.message}
+                                            </p>
+                                        }
                                     </Link>
                                 </div>
                                 {activity.type === "FOLLOW" && (
@@ -55,7 +61,7 @@ export default function ActivityPage() {
                 ))
             ) : (
                 <div className="h-[50vh] w-full justify-center items-center flex text-[#777777]">
-                    <p>No results.</p>
+                    <p>No notifications.</p>
                 </div>
             )}
         </>

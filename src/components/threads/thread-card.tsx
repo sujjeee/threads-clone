@@ -84,13 +84,14 @@ const ThreadCard: React.FC<ThreadCardProps> = ({
                     <Dialog>
                         <DialogTrigger asChild>
                             <button className='relative '>
-                                <div className='h-9 w-9 outline outline-1 outline-[#333333] rounded-full'>
-                                    <Avatar className="rounded-full w-full h-full">
-                                        <AvatarImage src={author.image} alt={author.username} />
+                                <div className='h-9 w-9 outline outline-1 outline-[#333333] rounded-full ml-[1px]'>
+                                    <Avatar className="rounded-full w-full h-full ">
+                                        <AvatarImage src={author.image} alt={author.username} className='object-cover' />
                                         <AvatarFallback>{author.username?.slice(0, 2).toUpperCase()}</AvatarFallback>
                                     </Avatar>
                                 </div>
                                 <div className='bg-foreground absolute -bottom-0.5 -right-0.5  rounded-2xl border-2 border-background text-background hover:scale-105 active:scale-95'>
+
                                     <Plus className='h-4 w-4 p-0.5' />
                                 </div>
                             </button>
@@ -109,7 +110,7 @@ const ThreadCard: React.FC<ThreadCardProps> = ({
                 <div className="flex flex-col w-full px-2">
                     <div className="justify-center items-start self-stretch flex flex-col max-md:max-w-full  ">
                         <div className="justify-center items-start flex w-full flex-col  pt-0 self-start">
-                            <div className="items-start flex w-full justify-between gap-5 py-px self-start max-md:max-w-full max-md:flex-wrap ">
+                            <div className=" flex w-full justify-between gap-5 py-px self-start max-md:max-w-full max-md:flex-wrap ">
                                 <Username author={author} />
                                 <div className="justify-between items-center self-stretch flex gap-3">
                                     <time className="text-right text-[15px] leading-none self-stretch  text-[#777777] cursor-default">
@@ -149,6 +150,7 @@ const ThreadCard: React.FC<ThreadCardProps> = ({
                                             createdAt: author.createdAt,
                                             username: author.username,
                                             fullname: author.fullname,
+                                            isAdmin: author.isAdmin,
                                             link: '',
                                             bio: '',
                                             followers: []

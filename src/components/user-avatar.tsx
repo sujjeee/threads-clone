@@ -27,22 +27,24 @@ const UserAvatar: React.FC<UserAvatarProps> = ({ username, image, fullname, type
 
   return (
     <Link href={`/@${username}`} >
-      <Avatar className="h-10 w-10 relative overflow-visible cursor-pointer ">
-        <AvatarImage src={image} alt={fullname} className="rounded-full w-full h-full object-cover" />
-        <AvatarFallback>{username.slice(0, 2).toUpperCase()}</AvatarFallback>
-        <div
-          className={cn(
-            'absolute -bottom-0.5 -right-0.5 rounded-2xl border-2 border-background text-white',
-            {
-              'bg-[#fe0169]': icon_name === 'like',
-              'bg-[#6e3def]': icon_name === 'follow',
-              'bg-[#24c3ff]': icon_name === 'reply',
-            }
-          )}
-        >
-          <Icon className='h-[18px] w-[18px] p-1' fill='white' />
-        </div>
-      </Avatar>
+      <div className='outline outline-1 outline-[#333333] rounded-full ml-[1px]'>
+        <Avatar className="h-10 w-10 relative overflow-visible cursor-pointer ">
+          <AvatarImage src={image} alt={fullname} className="rounded-full w-full h-full object-cover" />
+          <AvatarFallback>{username.slice(0, 2).toUpperCase()}</AvatarFallback>
+          <div
+            className={cn(
+              'absolute -bottom-0.5 -right-0.5 rounded-2xl border-2 border-background text-white',
+              {
+                'bg-[#fe0169]': icon_name === 'like',
+                'bg-[#6e3def]': icon_name === 'follow',
+                'bg-[#24c3ff]': icon_name === 'reply',
+              }
+            )}
+          >
+            {type !== 'ADMIN' && <Icon className='h-[18px] w-[18px] p-1' fill='white' />}
+          </div>
+        </Avatar>
+      </div>
     </Link>
   )
 }

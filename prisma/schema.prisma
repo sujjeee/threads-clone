@@ -70,10 +70,11 @@ model Notification {
     createdAt DateTime         @default(now())
     type      NotificationType
     userId    String
-    user      User             @relation(fields: [userId], references: [id])
+    user      User             @relation(fields: [userId], references: [id], onDelete: Cascade)
     threadId  String
-    thread    Thread?          @relation(fields: [threadId], references: [id])
+    thread    Thread           @relation(fields: [threadId], references: [id], onDelete: Cascade)
     message   String
+    isPublic  Boolean          @default(false)
 
     @@id([userId, threadId, type])
     @@index([userId])
@@ -83,4 +84,5 @@ enum NotificationType {
     LIKE
     REPLY
     FOLLOW
+    ADMIN
 }

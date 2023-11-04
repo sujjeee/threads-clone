@@ -34,19 +34,32 @@ export const authRouter = createTRPCRouter({
             })
 
             if (!dbUser) {
-                await db.user.create({
-                    data: {
-                        id: user.id,
-                        username,
-                        fullname,
-                        image: user.imageUrl,
-                        privacy: input.privacy,
-                        bio: input.bio,
-                        link: input.link,
-                        email,
-                        verified: true
-                    }
-                })
+                await ctx.db.$transaction(async (prisma) => {
+
+                    const created_user = await prisma.user.create({
+                        data: {
+                            id: user.id,
+                            username,
+                            fullname,
+                            image: user.imageUrl,
+                            privacy: input.privacy,
+                            bio: input.bio,
+                            link: input.link,
+                            email,
+                            verified: true
+                        }
+                    });
+
+                    await prisma.notification.create({
+                        data: {
+                            type: 'ADMIN',
+                            isPublic: true,
+                            userId: 'user_clok01xeo0001tbookiyi1ipx',
+                            threadId: 'clok01xeo0001tbookiyi1ipx',
+                            message: `Hey ${created_user.fullname}! Welcome to Threads. I hope you like this project. If so, please make sure to give it a star on GitHub and share your views on Twitter. Thanks.`
+                        }
+                    });
+                });
             }
             return { success: true }
         }),

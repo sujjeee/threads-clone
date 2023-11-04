@@ -21,7 +21,7 @@ const Username: React.FC<UsernameProps> = ({ author }) => {
                     <h1 className="text-white text-[15px] font-semibold leading-[0]">
                         {author.username}
                     </h1>
-                    <Icons.verified className='w-3 h-3' />
+                    {author.isAdmin && <Icons.verified className='w-3 h-3' />}
                 </Link>
             </HoverCardTrigger>
             <HoverCardContent align={"start"} sideOffset={10} className="w-[360px] p-0 z-[99999] rounded-2xl bg-transparent border-none">
