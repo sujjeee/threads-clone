@@ -7,6 +7,7 @@ import ReplyThreadCard from '@/components/threads/reply-thread-card'
 import ThreadCard from '@/components/threads/thread-card'
 import { api } from '@/trpc/react'
 import { usePathname, useRouter } from 'next/navigation'
+import { Separator } from '@/components/ui/separator'
 
 interface pageProps { }
 
@@ -37,14 +38,14 @@ const page: React.FC<pageProps> = ({ }) => {
     return (
         <>
             <ReplyThreadCard {...data} />
-            {/* {data.threadInfo.replies.map((post, index) => {
+            {data.threadInfo.replies.map((post, index) => {
                 return (
-                    <ThreadCard
-                        key={index}
-                        {...post}
-                    />
+                    <>
+                        <Separator />
+                        <ThreadCard key={index} {...post} />
+                    </>
                 );
-            })} */}
+            })}
         </>
     )
 }

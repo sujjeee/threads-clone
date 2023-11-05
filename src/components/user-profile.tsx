@@ -10,12 +10,13 @@ import { Avatar, AvatarFallback, AvatarImage } from './ui/avatar'
 import { Icons } from './icons'
 import { UserProfileInfoProps } from '@/types'
 import { Button } from './ui/button'
+import { useUser } from '@clerk/nextjs'
 
 const UserProfile: React.FC<UserProfileInfoProps> = ({
+    id,
     bio,
     createdAt,
     fullname,
-    id,
     image,
     link,
     privacy,
@@ -23,6 +24,7 @@ const UserProfile: React.FC<UserProfileInfoProps> = ({
 }) => {
     const path = usePathname()
     const router = useRouter()
+    const { user } = useUser()
 
     if (!path.startsWith('/@')) {
         const newPath = '/@' + path.replace(/^\//, '')
@@ -67,24 +69,28 @@ const UserProfile: React.FC<UserProfileInfoProps> = ({
                 </div>
                 <div className='flex gap-4'>
                     <Instagram className='h-6 w-6' />
-                    <Icons.circleMenu className='h-6 w-6' />
+                    {user?.id != id &&
+                        <Icons.circleMenu className='h-6 w-6' />
+                    }
                 </div>
             </div>
-            <div className="grid gap-2 sm:grid-cols-2 pt-2">
-                <Button
-                    size={'sm'}
-                    className="w-full border-[#333333] sm:w-auto rounded-xl  py-1 "
-                >
-                    Follow
-                </Button>
-                <Button
-                    size={'sm'}
-                    variant="outline"
-                    className="w-full border-[#333333] sm:w-auto rounded-xl cursor-not-allowed py-1"
-                >
-                    Mention
-                </Button>
-            </div>
+            {user?.id != id &&
+                <div className="grid gap-2 sm:grid-cols-2 pt-2">
+                    <Button
+                        size={'sm'}
+                        className="w-full border-[#333333] sm:w-auto rounded-xl  py-1 "
+                    >
+                        Follow
+                    </Button>
+                    <Button
+                        size={'sm'}
+                        variant="outline"
+                        className="w-full border-[#333333] sm:w-auto rounded-xl cursor-not-allowed py-1"
+                    >
+                        Mention
+                    </Button>
+                </div>
+            }
             <div className="w-full  flex">
                 <button className="w-full h-12 py-2 font-semibold border-b border-b-white text-center">
                     Threads

@@ -1,20 +1,25 @@
 "use client"
 
 import React from 'react'
-import { Icons } from '../icons'
-import { Plus } from 'lucide-react'
-import { api } from '@/trpc/react'
-import { toast } from 'sonner'
-import { cn, formatTimeAgo } from '@/lib/utils'
 import { useUser } from '@clerk/nextjs'
-import CreateThread from './create-thread'
+import { toast } from 'sonner'
+import { Icons } from '@/components/icons'
+import { api } from '@/trpc/react'
+import { cn, formatTimeAgo } from '@/lib/utils'
+import CreateThread from '@/components/threads/create-thread'
 import Link from 'next/link'
 import { ThreadProps } from '@/types'
-import { Avatar, AvatarFallback, AvatarImage } from '../ui/avatar'
-import Username from './username'
-import PostMenu from '../buttons/post-menu'
+import {
+    Avatar,
+    AvatarFallback,
+    AvatarImage
+} from '@/components/ui/avatar'
+import Username from '@/components/threads/username'
+import PostMenu from '@/components/buttons/post-menu'
+import ThreadCard from './thread-card'
 
 const ReplyThreadCard: React.FC<ThreadProps> = ({ threadInfo }) => {
+
     const { user: loginUser } = useUser()
     const { id, likes, replies, author, count, createdAt, parentThreadId, text } = threadInfo
 
@@ -28,6 +33,7 @@ const ReplyThreadCard: React.FC<ThreadProps> = ({ threadInfo }) => {
     const { mutate: toggleLike } = api.like.toggleLike.useMutation({
 
         onMutate: async ({ id }) => {
+
             const previousLikedByMe = likeUpdate.current.likedByMe;
             const previousLikeCount = likeUpdate.current.likeCount;
 
@@ -47,12 +53,14 @@ const ReplyThreadCard: React.FC<ThreadProps> = ({ threadInfo }) => {
     return (
         <>
             <div className='flex flex-col w-full pt-2'>
-                {/* {parentThread && (
+                {/* {getThreadParents?.map((post,index) => (
                     <>
-                        {console.log("this is parent I'm passing", parentThread)}
-                        <ParentThreadCard {...parentThread} />
+                    <ThreadCard
+                        key={index}
+                        {...post}
+                    />
                     </>
-                )} */}
+                ))} */}
                 <div className="flex items-center gap-3 z-50 w-full pr-2 ">
                     <button className='relative '>
                         <div className='h-9 w-9 outline outline-1 outline-[#333333] rounded-full ml-[1px]'>

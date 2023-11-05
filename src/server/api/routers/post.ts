@@ -9,6 +9,7 @@ import { getUserEmail } from "@/lib/utils";
 import { currentUser } from "@clerk/nextjs";
 import { GET_USER } from "@/server/constant";
 import { GET_COUNT } from "@/server/constant";
+import { Prisma, Thread } from "@prisma/client";
 
 export const postRouter = createTRPCRouter({
 
@@ -301,6 +302,7 @@ export const postRouter = createTRPCRouter({
     )
     .query(async ({ input, ctx }) => {
       const { id } = input
+      // const id = 'clolb0i010004tbwgasank23ha'
       const getThreads = await ctx.db.thread.findUnique({
         where: {
           id
@@ -358,6 +360,7 @@ export const postRouter = createTRPCRouter({
           }
         },
       });
+
       // const getThreadParents = await ctx.db.$queryRaw<Thread[]>(
       //   Prisma.sql`
       //     WITH RECURSIVE threads_tree AS (
@@ -423,8 +426,16 @@ export const postRouter = createTRPCRouter({
             replyCount: getThreads._count.replies,
           },
           likes: getThreads.likes,
-          replies: getThreads.replies,
-        }
+          // replies: getThreads.replies,
+          replies: getThreads.replies.map(({ _count, ...reply }) => ({
+            ...reply,
+            count: {
+              likeCount: _count.likes,
+              replyCount: _count.replies,
+            },
+          })),
+        },
+        // getThreadParents
       }
     }),
 
