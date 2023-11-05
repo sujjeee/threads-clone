@@ -10,6 +10,7 @@ import { currentUser } from "@clerk/nextjs";
 import { GET_USER } from "@/server/constant";
 import { GET_COUNT } from "@/server/constant";
 import { Prisma, Thread } from "@prisma/client";
+import { ThreadCardProps } from "@/types";
 
 export const postRouter = createTRPCRouter({
 
@@ -295,14 +296,14 @@ export const postRouter = createTRPCRouter({
 
 
   getNestedThreads: publicProcedure
-    .input(
-      z.object({
-        id: z.string()
-      })
-    )
+    // .input(
+    //   z.object({
+    //     id: z.string()
+    //   })
+    // )
     .query(async ({ input, ctx }) => {
-      const { id } = input
-      // const id = 'clolb0i010004tbwgasank23ha'
+      // const { id } = input
+      const id = 'clolbll660005tbwgvyoixmmu'
       const getThreads = await ctx.db.thread.findUnique({
         where: {
           id
@@ -361,55 +362,106 @@ export const postRouter = createTRPCRouter({
         },
       });
 
-      // const getThreadParents = await ctx.db.$queryRaw<Thread[]>(
-      //   Prisma.sql`
-      //     WITH RECURSIVE threads_tree AS (
-      //       SELECT
-      //         t.*,
-      //         0 AS depth,
-      //         jsonb_build_object(
-      //           'id', u.id,
-      //           'username', u.username,
-      //           'image', u.image,
-      //           'fullname', u.fullname,
-      //           'bio', u.bio,
-      //           'link', u.link
+      const parentThreads = await ctx.db.$queryRaw<Thread[]>(
+        Prisma.sql`
+          WITH RECURSIVE threads_tree AS (
+            SELECT
+              t.*,
+              0 AS depth,
+              jsonb_build_object(
+                'id', u.id,
+                'username', u.username,
+                'image', u.image,
+                'fullname', u.fullname,
+                'bio', u.bio,
+                'link', u.link,
+                'createdAt', u.created_at,
+                'followers', (
+                  SELECT jsonb_agg(
+                    jsonb_build_object(
+                      'id', f.id,
+                      'image', f.image
+                    )
+                  )
+                  FROM "User" f
+                  JOIN "_followers" uf ON f.id = uf."A"
+                  WHERE uf."B" = u.id
+                )
+              ) AS author,
+              (SELECT json_agg("userId")  
+              FROM "Like" 
+              WHERE "threadId" = t.id) AS likes,
+              (SELECT jsonb_agg(
+                jsonb_build_object(
+                  'author', jsonb_build_object(
+                    'id', r."authorId",
+                    'username', ru.username,
+                    'image', ru.image
+                  )
+                )
+              )
+              FROM "Thread" r
+              JOIN "User" ru ON r."authorId" = ru.id
+              WHERE r."parentThreadId" = t.id) AS replies,
+              (SELECT count(*) FROM "Like" l WHERE l."threadId" = t.id) AS like_count,
+              (SELECT count(*) FROM "Thread" r WHERE r."parentThreadId" = t.id) AS reply_count  
+            FROM "Thread" t
+            JOIN "User" u ON t."authorId" = u.id
+            WHERE t.id = ${id}
+      
+            UNION ALL
+      
+            SELECT
+              t.*,
+              tt.depth + 1,
+              jsonb_build_object(
+                'id', u.id,
+                'username', u.username,
+                'image', u.image,
+                'fullname', u.fullname,
+                'bio', u.bio,
+                'link', u.link,
+                'createdAt', u.created_at,
+                'followers', (
+                  SELECT jsonb_agg(
+                    jsonb_build_object(
+                      'id', f.id,
+                      'image', f.image
+                    )
+                  )
+                  FROM "User" f
+                  JOIN "_followers" uf ON f.id = uf."A"
+                  WHERE uf."B" = u.id
+                )
+              ) AS author,
+              (SELECT json_agg("userId")  
+              FROM "Like" 
+              WHERE "threadId" = t.id) AS likes,
+              (SELECT jsonb_agg(
+                jsonb_build_object(
+                  'author', jsonb_build_object(
+                    'id', r."authorId",
+                    'username', ru.username,
+                    'image', ru.image
+                  )
+                )
+              )
+              FROM "Thread" r
+              JOIN "User" ru ON r."authorId" = ru.id
+              WHERE r."parentThreadId" = t.id) AS replies,
+              (SELECT count(*) FROM "Like" l WHERE l."threadId" = t.id) AS like_count,
+              (SELECT count(*) FROM "Thread" r WHERE r."parentThreadId" = t.id) AS reply_count
+            FROM "Thread" t
+            JOIN "User" u ON t."authorId" = u.id
+            JOIN threads_tree tt ON t.id = tt."parentThreadId"
+          )
+      
+          SELECT *
+          FROM threads_tree
+          ORDER BY depth;
+        `
+      );
 
-      //         ) AS author,
-      //         (SELECT count(*) FROM "Like" l WHERE l."threadId" = t.id) AS likes,
-      //         (SELECT count(*) FROM "Thread" r WHERE r."parentThreadId" = t.id) AS replies
-      //       FROM "Thread" t
-      //       JOIN "User" u ON t."authorId" = u.id
-      //       WHERE t.id = ${id}
-
-      //       UNION ALL
-
-      //       SELECT
-      //         t.*,
-      //         tt.depth + 1,
-      //         jsonb_build_object(
-      //           'id', u.id,
-      //           'username', u.username,
-      //           'image', u.image,
-      //           'fullname', u.fullname,
-      //           'bio', u.bio,
-      //           'link', u.link
-
-      //         ) AS author,
-      //         (SELECT count(*) FROM "Like" l WHERE l."threadId" = t.id) AS likes,
-      //         (SELECT count(*) FROM "Thread" r WHERE r."parentThreadId" = t.id) AS replies
-      //       FROM "Thread" t
-      //       JOIN "User" u ON t."authorId" = u.id
-      //       JOIN threads_tree tt ON t.id = tt."parentThreadId"
-      //     )
-
-      //     SELECT *
-      //     FROM threads_tree
-      //     ORDER BY depth;
-      //   `
-      // );
-
-      // return { getThreads };
       if (!getThreads) {
         throw new TRPCError({ code: 'NOT_FOUND' })
       }
@@ -426,7 +478,6 @@ export const postRouter = createTRPCRouter({
             replyCount: getThreads._count.replies,
           },
           likes: getThreads.likes,
-          // replies: getThreads.replies,
           replies: getThreads.replies.map(({ _count, ...reply }) => ({
             ...reply,
             count: {
@@ -435,7 +486,25 @@ export const postRouter = createTRPCRouter({
             },
           })),
         },
-        // getThreadParents
+
+        // TODO: need to fix type here
+        parentThreads: parentThreads
+          .filter(parent => parent.id !== id)
+          .map((parent: any, index) => {
+            return {
+              id: parent.id,
+              createdAt: parent.createdAt,
+              text: parent.text,
+              parentThreadId: parent.parentThreadId,
+              author: parent.author,
+              count: {
+                likeCount: parent.like_count,
+                replyCount: parent.parent,
+              },
+              likes: getThreads.likes,
+              replies: getThreads.replies,
+            };
+          })
       }
     }),
 
