@@ -50,7 +50,8 @@ const ParentThreadCard: React.FC<ParentThreadCardProps> = (parentThread) => {
         likeCount: _count.likes
     });
 
-    const { mutate: toggleLike } = api.post.toggleLike.useMutation({
+    const { mutate: toggleLike } = api.like.toggleLike.useMutation({
+
         onMutate: async ({ id }) => {
             // Save the current values for potential rollback
             const previousLikedByMe = likeUpdate.current.likedByMe;

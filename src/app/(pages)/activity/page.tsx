@@ -14,7 +14,7 @@ import Link from 'next/link'
 export default function ActivityPage() {
 
     const { user: loggedUser } = useUser()
-    const { data, isLoading } = api.post.notifications.useQuery({ id: loggedUser?.id! })
+    const { data, isLoading } = api.notification.getNotification.useQuery({ id: loggedUser?.id! })
 
     if (isLoading) return <Loading />
 

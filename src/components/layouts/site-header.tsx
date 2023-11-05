@@ -8,6 +8,7 @@ import FooterNavs from './footer-navs'
 import MenuOptions from '../menu-options'
 import { usePathname } from 'next/navigation'
 import { cn } from '@/lib/utils'
+import Link from 'next/link'
 
 
 export default function SiteHeader() {
@@ -41,9 +42,9 @@ export default function SiteHeader() {
                 </nav> */}
                 <nav className="md:container md:max-w-[1250px] ">
                     <div className="py-1 flex w-full justify-between items-center z-50">
-                        <h2 className="text-2xl font-semibold tracking-wide flex gap-2.5 items-center ">
+                        <Link href={'/'} className="text-2xl font-semibold tracking-wide flex gap-2.5 items-center cursor-pointer active:scale-95 hover:scale-105 z-[100]">
                             <Icons.logo className='h-[34px] w-[34px]' />
-                        </h2>
+                        </Link>
                         <Navs />
                         <MenuOptions />
                     </div>

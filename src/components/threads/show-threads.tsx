@@ -16,20 +16,18 @@ export default function page() {
     return (
         <ShowThreads />
     )
-
 }
 
 interface ShowThreadsProps { }
 
 const ShowThreads: React.FC<ShowThreadsProps> = ({ }) => {
-    const { data, isLoading, isError, hasNextPage, fetchNextPage } = api.post.infiniteFeed.useInfiniteQuery({}, {
+
+    const { data, isLoading, isError, hasNextPage, fetchNextPage } = api.post.getInfinitePost.useInfiniteQuery({}, {
         getNextPageParam: (lastPage) => lastPage.nextCursor
     })
 
-
     const allThread = data?.pages.flatMap((page) => page.threads)
 
-    // console.log("allThread", allThread)
     if (isLoading) return <Loading />
     if (isError) return <h1>Error...</h1>;
 

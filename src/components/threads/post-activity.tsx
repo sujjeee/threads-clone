@@ -66,7 +66,9 @@ interface DisplayInsightProps {
 }
 
 const DisplayInsight: React.FC<DisplayInsightProps> = ({ id }) => {
-    const { data, isLoading } = api.post.getLikeInfo.useQuery({ id })
+
+    const { data, isLoading } = api.like.likeInfo.useQuery({ id })
+
     if (isLoading) {
         return (
             <div className="h-[100px] w-full justify-center items-center flex ">

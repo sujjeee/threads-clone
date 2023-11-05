@@ -3,7 +3,6 @@
 import React from 'react'
 import Link from 'next/link'
 import { toast } from 'sonner'
-import { Separator } from '@/components/ui/separator'
 import { Plus } from 'lucide-react'
 import { Icons } from '@/components/icons'
 import { cn, formatTimeAgo } from '@/lib/utils'
@@ -12,18 +11,22 @@ import { useUser } from '@clerk/nextjs'
 import { ThreadCardProps } from '@/types'
 import CreateThread from '@/components/threads/create-thread'
 import RepliesImageContainer from '@/components/threads/replies-image-container'
-import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
+import ProfileInfoCard from '@/components/threads/profile-info-card'
+import PostMenu from '@/components/buttons/post-menu'
+import ShareButton from '@/components/buttons/share-button'
+import RepostButton from '@/components/buttons/repost-button'
+import Username from '@/components/threads/username'
+import PostActivity from '@/components/threads/post-activity'
+import {
+    Avatar,
+    AvatarFallback,
+    AvatarImage
+} from '@/components/ui/avatar'
 import {
     Dialog,
     DialogContent,
     DialogTrigger,
 } from "@/components/ui/dialog"
-import ProfileInfoCard from '@/components/threads/profile-info-card'
-import PostMenu from '@/components/buttons/post-menu'
-import ShareButton from '../buttons/share-button'
-import RepostButton from '../buttons/repost-button'
-import Username from './username'
-import PostActivity from './post-activity'
 
 const ThreadCard: React.FC<ThreadCardProps> = ({
     id,
@@ -54,7 +57,7 @@ const ThreadCard: React.FC<ThreadCardProps> = ({
         likeCount
     });
 
-    const { mutate: toggleLike, isLoading } = api.post.toggleLike.useMutation({
+    const { mutate: toggleLike, isLoading } = api.like.toggleLike.useMutation({
         onMutate: async () => {
 
             const previousLikedByMe = likeUpdate.current.isLikedByMe;
@@ -91,7 +94,6 @@ const ThreadCard: React.FC<ThreadCardProps> = ({
                                     </Avatar>
                                 </div>
                                 <div className='bg-foreground absolute -bottom-0.5 -right-0.5  rounded-2xl border-2 border-background text-background hover:scale-105 active:scale-95'>
-
                                     <Plus className='h-4 w-4 p-0.5' />
                                 </div>
                             </button>

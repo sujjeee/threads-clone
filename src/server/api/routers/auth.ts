@@ -4,7 +4,6 @@ import { createTRPCRouter, publicProcedure } from "@/server/api/trpc";
 import { currentUser } from "@clerk/nextjs";
 import { emailToUsername, getUserEmail } from "@/lib/utils";
 import { TRPCError } from "@trpc/server";
-import { db } from "@/server/db";
 import { Privacy } from "@prisma/client";
 
 export const authRouter = createTRPCRouter({

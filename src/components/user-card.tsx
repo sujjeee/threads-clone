@@ -5,6 +5,7 @@ import { Separator } from '@/components/ui/separator'
 import { UserCardProps } from '@/types'
 import Link from 'next/link'
 import Username from '@/components/threads/username'
+import { Icons } from './icons'
 
 const UserCard: React.FC<UserCardProps> = ({
     id,
@@ -13,6 +14,7 @@ const UserCard: React.FC<UserCardProps> = ({
     createdAt,
     image,
     link,
+    isAdmin,
     username,
     followers
 }) => {
@@ -29,22 +31,28 @@ const UserCard: React.FC<UserCardProps> = ({
                     <div className='flex justify-between  w-full'>
                         <Link href={`/@${username}`} className="flex flex-col gap-1.5 w-full">
                             <div className='flex flex-col w-full'>
-                                <Username
-                                    author={{
-                                        id,
-                                        image,
-                                        createdAt,
-                                        username,
-                                        fullname,
-                                        link,
-                                        bio,
-                                        followers
-                                    }}
-                                />
+                                <div className='flex'>
+                                    <Username
+                                        author={{
+                                            id,
+                                            image,
+                                            createdAt,
+                                            username,
+                                            fullname,
+                                            isAdmin,
+                                            link,
+                                            bio,
+                                            followers
+                                        }}
+                                    />
+                                    {/* TODO: This is temp solution */}
+                                    <div className='w-3 h-3 invisible'>
+                                        <Icons.verified className='w-3 h-3' />
+                                    </div>
+                                </div>
                                 <p className="text-[15px]  text-[#6A6A6A] tracking-wide mt-1">
                                     {fullname}
                                 </p>
-
                             </div>
                             <span>12K followers</span>
                         </Link>

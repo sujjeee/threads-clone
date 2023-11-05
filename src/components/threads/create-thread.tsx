@@ -52,18 +52,19 @@ const CreateThread: React.FC<CreateThreadProps> = ({ showIcon, replyThreadInfo }
 
     const backupText = React.useRef('')
 
-    const { mutate: createThread, isLoading } = api.post.createThread.useMutation({
+    const { mutate: createThread, isLoading } = api.post.createPost.useMutation({
         onMutate: async ({ text }) => {
             backupText.current = text
             setThreadData({
                 ...threadData,
                 text: '',
             });
-            await trpcUtils.post.infiniteFeed.cancel()
 
-            const previousPostData = trpcUtils.post.infiniteFeed.getInfiniteData()
+            await trpcUtils.post.getInfinitePost.cancel()
 
-            trpcUtils.post.infiniteFeed.setInfiniteData(
+            const previousPostData = trpcUtils.post.getInfinitePost.getInfiniteData()
+
+            trpcUtils.post.getInfinitePost.setInfiniteData(
                 {},
                 (old) => {
                     if (!old) {
@@ -122,12 +123,12 @@ const CreateThread: React.FC<CreateThreadProps> = ({ showIcon, replyThreadInfo }
             toast.error("PostCallbackError: Something went wrong!")
         },
         onSettled: async () => {
-            await trpcUtils.post.infiniteFeed.invalidate()
+            await trpcUtils.post.getInfinitePost.invalidate()
         },
         retry: false,
     });
 
-    const { mutate: replytoThread, isLoading: isReplying } = api.post.replyToThread.useMutation({
+    const { mutate: replytoThread, isLoading: isReplying } = api.post.replyToPost.useMutation({
         onError: (err) => {
             toast.error("PostCallbackError: Something went wrong!")
             if (err.data?.code === 'UNAUTHORIZED') {
@@ -330,8 +331,9 @@ export function InsideCard({ user, onTextareaChange, replyThreadInfo }: {
                 {replyThreadInfo ? (
                     <div className='flex'>
                         <Username author={replyThreadInfo?.author} />
+                        {/* TODO: This is temp solution */}
                         <div className='w-3 h-3 invisible'>
-                            h
+                            <Icons.verified className='w-3 h-3' />
                         </div>
                     </div>
                 ) : (

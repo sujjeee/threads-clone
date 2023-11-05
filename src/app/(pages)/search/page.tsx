@@ -17,7 +17,7 @@ export default function page() {
     const searchParams = useSearchParams()
     const search = searchParams.get('q')
 
-    const { data, isLoading, isError, hasNextPage, fetchNextPage } = api.post.getAllUsers.useInfiniteQuery({}, {
+    const { data, isLoading, isError, hasNextPage, fetchNextPage } = api.user.allUsers.useInfiniteQuery({}, {
         getNextPageParam: (lastPage) => lastPage.nextCursor
     })
 
@@ -48,7 +48,7 @@ export default function page() {
                                 })}
                             </InfiniteScroll>
                         ) : (
-                            <DisplayQueryThreads searchQuery={search} />
+                            <DisplayQueryPosts searchQuery={search} />
                         )}
                     </>
                     : <Loading />
@@ -59,15 +59,15 @@ export default function page() {
 }
 
 
-interface DisplayQueryThreadsProps {
+interface DisplayQueryPostsProps {
     searchQuery: string
 }
 
-const DisplayQueryThreads: React.FC<DisplayQueryThreadsProps> = ({ searchQuery }) => {
+const DisplayQueryPosts: React.FC<DisplayQueryPostsProps> = ({ searchQuery }) => {
 
     if (searchQuery === '') return
 
-    const { data, isLoading, isError, hasNextPage, fetchNextPage } = api.post.infiniteFeed.useInfiniteQuery({ searchQuery }, {
+    const { data, isLoading, isError, hasNextPage, fetchNextPage } = api.post.getInfinitePost.useInfiniteQuery({ searchQuery }, {
         getNextPageParam: (lastPage) => lastPage.nextCursor
     })
 

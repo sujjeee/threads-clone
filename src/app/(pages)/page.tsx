@@ -12,7 +12,7 @@ import { Separator } from '@/components/ui/separator'
 
 export default function page() {
 
-  const { data, isLoading, isError, hasNextPage, fetchNextPage } = api.post.infiniteFeed.useInfiniteQuery({}, {
+  const { data, isLoading, isError, hasNextPage, fetchNextPage } = api.post.getInfinitePost.useInfiniteQuery({}, {
     getNextPageParam: (lastPage) => lastPage.nextCursor
   })
 

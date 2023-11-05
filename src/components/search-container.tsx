@@ -75,8 +75,9 @@ interface DisplaySearchedResultsProps {
 }
 
 const DisplaySearchedResults: React.FC<DisplaySearchedResultsProps> = ({ debouncedSearch }) => {
-    const { data, isLoading } = api.post.searchUsers.useQuery({ debouncedSearch })
-    console.log("fetched user?", data)
+
+    const { data, isLoading } = api.search.allUsers.useQuery({ debouncedSearch })
+
     if (isLoading) {
         return (
             <div className="h-[100px] w-full justify-center items-center flex ">
@@ -84,7 +85,9 @@ const DisplaySearchedResults: React.FC<DisplaySearchedResultsProps> = ({ debounc
             </div>
         )
     }
+
     if (data?.length === 0) return
+
     return (
         <>
             {data?.map((user) => (

@@ -19,7 +19,8 @@ export default function page() {
     return null;
   }
 
-  const { data, isLoading } = api.post.getUserProfileInfo.useQuery({ username })
+  const { data, isLoading } = api.user.profileInfo.useQuery({ username })
+
   if (isLoading) return <Loading />
   if (!data) {
     return (
