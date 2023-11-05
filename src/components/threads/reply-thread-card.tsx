@@ -18,16 +18,24 @@ import Username from '@/components/threads/username'
 import PostMenu from '@/components/buttons/post-menu'
 import ThreadCard from './thread-card'
 
-const ReplyThreadCard: React.FC<ThreadProps> = ({ threadInfo }) => {
+const ReplyThreadCard: React.FC<ThreadProps> = ({ threadInfo, parentThreads }) => {
+
+    console.log("all parent threads", parentThreads)
+
 
     const { user: loginUser } = useUser()
     const { id, likes, replies, author, count, createdAt, parentThreadId, text } = threadInfo
+    let likedByMe = false;
+    let likeCount = 0;
 
-    const likedByMe = likes.some((like: any) => like.userId === loginUser?.id);
+    if (likes && loginUser) {
+        likedByMe = likes.some((like: any) => like.userId === loginUser.id);
+        likeCount = likes.length;
+    }
 
     const likeUpdate = React.useRef({
         likedByMe,
-        likeCount: likes.length
+        likeCount
     });
 
     const { mutate: toggleLike } = api.like.toggleLike.useMutation({
@@ -50,17 +58,25 @@ const ReplyThreadCard: React.FC<ThreadProps> = ({ threadInfo }) => {
             toast.error("LikeCallBack: Something went wrong!")
         }
     });
+
     return (
         <>
             <div className='flex flex-col w-full pt-2'>
-                {/* {getThreadParents?.map((post,index) => (
+                {parentThreads && parentThreads.map((post, index) => (
                     <>
-                    <ThreadCard
-                        key={index}
-                        {...post}
-                    />
+                        <ThreadCard
+                            key={index}
+                            author={post.author}
+                            count={post.count}
+                            id={post.id}
+                            createdAt={post.createdAt}
+                            likes={post.likes ?? []}
+                            parentThreadId={post.parentThreadId}
+                            replies={post.replies}
+                            text={post.text}
+                        />
                     </>
-                ))} */}
+                ))}
                 <div className="flex items-center gap-3 z-50 w-full pr-2 ">
                     <button className='relative '>
                         <div className='h-9 w-9 outline outline-1 outline-[#333333] rounded-full ml-[1px]'>

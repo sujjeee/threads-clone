@@ -1,19 +1,19 @@
 import {
-    createTRPCRouter,
-    publicProcedure
+  createTRPCRouter,
+  publicProcedure
 } from "@/server/api/trpc";
 
 import { Prisma, Thread } from "@prisma/client";
 
 export const threadsRouter = createTRPCRouter({
 
-    info: publicProcedure
-        .query(async ({ ctx }) => {
+  info: publicProcedure
+    .query(async ({ ctx }) => {
 
-            const id = 'clolbll660005tbwgvyoixmmu'
+      const id = 'clolbll660005tbwgvyoixmmu'
 
-            const parents = await ctx.db.$queryRaw<Thread[]>(
-                Prisma.sql`
+      const parentThreads = await ctx.db.$queryRaw<Thread[]>(
+        Prisma.sql`
                   WITH RECURSIVE threads_tree AS (
                     SELECT
                       t.*,
@@ -25,7 +25,7 @@ export const threadsRouter = createTRPCRouter({
                         'fullname', u.fullname,
                         'bio', u.bio,
                         'link', u.link,
-                        'createdAt', u.created_at,
+                        'createdAt', to_timestamp(to_char(created_at, 'YYYY-MM-DD"T"HH24:MI:SS'), 'YYYY-MM-DD"T"HH24:MI:SS'),
                         'followers', (
                           SELECT jsonb_agg(
                             jsonb_build_object(
@@ -71,7 +71,7 @@ export const threadsRouter = createTRPCRouter({
                         'fullname', u.fullname,
                         'bio', u.bio,
                         'link', u.link,
-                        'createdAt', u.created_at,
+                        'createdAt', to_timestamp(to_char(created_at, 'YYYY-MM-DD"T"HH24:MI:SS'), 'YYYY-MM-DD"T"HH24:MI:SS'),
                         'followers', (
                           SELECT jsonb_agg(
                             jsonb_build_object(
@@ -110,8 +110,29 @@ export const threadsRouter = createTRPCRouter({
                   FROM threads_tree
                   ORDER BY depth;
                 `
-            );
+      );
 
-            // return parents
-        }),
+      const filteredParentThreads = parentThreads.filter(parent => parent.id !== id);
+
+      const mappedParentThreads = filteredParentThreads.map((parent: any, index) => {
+        return {
+          id: parent.id,
+          createdAt: parent.createdAt,
+          text: parent.text,
+          parentThreadId: parent.parentThreadId,
+          author: parent.author,
+          count: {
+            likeCount: parent.like_count,
+            replyCount: parent.parent,
+          },
+          likes: {
+            userId: parent.likes,
+          },
+          replies: parent.replies,
+        };
+      });
+
+      return mappedParentThreads;
+
+    }),
 });

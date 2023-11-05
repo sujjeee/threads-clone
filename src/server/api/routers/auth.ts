@@ -53,8 +53,8 @@ export const authRouter = createTRPCRouter({
                         data: {
                             type: 'ADMIN',
                             isPublic: true,
-                            userId: 'user_clok01xeo0001tbookiyi1ipx',
-                            threadId: 'clok01xeo0001tbookiyi1ipx',
+                            userId: 'ZQMhnZjwpOt',
+                            threadId: 'cloljb30800dxtbk4psrach2r',
                             message: `Hey ${created_user.fullname}! Welcome to Threads. I hope you like this project. If so, please make sure to give it a star on GitHub and share your views on Twitter. Thanks.`
                         }
                     });

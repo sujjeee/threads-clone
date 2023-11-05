@@ -5,7 +5,8 @@ import {
     privateProcedure,
     publicProcedure
 } from "@/server/api/trpc";
-import { TRPCError } from "@trpc/server";
+
+import { GET_USER } from "@/server/constant";
 
 export const notificationRouter = createTRPCRouter({
 

@@ -17,3 +17,36 @@ export type ParentThreadCardProps = RouterOutput['post']['getPostInfo'];
 export type UserCardProps = ArrayElement<RouterOutput['user']['allUsers']['allUsers']>;
 
 export type UserProfileInfoProps = RouterOutput['user']['profileInfo']['userDetails'];
+
+export type ParentThreadsProps = {
+    id: string;
+    createdAt: string;
+    text: string;
+    likes: {
+        userId: string;
+    }[];
+    parentThreadId: string | null;
+    replies: {
+        author: {
+            username: string;
+            id: string;
+            image: string;
+        };
+    }[];
+    author: {
+        id: string;
+        image: string;
+        fullname: string;
+        username: string;
+        bio: string;
+        link: string;
+        createdAt: Date;
+        isAdmin: boolean;
+        followers: {
+            id: string;
+            image: string;
+        }[];
+    };
+    like_count: number;
+    reply_count: number;
+}

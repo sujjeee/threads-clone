@@ -10,7 +10,7 @@ import { currentUser } from "@clerk/nextjs";
 import { GET_USER } from "@/server/constant";
 import { GET_COUNT } from "@/server/constant";
 import { Prisma, Thread } from "@prisma/client";
-import { ThreadCardProps } from "@/types";
+import { ParentThreadsProps } from "@/types";
 
 export const postRouter = createTRPCRouter({
 
@@ -296,14 +296,13 @@ export const postRouter = createTRPCRouter({
 
 
   getNestedThreads: publicProcedure
-    // .input(
-    //   z.object({
-    //     id: z.string()
-    //   })
-    // )
+    .input(
+      z.object({
+        id: z.string()
+      })
+    )
     .query(async ({ input, ctx }) => {
-      // const { id } = input
-      const id = 'clolbll660005tbwgvyoixmmu'
+      const { id } = input
       const getThreads = await ctx.db.thread.findUnique({
         where: {
           id
@@ -362,7 +361,7 @@ export const postRouter = createTRPCRouter({
         },
       });
 
-      const parentThreads = await ctx.db.$queryRaw<Thread[]>(
+      const parentThreads = await ctx.db.$queryRaw<ParentThreadsProps[]>(
         Prisma.sql`
           WITH RECURSIVE threads_tree AS (
             SELECT
@@ -490,21 +489,21 @@ export const postRouter = createTRPCRouter({
         // TODO: need to fix type here
         parentThreads: parentThreads
           .filter(parent => parent.id !== id)
-          .map((parent: any, index) => {
+          .map((parent, index) => {
             return {
               id: parent.id,
-              createdAt: parent.createdAt,
+              createdAt: new Date(parent.createdAt),
               text: parent.text,
               parentThreadId: parent.parentThreadId,
               author: parent.author,
               count: {
                 likeCount: parent.like_count,
-                replyCount: parent.parent,
+                replyCount: parent.reply_count,
               },
-              likes: getThreads.likes,
-              replies: getThreads.replies,
+              likes: parent.likes,
+              replies: parent.replies,
             };
-          })
+          }).reverse()
       }
     }),
 
