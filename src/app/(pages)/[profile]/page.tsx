@@ -6,6 +6,7 @@ import { api } from '@/trpc/react'
 import UserProfile from '@/components/user-profile'
 import Loading from '../loading'
 import ThreadCard from '@/components/threads/thread-card'
+import { Separator } from '@/components/ui/separator'
 
 export default function page() {
   const path = usePathname()
@@ -20,29 +21,25 @@ export default function page() {
 
   const { data, isLoading } = api.post.getUserProfileInfo.useQuery({ username })
   if (isLoading) return <Loading />
-  if (!data) return <p>error user not found</p>
+  if (!data) {
+    return (
+      <div className="h-[50vh] w-full justify-center items-center flex text-[#777777]">
+        <p>No results.</p>
+      </div>
+    )
+  }
+
+
   return (
     <div>
-      <UserProfile {...data} />
-      {data.threads.map((threads) => {
+      <UserProfile {...data.userDetails} />
+      {data && data.threads.map((threads, index) => {
         console.log(threads)
         return (
-          <ThreadCard
-            key={threads.id}
-            id={threads.id}
-            text={threads.text}
-            createdAt={threads.createdAt}
-            likeCount={threads._count.likes}
-            replyCount={threads._count.replies}
-            user={{
-              id: threads.author.id,
-              username: threads.author.username,
-              image: threads.author.image,
-            }}
-            parentThreadId="skdll"
-            likes={threads.likes}
-            replies={threads.replies}
-          />
+          <>
+            <ThreadCard key={threads.id} {...threads} />
+            {index !== data.threads.length - 1 && <Separator />}
+          </>
         )
       })}
     </div>

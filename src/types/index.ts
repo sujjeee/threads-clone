@@ -15,4 +15,4 @@ export type ParentThreadCardProps = ArrayElement<RouterOutput['post']['getsThrea
 
 export type UserCardProps = ArrayElement<RouterOutput['post']['getAllUsers']['allUsers']>;
 
-export type UserProfileInfoProps = RouterOutput['post']['getUserProfileInfo'];
+export type UserProfileInfoProps = RouterOutput['post']['getUserProfileInfo']['userDetails'];

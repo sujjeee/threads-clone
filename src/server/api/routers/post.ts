@@ -501,34 +501,18 @@ export const postRouter = createTRPCRouter({
           username: input.username
         },
         include: {
-          // followers:true,
+          followers: true,
           // following:true,
           threads: {
             select: {
               id: true,
-              text: true,
               createdAt: true,
-              _count: {
+              text: true,
+              likes: {
                 select: {
-                  likes: true,
-                  replies: true
+                  userId: true
                 }
               },
-              author: {
-                select: {
-                  id: true,
-                  username: true,
-                  image: true,
-                }
-              },
-              // likes: {
-              //   where: {
-              //     userId
-              //   },
-              //   select: {
-              //     userId: true
-              //   }
-              // },
               parentThreadId: true,
               replies: {
                 select: {
@@ -536,20 +520,53 @@ export const postRouter = createTRPCRouter({
                     select: {
                       id: true,
                       username: true,
-                      image: true
+                      image: true,
                     }
                   }
                 }
-              }
+              },
+              author: {
+                select: {
+                  ...GET_USER,
+                }
+              },
+              ...GET_COUNT,
             },
-          },
+          }
         }
       });
-      if (userProfileInfo) {
-        return userProfileInfo
-      } else {
-        throw new TRPCError({ code: 'NOT_FOUND' })
+
+      if (!userProfileInfo) {
+        throw new TRPCError({ code: 'NOT_FOUND' });
       }
+
+      return {
+        threads: userProfileInfo.threads.map((thread) => ({
+          id: thread.id,
+          createdAt: thread.createdAt,
+          text: thread.text,
+          parentThreadId: thread.parentThreadId,
+          author: thread.author,
+          count: {
+            likeCount: thread._count.likes,
+            replyCount: thread._count.replies,
+          },
+          likes: thread.likes,
+          replies: thread.replies,
+        })),
+        userDetails: {
+          id: userProfileInfo.id,
+          image: userProfileInfo.image,
+          fullname: userProfileInfo.fullname,
+          username: userProfileInfo.username,
+          bio: userProfileInfo.bio,
+          link: userProfileInfo.link,
+          privacy: userProfileInfo.privacy,
+          createdAt: userProfileInfo.createdAt,
+          isAdmin: userProfileInfo.isAdmin,
+          followers: userProfileInfo.followers
+        }
+      };
     }),
 
   getNestedThreads: publicProcedure

@@ -9,10 +9,18 @@ import { formatURL } from '@/lib/utils'
 import { Avatar, AvatarFallback, AvatarImage } from './ui/avatar'
 import { Icons } from './icons'
 import { UserProfileInfoProps } from '@/types'
+import { Button } from './ui/button'
 
-
-
-const UserProfile: React.FC<UserProfileInfoProps> = ({ bio, createdAt, email, fullname, id, image, link, privacy, username }) => {
+const UserProfile: React.FC<UserProfileInfoProps> = ({
+    bio,
+    createdAt,
+    fullname,
+    id,
+    image,
+    link,
+    privacy,
+    username
+}) => {
     const path = usePathname()
     const router = useRouter()
 
@@ -32,14 +40,13 @@ const UserProfile: React.FC<UserProfileInfoProps> = ({ bio, createdAt, email, fu
                         <span className="ml-0.5 rounded-2xl bg-[#1E1E1E] text-[#777777] text-xm px-1.5 py-1 text-[11px] font-medium">threads.net</span>
                     </div>
                 </div>
-                <Avatar className="h-[82px] w-[82px] overflow-visible outline outline-2 outline-[#505050] relative">
+                <Avatar className="h-[80px] w-[80px] overflow-visible outline outline-2 outline-[#505050] relative">
                     <AvatarImage src={image} alt={fullname} className="h-min w-full rounded-full object-cover " />
                     <AvatarFallback></AvatarFallback>
                     <div className='absolute bottom-0 -left-0.5'>
                         <Icons.verified2 className='h-6 w-6' />
                     </div>
                 </Avatar>
-
             </div>
             <p className='text-[15px]'>{bio}</p>
             <div className='flex justify-between items-center'>
@@ -58,9 +65,27 @@ const UserProfile: React.FC<UserProfileInfoProps> = ({ bio, createdAt, email, fu
                         }
                     </div>
                 </div>
-                <Instagram className='h-6 w-6' />
+                <div className='flex gap-4'>
+                    <Instagram className='h-6 w-6' />
+                    <Icons.circleMenu className='h-6 w-6' />
+                </div>
             </div>
-            <div className="w-full mt-4 flex">
+            <div className="grid gap-2 sm:grid-cols-2 pt-2">
+                <Button
+                    size={'sm'}
+                    className="w-full border-[#333333] sm:w-auto rounded-xl  py-1 "
+                >
+                    Follow
+                </Button>
+                <Button
+                    size={'sm'}
+                    variant="outline"
+                    className="w-full border-[#333333] sm:w-auto rounded-xl cursor-not-allowed py-1"
+                >
+                    Mention
+                </Button>
+            </div>
+            <div className="w-full  flex">
                 <button className="w-full h-12 py-2 font-semibold border-b border-b-white text-center">
                     Threads
                 </button>
