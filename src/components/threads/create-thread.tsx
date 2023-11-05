@@ -23,7 +23,14 @@ import { AuthorInfoProps } from '@/types'
 import { UserResource } from '@clerk/types'
 import { Separator } from '../ui/separator'
 import Username from './username'
+import {
+    useDropzone,
+    type Accept,
+    type FileRejection,
+} from "react-dropzone";
 
+import { useUploadThing } from '@/lib/uploadthing'
+import { X } from 'lucide-react'
 
 interface CreateThreadProps {
     showIcon: boolean
@@ -48,9 +55,12 @@ const CreateThread: React.FC<CreateThreadProps> = ({ showIcon, replyThreadInfo }
         images: []
     })
 
+
     const trpcUtils = api.useContext();
 
     const backupText = React.useRef('')
+
+
 
     const { mutate: createThread, isLoading } = api.post.createPost.useMutation({
         onMutate: async ({ text }) => {
@@ -307,6 +317,53 @@ export function InsideCard({ user, onTextareaChange, replyThreadInfo }: {
         onTextareaChange(newValue);
     };
 
+    const [files, setFiles] = React.useState<File | undefined>(undefined)
+    const [previewURL, setPreviewURL] = React.useState<string | undefined>(undefined)
+
+    const { startUpload } = useUploadThing("postMedia")
+
+    const maxSize = 4 * 1024 * 1024;
+
+    const onDrop = React.useCallback(
+        (acceptedFiles: File[], rejectedFiles: FileRejection[]) => {
+            const acceptedFile = acceptedFiles[0];
+            if (!acceptedFile) {
+                alert('Please select a single file to upload.');
+                return;
+            }
+            // @ts-ignore
+            setFileData(acceptedFile)
+
+            const fileWithPreview = Object.assign(acceptedFile, {
+                preview: URL.createObjectURL(acceptedFile),
+            });
+            setFiles(fileWithPreview);
+
+            const previewURL = URL.createObjectURL(acceptedFile)
+            setPreviewURL(previewURL)
+
+            if (rejectedFiles.length > 0) {
+                rejectedFiles.forEach(({ errors }) => {
+                    if (errors[0]?.code === "file-too-large") {
+                        toast.error(`File is too large. Max size is 1 MB`);
+                        return;
+                    }
+                    errors[0]?.message && toast.error(errors[0].message);
+                });
+            }
+        },
+        [maxSize, setFiles]
+    );
+    const accept: Accept = {
+        "image/*": [],
+    }
+
+    const { getRootProps, getInputProps, isDragActive } = useDropzone({
+        onDrop,
+        accept,
+        maxSize,
+    })
+
     // console.log("is replyThreadInfo?", replyThreadInfo)
     return (
         <div className={cn('flex space-x-3',
@@ -339,19 +396,34 @@ export function InsideCard({ user, onTextareaChange, replyThreadInfo }: {
                 ) : (
                     <p className="text-[15px] font-medium leading-none tracking-normal">{user.username}</p>
                 )}
-                {replyThreadInfo ? <p className='flex-grow resize-none overflow-hidden outline-none text-[15px] text-accent-foreground break-words placeholder:text-[#777777] w-full tracking-normal'>
-                    {replyThreadInfo.text}
-                </p>
-                    : <ResizeTextarea
-                        name='text'
-                        onChange={handleResizeTextareaChange}
-                        placeholder="Start a thread..."
-                    />
+                {replyThreadInfo ? (
+                    <>
+                        <p className='flex-grow resize-none overflow-hidden outline-none text-[15px] text-accent-foreground break-words placeholder:text-[#777777] w-full tracking-normal'>
+                            {replyThreadInfo.text}
+                        </p>
+                        {previewURL && (
+                            <div className='relative overflow-hidden rounded-[12px] border border-[#393939] w-fit'>
+                                <img src={previewURL} alt="" className='object-contain max-h-[520px] max-w-full  rounded-[12px]' />
+                                <Button
+                                    onClick={() => setPreviewURL('')}
+                                    variant={"ghost"}
+                                    className="h-6 w-6 p-1 absolute top-2 right-2 z-50 rounded-full bg-black/80 transform active:scale-75 transition-transform cursor-pointer" >
+                                    <X />
+                                </Button>
+                            </div>
+                        )}
+                    </>
+                ) : <ResizeTextarea
+                    name='text'
+                    onChange={handleResizeTextareaChange}
+                    placeholder="Start a thread..."
+                />
                 }
 
                 {!replyThreadInfo?.text &&
-                    <div className='space-y-2 mt-1'>
+                    <div {...getRootProps()} className='space-y-2 mt-1'>
                         <div className='text-[#777777] flex gap-1  items-center text-[15px]'>
+                            <input {...getInputProps()} />
                             <Icons.image className='h-5 w-5   transform active:scale-75 transition-transform cursor-pointer' />
                         </div>
                     </div>
