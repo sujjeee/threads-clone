@@ -20,6 +20,7 @@ export const postRouter = createTRPCRouter({
         text: z.string().min(3, {
           message: "Text must be at least 3 character",
         }),
+        imageUrl: z.string().optional()
       })
     )
     .mutation(async ({ ctx, input }) => {
@@ -41,7 +42,8 @@ export const postRouter = createTRPCRouter({
       const newpost = await ctx.db.thread.create({
         data: {
           text: input.text,
-          authorId: userId
+          authorId: userId,
+          images: input.imageUrl ? [input.imageUrl] : [],
         }
       })
 
@@ -78,6 +80,7 @@ export const postRouter = createTRPCRouter({
               userId: true
             }
           },
+          images: true,
           parentThreadId: true,
           replies: {
             select: {
@@ -121,6 +124,7 @@ export const postRouter = createTRPCRouter({
           },
           likes: thread.likes,
           replies: thread.replies,
+          images: thread.images
         })),
         nextCursor,
       };
@@ -256,6 +260,7 @@ export const postRouter = createTRPCRouter({
         text: z.string().min(3, {
           message: "Text must be at least 3 character",
         }),
+        imageUrl: z.string().optional()
       })
     )
     .mutation(async ({ ctx, input }) => {
@@ -278,6 +283,7 @@ export const postRouter = createTRPCRouter({
       const repliedThreadPost = await ctx.db.thread.create({
         data: {
           text: input.text,
+          images: input.imageUrl ? [input.imageUrl] : [],
           author: {
             connect: {
               id: userId,
@@ -317,6 +323,7 @@ export const postRouter = createTRPCRouter({
               replies: true
             }
           },
+          images: true,
           parentThreadId: true,
           author: {
             select: {
@@ -333,6 +340,7 @@ export const postRouter = createTRPCRouter({
               id: true,
               createdAt: true,
               text: true,
+              images: true,
               likes: {
                 select: {
                   userId: true
@@ -470,6 +478,7 @@ export const postRouter = createTRPCRouter({
           id: getThreads.id,
           createdAt: getThreads.createdAt,
           text: getThreads.text,
+          images: getThreads.images,
           parentThreadId: getThreads.parentThreadId,
           author: getThreads.author,
           count: {
@@ -494,6 +503,7 @@ export const postRouter = createTRPCRouter({
               id: parent.id,
               createdAt: new Date(parent.createdAt),
               text: parent.text,
+              images: parent.images,
               parentThreadId: parent.parentThreadId,
               author: parent.author,
               count: {

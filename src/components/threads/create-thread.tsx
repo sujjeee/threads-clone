@@ -31,6 +31,7 @@ import {
 
 import { useUploadThing } from '@/lib/uploadthing'
 import { X } from 'lucide-react'
+import useFileStore from '@/store/fileStore'
 
 interface CreateThreadProps {
     showIcon: boolean
@@ -47,7 +48,10 @@ const CreateThread: React.FC<CreateThreadProps> = ({ showIcon, replyThreadInfo }
     const router = useRouter()
     const { user } = useUser()
 
+    const { selectedFile } = useFileStore();
     const [isOpen, setIsOpen] = React.useState(false)
+
+    const { startUpload } = useUploadThing("postMedia")
 
     const [threadData, setThreadData] = React.useState({
         privacy: "Anyone can reply",
@@ -56,11 +60,9 @@ const CreateThread: React.FC<CreateThreadProps> = ({ showIcon, replyThreadInfo }
     })
 
 
-    const trpcUtils = api.useContext();
+    const trpcUtils = api.useUtils();
 
     const backupText = React.useRef('')
-
-
 
     const { mutate: createThread, isLoading } = api.post.createPost.useMutation({
         onMutate: async ({ text }) => {
@@ -92,6 +94,7 @@ const CreateThread: React.FC<CreateThreadProps> = ({ showIcon, replyThreadInfo }
                             id: crypto.randomUUID(),
                             createdAt: new Date(),
                             text: text,
+                            images: ['url'],
                             author: {
                                 id: crypto.randomUUID(),
                                 username: user?.username!,
@@ -138,7 +141,7 @@ const CreateThread: React.FC<CreateThreadProps> = ({ showIcon, replyThreadInfo }
         retry: false,
     });
 
-    const { mutate: replytoThread, isLoading: isReplying } = api.post.replyToPost.useMutation({
+    const { mutate: replyToPost, isLoading: isReplying } = api.post.replyToPost.useMutation({
         onError: (err) => {
             toast.error("PostCallbackError: Something went wrong!")
             if (err.data?.code === 'UNAUTHORIZED') {
@@ -149,14 +152,18 @@ const CreateThread: React.FC<CreateThreadProps> = ({ showIcon, replyThreadInfo }
     });
 
     async function handleCreateThread() {
+        const imgRes = await startUpload(selectedFile)
+
         if (replyThreadInfo) {
-            replytoThread({
+            replyToPost({
                 text: threadData.text,
                 threadId: replyThreadInfo.id,
+                imageUrl: imgRes ? imgRes[0]?.url : undefined
             });
         } else {
             createThread({
                 text: threadData.text,
+                imageUrl: imgRes ? imgRes[0]?.url : undefined
             });
         }
     }
@@ -311,16 +318,18 @@ export function InsideCard({ user, onTextareaChange, replyThreadInfo }: {
     user: UserResource
     onTextareaChange: (textValue: string) => void;
 }) {
+    const { setSelectedFile } = useFileStore();
 
+    const [inputValue, setInputValue] = React.useState('')
     const handleResizeTextareaChange = (event: React.ChangeEvent<HTMLTextAreaElement>) => {
         const newValue = event.target.value;
+        setInputValue(newValue)
         onTextareaChange(newValue);
     };
 
-    const [files, setFiles] = React.useState<File | undefined>(undefined)
+    const [files, setFiles] = React.useState<File[]>([])
     const [previewURL, setPreviewURL] = React.useState<string | undefined>(undefined)
 
-    const { startUpload } = useUploadThing("postMedia")
 
     const maxSize = 4 * 1024 * 1024;
 
@@ -332,14 +341,11 @@ export function InsideCard({ user, onTextareaChange, replyThreadInfo }: {
                 return;
             }
             // @ts-ignore
-            setFileData(acceptedFile)
-
-            const fileWithPreview = Object.assign(acceptedFile, {
-                preview: URL.createObjectURL(acceptedFile),
-            });
-            setFiles(fileWithPreview);
+            setFiles(acceptedFile)
+            setSelectedFile(acceptedFiles);
 
             const previewURL = URL.createObjectURL(acceptedFile)
+            console.log('previewURL', previewURL)
             setPreviewURL(previewURL)
 
             if (rejectedFiles.length > 0) {
@@ -358,13 +364,14 @@ export function InsideCard({ user, onTextareaChange, replyThreadInfo }: {
         "image/*": [],
     }
 
-    const { getRootProps, getInputProps, isDragActive } = useDropzone({
+    const { getRootProps, getInputProps } = useDropzone({
         onDrop,
         accept,
         maxSize,
     })
 
-    // console.log("is replyThreadInfo?", replyThreadInfo)
+    console.log("is preview url?", previewURL)
+
     return (
         <div className={cn('flex space-x-3',
             {
@@ -401,6 +408,26 @@ export function InsideCard({ user, onTextareaChange, replyThreadInfo }: {
                         <p className='flex-grow resize-none overflow-hidden outline-none text-[15px] text-accent-foreground break-words placeholder:text-[#777777] w-full tracking-normal'>
                             {replyThreadInfo.text}
                         </p>
+                        {/* {!previewURL && (
+                            <div className='relative overflow-hidden rounded-[12px] border border-[#393939] w-fit'>
+                                <img src={'https://images.unsplash.com/photo-1688712645033-38bc029d8d44?auto=format&fit=crop&q=80&w=1932&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D'} alt="" className='object-contain max-h-[520px] max-w-full  rounded-[12px]' />
+                                <Button
+                                    onClick={() => setPreviewURL('')}
+                                    variant={"ghost"}
+                                    className="h-6 w-6 p-1 absolute top-2 right-2 z-50 rounded-full bg-black/80 transform active:scale-75 transition-transform cursor-pointer" >
+                                    <X />
+                                </Button>
+                            </div>
+                        )} */}
+                    </>
+                ) : (
+                    <>
+                        <ResizeTextarea
+                            name='text'
+                            value={inputValue}
+                            onChange={handleResizeTextareaChange}
+                            placeholder="Start a thread..."
+                        />
                         {previewURL && (
                             <div className='relative overflow-hidden rounded-[12px] border border-[#393939] w-fit'>
                                 <img src={previewURL} alt="" className='object-contain max-h-[520px] max-w-full  rounded-[12px]' />
@@ -413,18 +440,14 @@ export function InsideCard({ user, onTextareaChange, replyThreadInfo }: {
                             </div>
                         )}
                     </>
-                ) : <ResizeTextarea
-                    name='text'
-                    onChange={handleResizeTextareaChange}
-                    placeholder="Start a thread..."
-                />
+                )
                 }
 
                 {!replyThreadInfo?.text &&
-                    <div {...getRootProps()} className='space-y-2 mt-1'>
-                        <div className='text-[#777777] flex gap-1  items-center text-[15px]'>
+                    <div {...getRootProps()} className='space-y-2 mt-1 select-none'>
+                        <div className='text-[#777777] flex gap-1 select-none items-center text-[15px]'>
                             <input {...getInputProps()} />
-                            <Icons.image className='h-5 w-5   transform active:scale-75 transition-transform cursor-pointer' />
+                            <Icons.image className='h-5 w-5 select-none transform active:scale-75 transition-transform cursor-pointer' />
                         </div>
                     </div>
                 }

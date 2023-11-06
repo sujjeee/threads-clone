@@ -10,7 +10,7 @@ export const threadsRouter = createTRPCRouter({
   info: publicProcedure
     .query(async ({ ctx }) => {
 
-      const id = 'clolbll660005tbwgvyoixmmu'
+      const id = 'clolkm4jt00e4tbk42vml5x9i'
 
       const parentThreads = await ctx.db.$queryRaw<Thread[]>(
         Prisma.sql`
@@ -132,7 +132,7 @@ export const threadsRouter = createTRPCRouter({
         };
       });
 
-      return mappedParentThreads;
+      return parentThreads;
 
     }),
 });

@@ -36,6 +36,7 @@ const ThreadCard: React.FC<ThreadCardProps> = ({
     replies,
     author,
     count,
+    images
 }) => {
 
     const { user: loggedUser } = useUser()
@@ -122,11 +123,18 @@ const ThreadCard: React.FC<ThreadCardProps> = ({
                                 </div>
                             </div>
 
-                            <Link href={`/@${author.username}/post/${id}`} className='w-full'>
+                            <Link href={`/@${author.username}/post/${id}`} className='w-full '>
                                 <div className="text-white text-[15px] leading-5 mt-1 max-md:max-w-full">
                                     {text}
                                 </div>
                             </Link>
+
+                            {
+                                images.length > 0 &&
+                                <div className='relative overflow-hidden rounded-[12px] border border-[#393939] w-fit mt-2.5 '>
+                                    <img src={images[0]} alt="" className='object-contain max-h-[520px] max-w-full  rounded-[12px]' />
+                                </div>
+                            }
 
                             <div className="flex  font-bold -ml-2 mt-2 w-full">
                                 <div className='flex items-center justify-center hover:bg-[#1E1E1E] rounded-full p-2 w-fit h-fit active:scale-95'>

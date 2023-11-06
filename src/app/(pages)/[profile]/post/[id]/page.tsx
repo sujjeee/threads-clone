@@ -15,7 +15,7 @@ const page: React.FC<pageProps> = ({ }) => {
     const path = usePathname()
     const router = useRouter()
 
-    if (!path.startsWith('/@')) {
+    if (path.length < 20 && !path.startsWith('/@')) {
         const newPath = '/@' + path.replace(/^\//, '')
         router.push(newPath);
         return null;

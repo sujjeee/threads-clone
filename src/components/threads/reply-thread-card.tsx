@@ -24,7 +24,7 @@ const ReplyThreadCard: React.FC<ThreadProps> = ({ threadInfo, parentThreads }) =
 
 
     const { user: loginUser } = useUser()
-    const { id, likes, replies, author, count, createdAt, parentThreadId, text } = threadInfo
+    const { id, likes, replies, author, count, createdAt, parentThreadId, text, images } = threadInfo
     let likedByMe = false;
     let likeCount = 0;
 
@@ -73,6 +73,7 @@ const ReplyThreadCard: React.FC<ThreadProps> = ({ threadInfo, parentThreads }) =
                             likes={post.likes ?? []}
                             parentThreadId={post.parentThreadId}
                             replies={post.replies}
+                            images={post.images}
                             text={post.text}
                         />
                     </>
@@ -105,6 +106,12 @@ const ReplyThreadCard: React.FC<ThreadProps> = ({ threadInfo, parentThreads }) =
                             <div className="text-white  leading-5 mt-1  text-[15px]">
                                 {text}
                             </div>
+                            {
+                                images.length > 0 &&
+                                <div className='relative overflow-hidden rounded-[12px] border border-[#393939] w-fit mt-2.5 '>
+                                    <img src={images[0]} alt="" className='object-contain max-h-[520px] max-w-full  rounded-[12px]' />
+                                </div>
+                            }
                             <div className="flex  font-bold -ml-2 mt-2 w-full z-50">
                                 <div className='flex items-center justify-center hover:bg-[#1E1E1E] rounded-full p-2 w-fit h-fit'>
                                     <Icons.heart

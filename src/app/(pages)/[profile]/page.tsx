@@ -13,7 +13,7 @@ export default function page() {
   const router = useRouter()
   const username = path.substring(2);
 
-  if (!path.startsWith('/@')) {
+  if (path.length < 20 && !path.startsWith('/@')) {
     const newPath = '/@' + path.replace(/^\//, '')
     router.push(newPath);
     return null;

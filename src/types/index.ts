@@ -22,6 +22,7 @@ export type ParentThreadsProps = {
     id: string;
     createdAt: string;
     text: string;
+    images: string[];
     likes: {
         userId: string;
     }[];
