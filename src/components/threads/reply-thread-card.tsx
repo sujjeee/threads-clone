@@ -17,6 +17,8 @@ import {
 import Username from '@/components/threads/username'
 import PostMenu from '@/components/buttons/post-menu'
 import ThreadCard from './thread-card'
+import ParentThreadCard from './parent-thread-card'
+import { Plus } from 'lucide-react'
 
 const ReplyThreadCard: React.FC<ThreadProps> = ({ threadInfo, parentThreads }) => {
 
@@ -64,7 +66,7 @@ const ReplyThreadCard: React.FC<ThreadProps> = ({ threadInfo, parentThreads }) =
             <div className='flex flex-col w-full pt-2'>
                 {parentThreads && parentThreads.map((post, index) => (
                     <>
-                        <ThreadCard
+                        <ParentThreadCard
                             key={index}
                             author={post.author}
                             count={post.count}
@@ -85,6 +87,9 @@ const ReplyThreadCard: React.FC<ThreadProps> = ({ threadInfo, parentThreads }) =
                                 <AvatarImage src={author.image} alt={author.username} className='object-cover' />
                                 <AvatarFallback>{author.username?.slice(0, 2).toUpperCase()}</AvatarFallback>
                             </Avatar>
+                        </div>
+                        <div className='bg-foreground absolute -bottom-0.5 -right-0.5  rounded-2xl border-2 border-background text-background hover:scale-105 active:scale-95'>
+                            <Plus className='h-4 w-4 p-0.5' />
                         </div>
                     </button>
                     <div className="flex w-full justify-between gap-5 pl-0.5">
@@ -162,5 +167,4 @@ const ReplyThreadCard: React.FC<ThreadProps> = ({ threadInfo, parentThreads }) =
 }
 
 export default ReplyThreadCard
-
 
