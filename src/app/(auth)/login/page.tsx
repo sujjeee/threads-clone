@@ -8,7 +8,6 @@ export default async function LoginPage() {
     const user = await currentUser()
     if (user) redirect('/')
 
-
     return (
         <div className='max-w-[370px] mx-auto py-16 w-full z-50 text-center'>
             <LoginForm />

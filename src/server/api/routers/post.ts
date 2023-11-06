@@ -69,6 +69,7 @@ export const postRouter = createTRPCRouter({
           parentThreadId: null
         },
         take: limit + 1,
+
         cursor: cursor ? { createdAt_id: cursor } : undefined,
         orderBy: [{ createdAt: "desc" }, { id: "desc" }],
         select: {
