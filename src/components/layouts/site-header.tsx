@@ -9,6 +9,7 @@ import MenuOptions from '../menu-options'
 import { usePathname } from 'next/navigation'
 import { cn } from '@/lib/utils'
 import Link from 'next/link'
+import NavMenu from '../buttons/nav-menu'
 
 
 export default function SiteHeader() {
@@ -25,30 +26,24 @@ export default function SiteHeader() {
     }, [isScrolled])
 
     return (
-        isMobile
-            ? <FooterNavs />
-            : <header
-                aria-label="Header"
-                className={cn(
-                    "sticky top-0 z-[100] w-full",
-                    isScrolled ? "bg-[#0F0F0F]/90  backdrop-blur-2xl" : "bg-transparent"
-                )}
-            >
-                {/* <nav className=" max-w-screen-2xl ">
-                    <div className="container flex w-full h-16 items-center justify-between space-x-4 sm:space-x-0">
-
-                        
-                    </div>
-                </nav> */}
-                <nav className="md:container md:max-w-[1250px] ">
-                    <div className="py-1 flex w-full justify-between items-center z-50">
-                        <Link href={'/'} className="text-2xl font-semibold tracking-wide flex gap-2.5 items-center cursor-pointer active:scale-95 hover:scale-105 z-[100]">
-                            <Icons.logo className='h-[34px] w-[34px]' />
-                        </Link>
+        <header
+            aria-label="Header"
+            className={cn(
+                "sticky top-0 z-[100] w-full",
+                isScrolled ? "bg-[#101010D9]  backdrop-blur-2xl" : "bg-transparent"
+            )}
+        >
+            <nav className="sm:container sm:max-w-[1250px] px-5 ">
+                <div className="py-1 flex w-full justify-between items-center z-50 max-h-[60px] sm:max-h-full h-full">
+                    <Link href={'/'} className="text-2xl font-semibold tracking-wide flex gap-2.5 items-center cursor-pointer active:scale-95  transform transition-all duration-150 ease-out hover:scale-105 z-[100] w-full sm:w-fit py-4 justify-center ">
+                        <Icons.logo className='h-[34px] w-[34px]' />
+                    </Link>
+                    <div className='hidden sm:flex justify-between items-center gap-2 max-w-[480px] w-full'>
                         <Navs />
-                        <MenuOptions />
                     </div>
-                </nav>
-            </header>
+                    <NavMenu />
+                </div>
+            </nav>
+        </header>
     )
 }

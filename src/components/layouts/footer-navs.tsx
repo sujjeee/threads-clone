@@ -1,10 +1,13 @@
+"use client"
+
 import React from 'react'
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
 import { Icons } from '../icons'
 import { useTheme } from 'next-themes'
-import NewThreadModal from '../../../tests/new-thread-modal'
 import CreateThread from '../threads/create-thread'
+import { cn } from '@/lib/utils'
+import Navs from './navs'
 
 export default function FooterNavs() {
     const path = usePathname()
@@ -15,28 +18,55 @@ export default function FooterNavs() {
     }
 
     return (
-        <div className="w-full bg-background z-50 fixed bottom-0 flex items-center justify-around p-3 pb-4">
-            <Link href="/">
-                <Icons.home
-                    className={`w-6 h-6 ${path === "/" ? "" : "text-muted-foreground"}`}
-                />
-            </Link>
-            <Link href="/search">
-                <Icons.search
-                    className={`w-6 h-6 ${path === "/search" ? "" : "text-muted-foreground"
-                        }`}
-                />
-            </Link>
-            <CreateThread showIcon={true} />
-
-            <Icons.like
-                className={`w-6 h-6 cursor-not-allowed ${path === "/activity" ? "" : "text-muted-foreground"
-                    }`}
-            />
-            {/* </Link> */}
-            <Link href={`/`}>
-                <Icons.profile className="w-6 h-6 text-muted-foreground" />
-            </Link>
+        <div className="fixed sm:hidden bottom-0 left-0 z-50 w-full h-16 bg-[#101010D9] backdrop-blur-2xl">
+            <div className="grid h-full grid-cols-5 mx-auto font-medium justify-around items-center gap-2 w-full px-2">
+                <Link href={'/'} className="flex items-center justify-center px-5 hover:bg-[#1C1C1C]/80 py-5  rounded-lg transform transition-all duration-150 ease-out hover:scale-100 active:scale-90 w-full">
+                    <Icons.home
+                        className={cn(
+                            "h-[26px] w-[26px]  text-lg",
+                            path === '/'
+                                ? "text-forground"
+                                : "text-[#4D4D4D]",
+                        )}
+                        fill={fillIcon("/")}
+                    />
+                </Link>
+                <Link href={'/'} className="flex items-center justify-center px-5 hover:bg-[#1C1C1C]/80 py-5  rounded-lg transform transition-all duration-150 ease-out hover:scale-100 active:scale-90 w-full">
+                    <Icons.search
+                        className={cn(
+                            "h-6 w-6 text-lg",
+                            path === '/search'
+                                ? "text-forground"
+                                : "text-[#4D4D4D]",
+                        )}
+                    />
+                </Link>
+                <CreateThread showIcon={true} />
+                <Link href={'/'} className="flex items-center justify-center px-5 hover:bg-[#1C1C1C]/80 py-5  rounded-lg transform transition-all duration-150 ease-out hover:scale-100 active:scale-90 w-full">
+                    <Icons.like
+                        className={cn(
+                            "h-6 w-6",
+                            path === '/activity'
+                                ? "text-forground"
+                                : "text-[#4D4D4D]",
+                        )}
+                        fill={fillIcon("/activity")}
+                    />
+                </Link>
+                <Link href={'/'} className="flex items-center justify-center px-5 hover:bg-[#1C1C1C]/80 py-5  rounded-lg transform transition-all duration-150 ease-out hover:scale-100 active:scale-90 w-full">
+                    <Icons.profile
+                        className={cn(
+                            "h-6 w-6",
+                            path === '/profile'
+                                ? "text-forground"
+                                : "text-[#4D4D4D]",
+                        )}
+                        fill={fillIcon("/profile")}
+                    />
+                </Link>
+                <Navs />
+            </div>
         </div>
+
     )
 }

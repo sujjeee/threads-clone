@@ -1,3 +1,4 @@
+import FooterNavs from "@/components/layouts/footer-navs"
 import SiteHeader from "@/components/layouts/site-header"
 import { db } from "@/server/db"
 import { currentUser } from "@clerk/nextjs"
@@ -28,9 +29,10 @@ export default async function PagesLayout({ children }: PagesLayoutProps) {
     return (
         <>
             <SiteHeader />
-            <main className="container max-w-[620px] px-6">
+            <main className="container max-w-[620px] px-4 sm:px-6">
                 {children}
             </main>
+            <FooterNavs />
         </>
     )
 }

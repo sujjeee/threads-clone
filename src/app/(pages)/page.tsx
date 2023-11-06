@@ -36,14 +36,16 @@ export default function page() {
           </div>
         }
       >
-        {allThread?.map((post, index) => {
-          return (
-            <>
-              <ThreadCard key={index} {...post} />
-              {index !== allThread.length - 1 && <Separator />}
-            </>
-          )
-        })}
+        <div className="mb-[20vh]">
+          {allThread?.map((post, index) => {
+            return (
+              <>
+                <ThreadCard key={index} {...post} />
+                {index !== allThread.length - 1 && <Separator />}
+              </>
+            )
+          })}
+        </div>
       </InfiniteScroll>
     </>
   )
