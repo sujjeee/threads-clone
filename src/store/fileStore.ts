@@ -14,7 +14,7 @@ type FileStoreActions = {
 
 const useFileStore = create<FileStoreState & FileStoreActions>((set) => ({
   selectedFile: [],
-  isSelectedImageSafe: false,
+  isSelectedImageSafe: true,
   setSelectedFile: (files) => set({ selectedFile: files }),
   setIsSelectedImageSafe: (isSafe) => set({ isSelectedImageSafe: isSafe }),
 }));

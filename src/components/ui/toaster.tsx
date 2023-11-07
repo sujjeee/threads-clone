@@ -5,12 +5,15 @@ import { Toaster as RadToaster } from "sonner"
 export function Toaster() {
   return (
     <RadToaster
-      position="bottom-right"
+      className="w-max flex max-h-10 max-w-sm items-center justify-center rounded-x px-2"
+      position="bottom-center"
       toastOptions={{
         style: {
-          background: "hsl(var(--background))",
-          color: "hsl(var(--foreground))",
-          border: "1px solid hsl(var(--border))",
+          maxHeight: "50px",
+          height: "fit-content",
+          width: "max-content",
+          fontWeight: 600,
+          fontSize: 15
         },
       }}
     />
