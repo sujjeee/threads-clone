@@ -16,33 +16,51 @@ import {
 } from '@/components/ui/avatar'
 import Username from '@/components/threads/username'
 import PostMenu from '@/components/buttons/post-menu'
-import ThreadCard from './thread-card'
-import ParentThreadCard from './parent-thread-card'
+import ParentThreadCard from '@/components/threads/parent-thread-card'
 import { Plus } from 'lucide-react'
 
 const ReplyThreadCard: React.FC<ThreadProps> = ({ threadInfo, parentThreads }) => {
+    React.useEffect(() => {
+        const scrollToPost = async () => {
+            const postIdFromUrl = threadInfo.id;
+            if (postIdFromUrl) {
+                const postElement = document.getElementById(postIdFromUrl);
+                console.log('postElement?', postElement);
+                if (postElement) {
+                    postElement.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'start' });
+                }
+            }
+        };
 
-    console.log("all parent threads", parentThreads)
+        scrollToPost();
+
+    }, [threadInfo]);
 
 
     const { user: loginUser } = useUser()
-    const { id, likes, replies, author, count, createdAt, parentThreadId, text, images } = threadInfo
-    let likedByMe = false;
-    let likeCount = 0;
 
-    if (likes && loginUser) {
-        likedByMe = likes.some((like: any) => like.userId === loginUser.id);
-        likeCount = likes.length;
-    }
+    const {
+        id,
+        likes,
+        replies,
+        author,
+        count,
+        createdAt,
+        parentThreadId,
+        text,
+        images
+    } = threadInfo
 
     const likeUpdate = React.useRef({
-        likedByMe,
-        likeCount
+        likedByMe: loginUser && likes.some((like: any) => like.userId === loginUser.id),
+        likeCount: count.likeCount
     });
+
+    const postImage = images.length > 0 ? images[0] : ''
 
     const { mutate: toggleLike } = api.like.toggleLike.useMutation({
 
-        onMutate: async ({ id }) => {
+        onMutate: () => {
 
             const previousLikedByMe = likeUpdate.current.likedByMe;
             const previousLikeCount = likeUpdate.current.likeCount;
@@ -63,7 +81,10 @@ const ReplyThreadCard: React.FC<ThreadProps> = ({ threadInfo, parentThreads }) =
 
     return (
         <>
-            <div className='flex flex-col w-full pt-2'>
+            <div className={cn('flex flex-col w-full pt-2 mb-8', {
+                "mb-0": replies.length > 0
+            })}>
+
                 {parentThreads && parentThreads.map((post, index) => (
                     <>
                         <ParentThreadCard
@@ -72,7 +93,7 @@ const ReplyThreadCard: React.FC<ThreadProps> = ({ threadInfo, parentThreads }) =
                             count={post.count}
                             id={post.id}
                             createdAt={post.createdAt}
-                            likes={post.likes ?? []}
+                            likes={post.likes}
                             parentThreadId={post.parentThreadId}
                             replies={post.replies}
                             images={post.images}
@@ -80,7 +101,9 @@ const ReplyThreadCard: React.FC<ThreadProps> = ({ threadInfo, parentThreads }) =
                         />
                     </>
                 ))}
+
                 <div className="flex items-center gap-3 z-50 w-full pr-2 ">
+
                     <button className='relative '>
                         <div className='h-9 w-9 outline outline-1 outline-[#333333] rounded-full ml-[1px]'>
                             <Avatar className="rounded-full w-full h-full ">
@@ -92,6 +115,7 @@ const ReplyThreadCard: React.FC<ThreadProps> = ({ threadInfo, parentThreads }) =
                             <Plus className='h-4 w-4 p-0.5' />
                         </div>
                     </button>
+
                     <div className="flex w-full justify-between gap-5 pl-0.5">
                         <span className="flex items-center justify-center gap-1.5 cursor-pointer">
                             <Username author={author} />
@@ -103,21 +127,27 @@ const ReplyThreadCard: React.FC<ThreadProps> = ({ threadInfo, parentThreads }) =
                             <PostMenu id={author.id} />
                         </div>
                     </div>
+
                 </div>
 
-                <div className="flex flex-col w-full">
+                <div id={id} className="flex flex-col w-full">
                     <div className="justify-center items-start self-stretch flex flex-col">
                         <div className="justify-center items-start flex w-full flex-col  pt-1.5 self-start">
-                            <div className="text-white  leading-5 mt-1  text-[15px]">
-                                {text}
-                            </div>
-                            {
-                                images.length > 0 &&
+
+                            <div dangerouslySetInnerHTML={{
+                                __html: text.slice(1, -1).replace(/\\n/g, '\n')
+                            }}
+                                className="text-white text-[15px] leading-5 mt-1 max-md:max-w-full whitespace-pre-line"
+                            />
+
+                            {images.length > 0 &&
                                 <div className='relative overflow-hidden rounded-[12px] border border-[#393939] w-fit mt-2.5 '>
                                     <img src={images[0]} alt="" className='object-contain max-h-[520px] max-w-full  rounded-[12px]' />
                                 </div>
                             }
+
                             <div className="flex  font-bold -ml-2 mt-2 w-full z-50">
+
                                 <div className='flex items-center justify-center hover:bg-[#1E1E1E] rounded-full p-2 w-fit h-fit'>
                                     <Icons.heart
                                         onClick={() => {
@@ -129,26 +159,27 @@ const ReplyThreadCard: React.FC<ThreadProps> = ({ threadInfo, parentThreads }) =
                                         }
                                         )} />
                                 </div>
+
                                 <CreateThread showIcon={true} replyThreadInfo={{
                                     id,
                                     text,
+                                    image: postImage,
                                     author: { ...author }
                                 }} />
+
                                 <div className='flex items-center justify-center hover:bg-[#1E1E1E] rounded-full p-2 w-fit h-fit'>
                                     <Icons.repost className='w-5 h-5 ' />
                                 </div>
+
                                 <div className='flex items-center justify-center hover:bg-[#1E1E1E] rounded-full p-2 '>
                                     <Icons.share className='w-5 h-5 ' />
                                 </div>
+
                             </div>
                         </div>
                     </div>
-                    {/* {likeUpdate.current.likeCount > 0 &&
-                    <div className="flex items-start gap-2 text-[#777777] text-[15px] text-center mt-0.5 pb-4 z-50">
-                        <p>0 replies</p>
-                        <p>{likeUpdate.current.likeCount} likes</p>
-                    </div>
-                } */}
+                    {/* <div ref={scrollDownRef} /> */}
+
                     <Link href={`/@${author.username}/post/${id}`} className={cn('flex items-center gap-2 text-[#777777] text-[15px] text-center z-50 ', {
                         'mb-4': replies.length > 0 || likeUpdate.current.likeCount > 0
                     })}>

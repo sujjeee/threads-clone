@@ -39,11 +39,12 @@ const ParentThreadCard: React.FC<ThreadCardProps> = ({
     images
 }) => {
 
+    console.log('count', count)
+
     const { user: loggedUser } = useUser()
 
-    const isLikedByMe = likes.some((like: any) =>
-        like?.userId || like?.user?.id === loggedUser?.id
-    );
+    // @ts-ignore
+    const isLikedByMe = likes.includes(loggedUser?.id);
 
     const getThreadReplies = replies?.map((reply) => ({
         id: reply.author.id,
@@ -110,7 +111,7 @@ const ParentThreadCard: React.FC<ThreadCardProps> = ({
                             <div className="h-full w-0.5 bg-[#313639] rounded-full  leading-[0]" />
                             <div className='h-full absolute -left-[14px] z-[50]  leading-[0] transform -translate-y-1'>
                                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="29" viewBox="0 0 17 29" fill="none">
-                                    <path d="M16 27.5V15.5C16 10.7858 11.7871 5.70534 7.23886 5.70533C2.69067 5.70532 1.92432 8.83932 1.92432 10.6923C1.92432 12.5452 2.85983 15.4303 7.23957 15.4303C12.2931 15.4303 16 10.5535 16 5.5V1.5" stroke="#313639" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" />
+                                    <path d="M16 27.5V15.5C16 10.7858 11.7871 5.70534 7.23886 5.70533C2.69067 5.70532 1.92432 8.83932 1.92432 10.6923C1.92432 12.5452 2.85983 15.4303 7.23957 15.4303C12.2931 15.4303 16 10.5535 16 5.5V1.5" stroke="#313639" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" />
                                 </svg>
                             </div>
                         </div>
@@ -132,13 +133,10 @@ const ParentThreadCard: React.FC<ThreadCardProps> = ({
                             </div>
 
                             <Link href={`/@${author.username}/post/${id}`} className='w-full '>
-                                <div className="text-white text-[15px] leading-5 mt-1 max-md:max-w-full">
-                                    {text}
-                                </div>
+                                <div dangerouslySetInnerHTML={{ __html: text.slice(1, -1).replace(/\\n/g, '\n') }} className="text-white text-[15px] leading-5 mt-1 max-md:max-w-full whitespace-pre-line" />
                             </Link>
 
-                            {
-                                images.length > 0 &&
+                            {images.length > 0 &&
                                 <div className='relative overflow-hidden rounded-[12px] border border-[#393939] w-fit mt-2.5 '>
                                     <img src={images[0]} alt="" className='object-contain max-h-[520px] max-w-full  rounded-[12px]' />
                                 </div>
@@ -162,17 +160,8 @@ const ParentThreadCard: React.FC<ThreadCardProps> = ({
                                     replyThreadInfo={{
                                         id,
                                         text,
-                                        author: {
-                                            id: author.id,
-                                            image: author.image,
-                                            createdAt: author.createdAt,
-                                            username: author.username,
-                                            fullname: author.fullname,
-                                            isAdmin: author.isAdmin,
-                                            link: '',
-                                            bio: '',
-                                            followers: []
-                                        }
+                                        image: images.length > 0 ? images[0] : '',
+                                        author: { ...author }
                                     }} />
                                 <RepostButton id={id} />
                                 <ShareButton

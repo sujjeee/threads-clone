@@ -15,8 +15,8 @@ model User {
     createdAt    DateTime       @default(now()) @map(name: "created_at")
     updatedAt    DateTime       @default(now()) @map(name: "updated_at")
     username     String         @unique
-    fullname     String
-    image        String
+    fullname     String?
+    image        String?
     bio          String?
     link         String?
     email        String         @unique

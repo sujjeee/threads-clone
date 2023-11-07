@@ -3,7 +3,7 @@
 import React from 'react'
 import Link from 'next/link'
 import { toast } from 'sonner'
-import { Plus } from 'lucide-react'
+import { Plus, Text } from 'lucide-react'
 import { Icons } from '@/components/icons'
 import { cn, formatTimeAgo } from '@/lib/utils'
 import { api } from '@/trpc/react'
@@ -124,9 +124,7 @@ const ThreadCard: React.FC<ThreadCardProps> = ({
                             </div>
 
                             <Link href={`/@${author.username}/post/${id}`} className='w-full '>
-                                <div className="text-white text-[15px] leading-5 mt-1 max-md:max-w-full">
-                                    {text}
-                                </div>
+                                <div dangerouslySetInnerHTML={{ __html: text.slice(1, -1).replace(/\\n/g, '\n') }} className="text-white text-[15px] leading-5 mt-1 max-md:max-w-full whitespace-pre-line" />
                             </Link>
 
                             {
@@ -154,17 +152,8 @@ const ThreadCard: React.FC<ThreadCardProps> = ({
                                     replyThreadInfo={{
                                         id,
                                         text,
-                                        author: {
-                                            id: author.id,
-                                            image: author.image,
-                                            createdAt: author.createdAt,
-                                            username: author.username,
-                                            fullname: author.fullname,
-                                            isAdmin: author.isAdmin,
-                                            link: '',
-                                            bio: '',
-                                            followers: []
-                                        }
+                                        image: images.length > 0 ? images[0] : '',
+                                        author: { ...author }
                                     }} />
                                 <RepostButton id={id} />
                                 <ShareButton

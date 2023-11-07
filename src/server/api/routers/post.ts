@@ -384,16 +384,16 @@ export const postRouter = createTRPCRouter({
                 'bio', u.bio,
                 'link', u.link,
                 'createdAt', u.created_at,
-                'followers', (
-                  SELECT jsonb_agg(
-                    jsonb_build_object(
-                      'id', f.id,
-                      'image', f.image
-                    )
-                  )
-                  FROM "User" f
-                  JOIN "_followers" uf ON f.id = uf."A"
-                  WHERE uf."B" = u.id
+                'followers', COALESCE(
+                  (
+                    SELECT jsonb_agg( 
+                      jsonb_build_object('id', f.id, 'image', f.image)
+                    ) 
+                    FROM "User" f 
+                    JOIN "_followers" uf ON f.id = uf."A" 
+                    WHERE uf."B" = u.id
+                  ),
+                  '[]'
                 )
               ) AS author,
               (SELECT json_agg("userId")  
@@ -430,16 +430,16 @@ export const postRouter = createTRPCRouter({
                 'bio', u.bio,
                 'link', u.link,
                 'createdAt', u.created_at,
-                'followers', (
-                  SELECT jsonb_agg(
-                    jsonb_build_object(
-                      'id', f.id,
-                      'image', f.image
-                    )
-                  )
-                  FROM "User" f
-                  JOIN "_followers" uf ON f.id = uf."A"
-                  WHERE uf."B" = u.id
+                'followers', COALESCE(
+                  (
+                    SELECT jsonb_agg( 
+                      jsonb_build_object('id', f.id, 'image', f.image)
+                    ) 
+                    FROM "User" f 
+                    JOIN "_followers" uf ON f.id = uf."A" 
+                    WHERE uf."B" = u.id
+                  ),
+                  '[]'
                 )
               ) AS author,
               (SELECT json_agg("userId")  
@@ -499,7 +499,7 @@ export const postRouter = createTRPCRouter({
         // TODO: need to fix type here
         parentThreads: parentThreads
           .filter(parent => parent.id !== id)
-          .map((parent, index) => {
+          .map((parent) => {
             return {
               id: parent.id,
               createdAt: new Date(parent.createdAt),
@@ -508,11 +508,11 @@ export const postRouter = createTRPCRouter({
               parentThreadId: parent.parentThreadId,
               author: parent.author,
               count: {
-                likeCount: parent.like_count,
-                replyCount: parent.reply_count,
+                likeCount: Number(parent.like_count),
+                replyCount: Number(parent.reply_count),
               },
-              likes: parent.likes,
-              replies: parent.replies,
+              likes: parent.likes ?? [],
+              replies: parent.replies ?? [],
             };
           }).reverse()
       }

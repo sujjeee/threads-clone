@@ -40,10 +40,10 @@ const page: React.FC<pageProps> = ({ }) => {
             <ReplyThreadCard {...data} />
             {data.threadInfo.replies.map((post, index) => {
                 return (
-                    <>
+                    <div className='mb-8'>
                         <Separator />
                         <ThreadCard key={index} {...post} />
-                    </>
+                    </div>
                 );
             })}
         </>

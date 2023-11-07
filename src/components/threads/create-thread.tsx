@@ -33,13 +33,16 @@ import { useUploadThing } from '@/lib/uploadthing'
 import { X } from 'lucide-react'
 import useFileStore from '@/store/fileStore'
 
+interface ThreadInfo {
+    id: string;
+    text: string;
+    image: string | undefined;
+    author: AuthorInfoProps;
+}
+
 interface CreateThreadProps {
-    showIcon: boolean
-    replyThreadInfo?: {
-        id: string
-        text: string
-        author: AuthorInfoProps
-    }
+    showIcon: boolean;
+    replyThreadInfo?: ThreadInfo;
 }
 
 const CreateThread: React.FC<CreateThreadProps> = ({ showIcon, replyThreadInfo }) => {
@@ -156,13 +159,13 @@ const CreateThread: React.FC<CreateThreadProps> = ({ showIcon, replyThreadInfo }
 
         if (replyThreadInfo) {
             replyToPost({
-                text: threadData.text,
+                text: JSON.stringify(threadData.text, null, 2),
                 threadId: replyThreadInfo.id,
                 imageUrl: imgRes ? imgRes[0]?.url : undefined
             });
         } else {
             createThread({
-                text: threadData.text,
+                text: JSON.stringify(threadData.text, null, 2),
                 imageUrl: imgRes ? imgRes[0]?.url : undefined
             });
         }
@@ -237,10 +240,14 @@ const CreateThread: React.FC<CreateThreadProps> = ({ showIcon, replyThreadInfo }
                     <div className='overflow-y-auto no-scrollbar p-6 max-h-[70vh] '>
                         {
                             replyThreadInfo &&
-                            <InsideCard user={user!} onTextareaChange={handleFieldChange} replyThreadInfo={replyThreadInfo} />
+                            <InsideCard
+                                isOpen={isOpen}
+                                user={user!}
+                                onTextareaChange={handleFieldChange}
+                                replyThreadInfo={replyThreadInfo} />
                         }
 
-                        <InsideCard user={user!} onTextareaChange={handleFieldChange} />
+                        <InsideCard isOpen={isOpen} user={user!} onTextareaChange={handleFieldChange} />
                     </div>
                     <div className='flex justify-between items-center w-full p-6'>
                         <DropdownMenu>
@@ -309,12 +316,9 @@ const CreateThread: React.FC<CreateThreadProps> = ({ showIcon, replyThreadInfo }
 export default CreateThread
 
 
-export function InsideCard({ user, onTextareaChange, replyThreadInfo }: {
-    replyThreadInfo?: {
-        id: string
-        text: string
-        author: AuthorInfoProps
-    }
+export function InsideCard({ isOpen, user, onTextareaChange, replyThreadInfo }: {
+    isOpen: boolean
+    replyThreadInfo?: ThreadInfo
     user: UserResource
     onTextareaChange: (textValue: string) => void;
 }) {
@@ -327,9 +331,7 @@ export function InsideCard({ user, onTextareaChange, replyThreadInfo }: {
         onTextareaChange(newValue);
     };
 
-    const [files, setFiles] = React.useState<File[]>([])
     const [previewURL, setPreviewURL] = React.useState<string | undefined>(undefined)
-
 
     const maxSize = 4 * 1024 * 1024;
 
@@ -340,8 +342,7 @@ export function InsideCard({ user, onTextareaChange, replyThreadInfo }: {
                 alert('Please select a single file to upload.');
                 return;
             }
-            // @ts-ignore
-            setFiles(acceptedFile)
+
             setSelectedFile(acceptedFiles);
 
             const previewURL = URL.createObjectURL(acceptedFile)
@@ -358,7 +359,7 @@ export function InsideCard({ user, onTextareaChange, replyThreadInfo }: {
                 });
             }
         },
-        [maxSize, setFiles]
+        [maxSize]
     );
     const accept: Accept = {
         "image/*": [],
@@ -370,13 +371,17 @@ export function InsideCard({ user, onTextareaChange, replyThreadInfo }: {
         maxSize,
     })
 
-    console.log("is preview url?", previewURL)
+    const scrollDownRef = React.useRef<HTMLDivElement | null>(null)
+
+    React.useEffect(() => {
+        scrollDownRef.current?.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'start' })
+    }, [isOpen])
 
     return (
-        <div className={cn('flex space-x-3',
-            {
-                'mt-1': !replyThreadInfo
-            })}>
+        <div className={cn('flex space-x-3', {
+            'mt-1': !replyThreadInfo
+        })}>
+
             <div className='relative flex flex-col items-center'>
                 {replyThreadInfo
                     ?
@@ -386,12 +391,17 @@ export function InsideCard({ user, onTextareaChange, replyThreadInfo }: {
                     </Avatar>
                     : <Avatar className='h-9 w-9 outline outline-1 outline-[#333333] rounded-full  '>
                         <AvatarImage src={user?.imageUrl} className='object-cover' />
-                        <AvatarFallback>JK</AvatarFallback>
+                        <AvatarFallback>{user?.username?.slice(0, 2).toUpperCase()}</AvatarFallback>
                     </Avatar>
                 }
-                {replyThreadInfo?.text && <div className="h-full w-0.5 bg-[#333638] rounded-full mt-1.5 my-1" />}
+                {replyThreadInfo?.text
+                    && <div className="h-full w-0.5 bg-[#313639] rounded-full mt-1.5 my-1" />
+                }
             </div>
+
+
             <div className='flex flex-col w-full gap-1.5 pb-4'>
+
                 {replyThreadInfo ? (
                     <div className='flex'>
                         <Username author={replyThreadInfo?.author} />
@@ -403,22 +413,22 @@ export function InsideCard({ user, onTextareaChange, replyThreadInfo }: {
                 ) : (
                     <p className="text-[15px] font-medium leading-none tracking-normal">{user.username}</p>
                 )}
+
                 {replyThreadInfo ? (
                     <>
-                        <p className='flex-grow resize-none overflow-hidden outline-none text-[15px] text-accent-foreground break-words placeholder:text-[#777777] w-full tracking-normal'>
-                            {replyThreadInfo.text}
+                        <p className='flex-grow resize-none overflow-hidden outline-none text-[15px] text-accent-foreground break-words placeholder:text-[#777777] w-full tracking-normal whitespace-pre-line'>
+                            <div dangerouslySetInnerHTML={{
+                                __html: replyThreadInfo.text.slice(1, -1).replace(/\\n/g, '\n')
+                            }} />
                         </p>
-                        {/* {!previewURL && (
+                        {replyThreadInfo.image &&
                             <div className='relative overflow-hidden rounded-[12px] border border-[#393939] w-fit'>
-                                <img src={'https://images.unsplash.com/photo-1688712645033-38bc029d8d44?auto=format&fit=crop&q=80&w=1932&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D'} alt="" className='object-contain max-h-[520px] max-w-full  rounded-[12px]' />
-                                <Button
-                                    onClick={() => setPreviewURL('')}
-                                    variant={"ghost"}
-                                    className="h-6 w-6 p-1 absolute top-2 right-2 z-50 rounded-full bg-black/80 transform active:scale-75 transition-transform cursor-pointer" >
-                                    <X />
-                                </Button>
+                                <img
+                                    src={replyThreadInfo.image}
+                                    alt={`${replyThreadInfo.author.fullname}'s post image`}
+                                    className='object-contain max-h-[520px] max-w-full rounded-[12px]' />
                             </div>
-                        )} */}
+                        }
                     </>
                 ) : (
                     <>
@@ -427,6 +437,7 @@ export function InsideCard({ user, onTextareaChange, replyThreadInfo }: {
                             value={inputValue}
                             onChange={handleResizeTextareaChange}
                             placeholder="Start a thread..."
+                            maxLength={200}
                         />
                         {previewURL && (
                             <div className='relative overflow-hidden rounded-[12px] border border-[#393939] w-fit'>
@@ -440,17 +451,17 @@ export function InsideCard({ user, onTextareaChange, replyThreadInfo }: {
                             </div>
                         )}
                     </>
-                )
-                }
+                )}
 
                 {!replyThreadInfo?.text &&
-                    <div {...getRootProps()} className='space-y-2 mt-1 select-none'>
+                    <div {...getRootProps()} ref={scrollDownRef} className='space-y-2 mt-1 select-none'>
                         <div className='text-[#777777] flex gap-1 select-none items-center text-[15px]'>
                             <input {...getInputProps()} />
                             <Icons.image className='h-5 w-5 select-none transform active:scale-75 transition-transform cursor-pointer' />
                         </div>
                     </div>
                 }
+
             </div>
         </div>
     )

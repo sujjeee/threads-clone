@@ -2,13 +2,21 @@
 
 import React from 'react'
 import { Label } from '@/components/ui/label'
-import { Globe, Lock, Plus, User2 } from 'lucide-react'
-import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
+import {
+    Globe,
+    Lock,
+    Plus,
+    User2
+} from 'lucide-react'
+import {
+    Avatar,
+    AvatarFallback,
+    AvatarImage
+} from '@/components/ui/avatar'
 import { Input } from '@/components/ui/input'
 import { Button } from '@/components/ui/button'
 import { Card } from '@/components/ui/card'
 import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group'
-import { emailToUsername } from '@/lib/utils'
 import { api } from '@/trpc/react'
 import { Icons } from '@/components/icons'
 import { useRouter } from 'next/navigation'
@@ -17,19 +25,19 @@ import { ResizeTextarea } from '@/components/ui/resize-textarea'
 import { User, Privacy } from '@prisma/client'
 import { useUser } from '@clerk/nextjs'
 
-type UserSetupProps = Pick<User, 'bio' | 'link' | 'privacy'>;
+type UserSetupProps = Pick<User, 'bio' | 'link' | 'privacy' | 'username'>;
 
-export default function AccountSetupForm() {
+export default function AccountSetupForm({ username }: { username: string }) {
     const { user } = useUser()
     const router = useRouter()
-    const username = emailToUsername(user!)
 
     const [showPrivacyPage, setShowPrivacyPage] = React.useState(false);
 
     const [userAccountData, setUserAccountData] = React.useState<UserSetupProps>({
         bio: "",
         link: "",
-        privacy: Privacy.PUBLIC
+        privacy: Privacy.PUBLIC,
+        username: username
     });
 
     const handleFieldChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
@@ -40,19 +48,13 @@ export default function AccountSetupForm() {
         });
     };
 
-    React.useEffect(() => {
-        if (user) {
-            setUserAccountData((prevData) => ({ ...prevData, username }));
-        }
-    }, [user]);
-
-
     const { mutate: accountSetup, isLoading } = api.auth.accountSetup.useMutation({
-        onSuccess: ({ success }) => {
+        onSuccess: async ({ success, username }) => {
             if (success) {
                 router.push(origin ? `${origin}` : '/')
             }
             toast.success("Account created !")
+
         },
         onError: (err) => {
             toast.error("AuthCallBack: Something went wrong!")
@@ -71,7 +73,6 @@ export default function AccountSetupForm() {
         })
     }
 
-    // console.log("use suer ", user)
     return (
         <div className='mx-auto flex flex-col gap-6 justify-center w-full max-w-lg items-center h-[95vh]'>
             {!showPrivacyPage
@@ -90,10 +91,9 @@ export default function AccountSetupForm() {
                                         <Label htmlFor="username">Name</Label>
                                         <div className=" flex items-center gap-2  w-full my-1 h-7">
                                             <Lock className="h-4 w-4 text-[#4D4D4D]" />
-                                            <div
-                                                className="flex-grow overflow-hidden outline-none text-[15px] text-accent-foreground break-words tracking-wide w-fullselect-none"
+                                            <div className="flex-grow overflow-hidden outline-none text-[15px] text-accent-foreground break-words tracking-wide w-fullselect-none"
                                             >
-                                                {`${user?.firstName} ${user?.lastName}${" "}(${username})`}
+                                                {`${user?.firstName} ${user?.lastName}${" "}(${userAccountData?.username})`}
                                             </div>
                                         </div>
                                     </div>
@@ -111,7 +111,8 @@ export default function AccountSetupForm() {
                                     <Plus className="h-4 w-4 text-[#4D4D4D] mt-1" />
                                     <ResizeTextarea
                                         name='bio'
-                                        className='select-none'
+                                        className='select-none whitespace-break-spaces'
+                                        maxLength={100}
                                         value={userAccountData.bio!}
                                         onChange={handleFieldChange}
                                         placeholder="Write bio" />
@@ -121,20 +122,19 @@ export default function AccountSetupForm() {
                                     <div className=" flex items-center gap-2  my-1 h-7">
                                         <Plus className="h-4 w-4 text-[#4D4D4D]" />
                                         <Input
+                                            maxLength={50}
                                             type='url'
                                             name='link'
-                                            className="outline-none border-0  ring-0  focus-visible:ring-offset-0 resize-none min-h-min focus-visible:ring-0 p-0 bg-transparent rounded-none placeholder:text-[#777777] text-[15px] text-accent-foreground select-none"
+                                            className="outline-none border-0  ring-0  focus-visible:ring-offset-0 resize-none min-h-min focus-visible:ring-0 p-0 bg-transparent rounded-none placeholder:text-[#777777] text-[15px] text-accent-foreground select-none whitespace-break-spaces"
                                             placeholder="Add link"
                                             value={userAccountData.link!}
                                             onChange={handleFieldChange}
                                         />
                                     </div>
                                 </div>
-
                             </div>
                         </Card>
                         <Button className='w-full' onClick={() => setShowPrivacyPage(true)}>Continue &rarr;</Button>
-
                     </div>
                 ) : (
                     <div className='flex flex-col gap-1 justify-center items-center w-full'>

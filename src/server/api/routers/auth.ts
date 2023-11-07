@@ -4,7 +4,7 @@ import { createTRPCRouter, privateProcedure } from "@/server/api/trpc";
 import { emailToUsername, getUserEmail } from "@/lib/utils";
 import { TRPCError } from "@trpc/server";
 import { Privacy } from "@prisma/client";
-import { generateUsername } from "@/_actions/create";
+import { generateUsername } from "@/_actions/generateUsername";
 import { clerkClient } from "@clerk/nextjs";
 
 export const authRouter = createTRPCRouter({
