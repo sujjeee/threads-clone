@@ -30,7 +30,7 @@ import {
 } from "react-dropzone";
 
 import { useUploadThing } from '@/lib/uploadthing'
-import { X } from 'lucide-react'
+import { EyeOff, X } from 'lucide-react'
 import useFileStore from '@/store/fileStore'
 
 interface ThreadInfo {
@@ -51,7 +51,7 @@ const CreateThread: React.FC<CreateThreadProps> = ({ showIcon, replyThreadInfo }
     const router = useRouter()
     const { user } = useUser()
 
-    const { selectedFile } = useFileStore();
+    const { selectedFile, isSelectedImageSafe } = useFileStore();
     const [isOpen, setIsOpen] = React.useState(false)
 
     const { startUpload } = useUploadThing("postMedia")
@@ -294,7 +294,7 @@ const CreateThread: React.FC<CreateThreadProps> = ({ showIcon, replyThreadInfo }
                         <Button
                             size={'sm'}
                             onClick={handleCreateThread}
-                            disabled={threadData.text === '' || isLoading || isReplying}
+                            disabled={!isSelectedImageSafe || threadData.text === '' || isLoading || isReplying}
                             className='rounded-full px-4 font-semibold'
                         >
                             {isLoading || isReplying && (
@@ -316,15 +316,20 @@ const CreateThread: React.FC<CreateThreadProps> = ({ showIcon, replyThreadInfo }
 export default CreateThread
 
 
+import NSFWFilter from 'nsfw-filter';
+
+
 export function InsideCard({ isOpen, user, onTextareaChange, replyThreadInfo }: {
     isOpen: boolean
     replyThreadInfo?: ThreadInfo
     user: UserResource
     onTextareaChange: (textValue: string) => void;
 }) {
-    const { setSelectedFile } = useFileStore();
+    const { setSelectedFile, setIsSelectedImageSafe } = useFileStore();
 
     const [inputValue, setInputValue] = React.useState('')
+    const [isSafeImage, setIsSafeImage] = React.useState(false)
+
     const handleResizeTextareaChange = (event: React.ChangeEvent<HTMLTextAreaElement>) => {
         const newValue = event.target.value;
         setInputValue(newValue)
@@ -336,13 +341,17 @@ export function InsideCard({ isOpen, user, onTextareaChange, replyThreadInfo }: 
     const maxSize = 4 * 1024 * 1024;
 
     const onDrop = React.useCallback(
-        (acceptedFiles: File[], rejectedFiles: FileRejection[]) => {
+        async (acceptedFiles: File[], rejectedFiles: FileRejection[]) => {
             const acceptedFile = acceptedFiles[0];
             if (!acceptedFile) {
                 alert('Please select a single file to upload.');
                 return;
             }
 
+            const isSafe = await NSFWFilter.isSafe(acceptedFile);
+            setIsSafeImage(isSafe)
+
+            setIsSelectedImageSafe(isSafe)
             setSelectedFile(acceptedFiles);
 
             const previewURL = URL.createObjectURL(acceptedFile)
@@ -441,7 +450,12 @@ export function InsideCard({ isOpen, user, onTextareaChange, replyThreadInfo }: 
                         />
                         {previewURL && (
                             <div className='relative overflow-hidden rounded-[12px] border border-[#393939] w-fit'>
-                                <img src={previewURL} alt="" className='object-contain max-h-[520px] max-w-full  rounded-[12px]' />
+                                <img src={previewURL} alt="" className='object-contain max-h-[520px] max-w-full rounded-[12px]' />
+                                {!isSafeImage &&
+                                    <div className='absolute top-0 left-0 w-full h-full backdrop-blur-xl flex justify-center items-center'>
+                                        <EyeOff className='h-8 w-8 text-[#3b3b3b]' />
+                                    </div>
+                                }
                                 <Button
                                     onClick={() => setPreviewURL('')}
                                     variant={"ghost"}
@@ -454,7 +468,7 @@ export function InsideCard({ isOpen, user, onTextareaChange, replyThreadInfo }: 
                 )}
 
                 {!replyThreadInfo?.text &&
-                    <div {...getRootProps()} ref={scrollDownRef} className='space-y-2 mt-1 select-none'>
+                    <div {...getRootProps()} ref={scrollDownRef} className='space-y-2 mt-1 select-none w-fit'>
                         <div className='text-[#777777] flex gap-1 select-none items-center text-[15px]'>
                             <input {...getInputProps()} />
                             <Icons.image className='h-5 w-5 select-none transform active:scale-75 transition-transform cursor-pointer' />

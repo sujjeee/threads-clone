@@ -9,7 +9,7 @@ import { getUserEmail } from "@/lib/utils";
 import { currentUser } from "@clerk/nextjs";
 import { GET_USER } from "@/server/constant";
 import { GET_COUNT } from "@/server/constant";
-import { Prisma, Thread } from "@prisma/client";
+import { Prisma } from "@prisma/client";
 import { ParentThreadsProps } from "@/types";
 import Filter from 'bad-words';
 
