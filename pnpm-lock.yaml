@@ -130,6 +130,9 @@ dependencies:
     version: 4.4.6(@types/react@18.2.34)(react@18.2.0)
 
 devDependencies:
+  '@types/bad-words':
+    specifier: ^3.0.3
+    version: 3.0.3
   '@types/eslint':
     specifier: ^8.44.6
     version: 8.44.6
@@ -151,6 +154,9 @@ devDependencies:
   autoprefixer:
     specifier: ^10.4.16
     version: 10.4.16(postcss@8.4.31)
+  bad-words:
+    specifier: ^3.0.4
+    version: 3.0.4
   eslint:
     specifier: ^8.52.0
     version: 8.52.0
@@ -1390,6 +1396,10 @@ packages:
     engines: {node: '>=18.0.0'}
     dev: false
 
+  /@types/bad-words@3.0.3:
+    resolution: {integrity: sha512-jYdpTxDOJ+EENnsCwt8cOZhV/+4+qcwhks1igrOSg4zwwA17rsPqLsZpTo1l+OwViNu+5SPus0v5g7iGx+ofzA==}
+    dev: true
+
   /@types/body-parser@1.19.4:
     resolution: {integrity: sha512-N7UDG0/xiPQa2D/XrVJXjkWbpqHCd2sBaB32ggRF2l83RhPfamgKGF8gwwqyksS95qUS5ZYF9aF+lLPRlwI2UA==}
     dependencies:
@@ -1897,6 +1907,17 @@ packages:
     resolution: {integrity: sha512-jsyHu61e6N4Vbz/v18DHwWYKK0bSWLqn47eeDSKPB7m8tqMHF9YJ+mhIk2lVteyZrY8tnSj/jHOv4YiTCuCJgg==}
     dependencies:
       dequal: 2.0.3
+    dev: true
+
+  /bad-words@3.0.4:
+    resolution: {integrity: sha512-v/Q9uRPH4+yzDVLL4vR1+S9KoFgOEUl5s4axd6NIAq8SV2mradgi4E8lma/Y0cw1ltVdvyegCQQKffCPRCp8fg==}
+    engines: {node: '>=8.0.0'}
+    dependencies:
+      badwords-list: 1.0.0
+    dev: true
+
+  /badwords-list@1.0.0:
+    resolution: {integrity: sha512-oWhaSG67e+HQj3OGHQt2ucP+vAPm1wTbdp2aDHeuh4xlGXBdWwzZ//pfu6swf5gZ8iX0b7JgmSo8BhgybbqszA==}
     dev: true
 
   /balanced-match@1.0.2:

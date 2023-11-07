@@ -11,6 +11,7 @@ import { GET_USER } from "@/server/constant";
 import { GET_COUNT } from "@/server/constant";
 import { Prisma, Thread } from "@prisma/client";
 import { ParentThreadsProps } from "@/types";
+import Filter from 'bad-words';
 
 export const postRouter = createTRPCRouter({
 
@@ -39,9 +40,12 @@ export const postRouter = createTRPCRouter({
         throw new TRPCError({ code: 'NOT_FOUND' })
       }
 
+      const filter = new Filter()
+      const filteredText = filter.clean(input.text)
+
       const newpost = await ctx.db.thread.create({
         data: {
-          text: input.text,
+          text: filteredText,
           authorId: userId,
           images: input.imageUrl ? [input.imageUrl] : [],
         }
