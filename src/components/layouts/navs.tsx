@@ -36,7 +36,7 @@ export default function Navs() {
                     )}
                 />
             </Link>
-            <CreateThread showIcon={true} />
+            <CreateThread variant='create' />
             <Link href={'/activity'} className='hover:bg-[#181818] py-5 px-8 rounded-lg transform transition-all duration-150 ease-out hover:scale-100 active:scale-90'>
                 <Icons.like
                     className={cn(

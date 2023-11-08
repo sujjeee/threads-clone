@@ -24,7 +24,7 @@ export default function page() {
   return (
     <>
       <div className='w-full sm:flex hidden'>
-        <CreateThread showIcon={false} />
+        <CreateThread variant='home' />
       </div>
       <InfiniteScroll
         dataLength={allThread?.length!}

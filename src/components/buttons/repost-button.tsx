@@ -89,7 +89,7 @@ const RepostButton: React.FC<RepostButtonProps> = ({
                     <DropdownMenuItem
                         className='focus:bg-transparent px-4 tracking-normal select-none font-semibold py-3 cursor-pointer text-[15px] rounded-none active:bg-[#0a0a0a] w-full justify-between'
                     >
-                        <CreateThread showIcon={true} isQuote={id} />
+                        <CreateThread variant='quote' />
                     </DropdownMenuItem>
                 </DropdownMenuContent>
             </DropdownMenu>

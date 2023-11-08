@@ -155,11 +155,11 @@ const ThreadCard: React.FC<ThreadCardProps> = ({
                                     </button>
                                 </div>
                                 <CreateThread
-                                    showIcon={true}
+                                    variant='reply'
                                     replyThreadInfo={{
                                         id,
                                         text,
-                                        image: images.length > 0 ? images[0] : '',
+                                        images: images,
                                         author: { ...author }
                                     }} />
                                 <RepostButton id={id} isRepostedByMe={isRepostedByMe} />

@@ -12,36 +12,27 @@ import { cn } from '@/lib/utils'
 import { api } from '@/trpc/react'
 import { toast } from 'sonner'
 import { useUser } from '@clerk/nextjs'
-import { AuthorInfoProps } from '@/types'
+import { AuthorInfoProps, ThreadCardProps, TriggerVariant } from '@/types'
 import { UserResource } from '@clerk/types'
 import { Separator } from '../ui/separator'
 import Username from './username'
+import { useUploadThing } from '@/lib/uploadthing'
+import { EyeOff, X } from 'lucide-react'
+import useFileStore from '@/store/fileStore'
 import {
     useDropzone,
     type Accept,
     type FileRejection,
 } from "react-dropzone";
 
-import { useUploadThing } from '@/lib/uploadthing'
-import { EyeOff, X } from 'lucide-react'
-import useFileStore from '@/store/fileStore'
-
-interface ThreadInfo {
-    id: string;
-    text: string;
-    image: string | undefined;
-    author: AuthorInfoProps;
-}
+type ParentThreadInfo = Pick<ThreadCardProps, 'id' | 'text' | 'images' | 'author'>
 
 interface CreateThreadProps {
-    showIcon: boolean;
-    replyThreadInfo?: ThreadInfo;
-    isQuote?: string
+    variant: TriggerVariant;
+    replyThreadInfo?: ParentThreadInfo;
 }
 
-const CreateThread: React.FC<CreateThreadProps> = ({ showIcon, replyThreadInfo, isQuote }) => {
-
-    const path = usePathname()
+const CreateThread: React.FC<CreateThreadProps> = ({ variant, replyThreadInfo }) => {
     const router = useRouter()
     const { user } = useUser()
     const { postPrivacy } = usePost();
@@ -57,6 +48,7 @@ const CreateThread: React.FC<CreateThreadProps> = ({ showIcon, replyThreadInfo, 
         text: "",
         images: []
     })
+
     React.useEffect(() => {
         setThreadData((prevThreadData) => ({
             ...prevThreadData,
@@ -186,67 +178,10 @@ const CreateThread: React.FC<CreateThreadProps> = ({ showIcon, replyThreadInfo, 
 
     return (
         <Dialog open={isOpen} onOpenChange={setIsOpen}>
-            <DialogTrigger asChild>
-                {/* TODO: Need to fix these triggers  */}
-                {showIcon ? (
-                    !replyThreadInfo?.text ? (
-                        isQuote ? (
-                            <div className='flex items-center justify-between w-full'>
-                                Quote
-                                <Icons.quote className='w-5 h-5 ' />
-                            </div>
-                        ) : (
-                            <div
-                                onClick={() => {
-                                    setIsOpen(true)
-                                }}
-                                className="flex items-center justify-center px-5 hover:bg-[#1C1C1C]/80 py-5 rounded-lg transform transition-all duration-150 ease-out hover:scale-100 active:scale-90 w-full">
-                                <Icons.create
-                                    className={cn(
-                                        "h-6 w-6",
-                                        path === '/create'
-                                            ? "text-forground"
-                                            : "text-[#4D4D4D]",
-                                    )}
-                                />
-                            </div>
-                        )
-                    ) : (
-                        <div className='flex items-center justify-center hover:bg-[#1E1E1E] rounded-full p-2 w-fit h-fit active:scale-95'>
-                            <Icons.reply className='w-5 h-5 ' />
-                        </div>
-                    )
-                ) : (
-                    <div className='flex flex-col w-full'>
-                        <div
-                            onClick={() => {
-                                setIsOpen(true)
-                            }}
-                            className='flex w-full my-4 '>
-                            <div className='w-full flex'>
-                                <div>
-                                    <img
-                                        src={user?.imageUrl}
-                                        width={36}
-                                        height={36}
-                                        alt="Account Avatar"
-                                        className="rounded-full mr-4"
-                                    />
-                                </div>
-                                <input
-                                    className=" mini-scrollbar resize-none bg-transparent w-full placeholder:text-[#777777] outline-none placeholder:text-[15px]"
-                                    placeholder="Start a thread..."
-                                />
-                            </div>
-                            <Button
-                                disabled={threadData.text === '' || isLoading}
-                                size={'sm'}
-                                className='rounded-full px-4 font-semibold text-[15px]'>
-                                Post
-                            </Button>
-                        </div>
-                        <Separator className='bg-[#333333]' />
-                    </div>)}
+            <DialogTrigger className={cn({
+                "w-full": variant === "home" || variant === "create"
+            })}>
+                <Trigger variant={variant} />
             </DialogTrigger>
             <DialogContent className='border-none bg-transparent sm:max-w-[668px] max-w-lg w-full shadow-none select-none'>
                 <h1 className='w-full text-center font-bold mb-2'>New thread</h1>
@@ -293,10 +228,12 @@ export default CreateThread
 import NSFWFilter from 'nsfw-filter';
 import PostPrivacy from '../clickables/post-privacy'
 import usePost from '@/store/post'
+import useCreate from '@/store/create'
+import Trigger from '../trigger'
 
 export function InsideCard({ isOpen, user, onTextareaChange, replyThreadInfo }: {
     isOpen: boolean
-    replyThreadInfo?: ThreadInfo
+    replyThreadInfo?: ParentThreadInfo
     user: UserResource
     onTextareaChange: (textValue: string) => void;
 }) {
@@ -405,10 +342,10 @@ export function InsideCard({ isOpen, user, onTextareaChange, replyThreadInfo }: 
                                 __html: replyThreadInfo.text.slice(1, -1).replace(/\\n/g, '\n')
                             }} />
                         </p>
-                        {replyThreadInfo.image &&
+                        {replyThreadInfo.images &&
                             <div className='relative overflow-hidden rounded-[12px] border border-[#393939] w-fit'>
                                 <img
-                                    src={replyThreadInfo.image}
+                                    src={replyThreadInfo.images[0]}
                                     alt={`${replyThreadInfo.author.fullname}'s post image`}
                                     className='object-contain max-h-[520px] max-w-full rounded-[12px]' />
                             </div>

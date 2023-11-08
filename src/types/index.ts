@@ -51,3 +51,14 @@ export type ParentThreadsProps = {
     like_count: number;
     reply_count: number;
 }
+
+
+export type TriggerVariant =
+    | 'create'
+    | 'reply'
+    | 'quote'
+    | 'home'
+
+export interface TriggerProps {
+    variant: TriggerVariant;
+}
