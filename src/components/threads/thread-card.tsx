@@ -36,13 +36,18 @@ const ThreadCard: React.FC<ThreadCardProps> = ({
     replies,
     author,
     count,
-    images
+    images,
+    reposts
 }) => {
 
     const { user: loggedUser } = useUser()
 
     const isLikedByMe = likes.some((like: any) =>
         like?.userId || like?.user?.id === loggedUser?.id
+    );
+
+    const isRepostedByMe = reposts.some((user) =>
+        user?.userId || user?.userId === loggedUser?.id
     );
 
     const getThreadReplies = replies?.map((reply) => ({
@@ -80,6 +85,8 @@ const ThreadCard: React.FC<ThreadCardProps> = ({
 
         },
     });
+
+
 
     return (
         <>
@@ -155,7 +162,7 @@ const ThreadCard: React.FC<ThreadCardProps> = ({
                                         image: images.length > 0 ? images[0] : '',
                                         author: { ...author }
                                     }} />
-                                <RepostButton id={id} />
+                                <RepostButton id={id} isRepostedByMe={isRepostedByMe} />
                                 <ShareButton
                                     id={id}
                                     author={author.username}

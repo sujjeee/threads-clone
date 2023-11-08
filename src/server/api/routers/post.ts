@@ -102,6 +102,7 @@ export const postRouter = createTRPCRouter({
               ...GET_USER,
             }
           },
+          reposts: true,
           ...GET_COUNT,
         },
       });
@@ -128,7 +129,8 @@ export const postRouter = createTRPCRouter({
           },
           likes: thread.likes,
           replies: thread.replies,
-          images: thread.images
+          images: thread.images,
+          reposts: thread.reposts
         })),
         nextCursor,
       };
