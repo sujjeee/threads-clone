@@ -1,11 +1,10 @@
 import { postRouter } from "@/server/api/routers/post";
 import { createTRPCRouter } from "@/server/api/trpc";
 import { authRouter } from "@/server/api/routers/auth";
-import { likeRouter } from "./routers/like";
-import { userRouter } from "./routers/user";
-import { notificationRouter } from "./routers/notification";
-import { searchRouter } from "./routers/search";
-import { threadsRouter } from "./routers/threads";
+import { likeRouter } from "@/server/api/routers/like";
+import { userRouter } from "@/server/api/routers/user";
+import { notificationRouter } from "@/server/api/routers/notification";
+import { searchRouter } from "@/server/api/routers/search";
 
 /**
  * This is the primary router for your server.
@@ -19,7 +18,6 @@ export const appRouter = createTRPCRouter({
   like: likeRouter,
   search: searchRouter,
   notification: notificationRouter,
-  threads: threadsRouter
 });
 
 // export type definition of API

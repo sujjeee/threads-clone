@@ -55,7 +55,6 @@ export const postRouter = createTRPCRouter({
 
     }),
 
-
   getInfinitePost: publicProcedure
     .input(
       z.object({
@@ -134,7 +133,6 @@ export const postRouter = createTRPCRouter({
         nextCursor,
       };
     }),
-
 
   getPostInfo: publicProcedure
     .input(
@@ -257,7 +255,6 @@ export const postRouter = createTRPCRouter({
       }
     }),
 
-
   replyToPost: privateProcedure
     .input(
       z.object({
@@ -304,7 +301,6 @@ export const postRouter = createTRPCRouter({
       })
       return { repliedThreadPost, success: true }
     }),
-
 
   getNestedThreads: publicProcedure
     .input(
@@ -522,6 +518,84 @@ export const postRouter = createTRPCRouter({
       }
     }),
 
+  toggleRepost: privateProcedure
+    .input(z.object({
+      id: z.string()
+    }))
+    .mutation(async ({ input: { id }, ctx }) => {
+
+      const { userId } = ctx;
+
+      const data = { threadId: id, userId };
+
+      const existingRepost = await ctx.db.repost.findUnique({
+        where: {
+          threadId_userId: data
+        },
+      });
+
+      if (existingRepost == null) {
+
+        const transactionResult = await ctx.db.$transaction(async (prisma) => {
+
+          const createdRepost = await prisma.repost.create({
+            data,
+            select: {
+              thread: {
+                select: {
+                  text: true
+                }
+              }
+            }
+          });
+
+          const createNotification = await prisma.notification.create({
+            data: {
+              type: 'REPOST',
+              userId: data.userId,
+              threadId: data.threadId,
+              message: createdRepost.thread.text
+            }
+          });
+
+          return {
+            createdRepost,
+            createNotification
+          };
+
+        });
+
+        if (!transactionResult) {
+          throw new TRPCError({ code: 'NOT_IMPLEMENTED' })
+        }
+
+        return { createdRepost: true };
+
+      } else {
+        await ctx.db.$transaction(async (prisma) => {
+
+          await prisma.repost.delete({
+            where: {
+              threadId_userId: data
+            }
+          });
+
+          await prisma.notification.delete({
+            where: {
+              userId_threadId_type: {
+                userId: data.userId,
+                threadId: data.threadId,
+                type: 'REPOST'
+              }
+            }
+          });
+
+        });
+
+        return { createdRepost: false };
+
+      }
+    }),
 
 });
 

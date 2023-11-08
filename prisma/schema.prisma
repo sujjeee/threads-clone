@@ -98,10 +98,12 @@ model Notification {
 }
 
 enum NotificationType {
+    ADMIN
     LIKE
     REPLY
     FOLLOW
-    ADMIN
+    REPOST
+    QUOTE
 }
 
 enum PostPrivacy {
