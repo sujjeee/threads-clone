@@ -28,6 +28,8 @@ model User {
     likedThreads Like[]
     isAdmin      Boolean?       @default(false) @map(name: "is_admin")
     notification Notification[]
+    reposts      Repost[]
+    reports      Report[]
 
     @@unique([createdAt, id])
 }
@@ -49,6 +51,10 @@ model Thread {
     parentThread   Thread?        @relation("rootThread", fields: [parentThreadId], references: [id], onDelete: Cascade)
     replies        Thread[]       @relation("rootThread")
     notification   Notification[]
+    reposts        Repost[]
+    quoteId        String?
+    privacy        PostPrivacy    @default(ANYONE)
+    reports        Report[]
 
     @@unique([createdAt, id])
     @@index([authorId])
@@ -64,6 +70,17 @@ model Like {
     @@id([threadId, userId])
     @@index([userId])
     @@index([threadId])
+}
+
+model Repost {
+    createdAt DateTime @default(now())
+    thread    Thread   @relation(fields: [threadId], references: [id], onDelete: Cascade)
+    threadId  String
+    user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+    userId    String
+
+    @@id([threadId, userId])
+    @@index([userId])
 }
 
 model Notification {
@@ -85,4 +102,20 @@ enum NotificationType {
     REPLY
     FOLLOW
     ADMIN
+}
+
+enum PostPrivacy {
+    FOLLOWED
+    ANYONE
+    MENTIONED
+}
+
+model Report {
+    id        String   @id @default(cuid())
+    createdAt DateTime @default(now())
+    reason    String
+    thread    Thread?  @relation(fields: [threadId], references: [id])
+    threadId  String?
+    user      User?    @relation(fields: [userId], references: [id])
+    userId    String?
 }
