@@ -24,6 +24,18 @@ import { toast } from 'sonner'
 import { ResizeTextarea } from '@/components/ui/resize-textarea'
 import { User, Privacy } from '@prisma/client'
 import { useUser } from '@clerk/nextjs'
+import { z } from 'zod'
+import { useForm } from 'react-hook-form'
+import { zodResolver } from '@hookform/resolvers/zod'
+import {
+    Form,
+    FormControl,
+    FormDescription,
+    FormField,
+    FormItem,
+    FormLabel,
+    FormMessage,
+} from "@/components/ui/form"
 
 type UserSetupProps = Pick<User, 'bio' | 'link' | 'privacy' | 'username'>;
 
@@ -32,6 +44,7 @@ export default function AccountSetupForm({ username }: { username: string }) {
     const router = useRouter()
 
     const [showPrivacyPage, setShowPrivacyPage] = React.useState(false);
+    const [correctUserData, setCorrectUserData] = React.useState(false);
 
     const [userAccountData, setUserAccountData] = React.useState<UserSetupProps>({
         bio: "",
@@ -53,7 +66,7 @@ export default function AccountSetupForm({ username }: { username: string }) {
             if (success) {
                 router.push(origin ? `${origin}` : '/')
             }
-            toast.success("Account created !")
+            toast.success(`Welcome to threads ${username} !`)
 
         },
         onError: (err) => {
@@ -65,77 +78,121 @@ export default function AccountSetupForm({ username }: { username: string }) {
         retry: false,
     });
 
+    const FormSchema = z.object({
+        url: z.string()
+            .url()
+            .refine(url => {
+                try {
+                    const parsedUrl = new URL(url);
+                    return parsedUrl.protocol === 'https:';
+                } catch {
+                    return false;
+                }
+            }, 'Must be a valid HTTPS url')
+            .or(z.literal('')),
+    })
+
+    const form = useForm<z.infer<typeof FormSchema>>({
+        resolver: zodResolver(FormSchema),
+        defaultValues: {
+            url: "",
+        },
+    })
+
     async function handleAccountSetup() {
         accountSetup({
-            bio: userAccountData.bio!,
+            bio: JSON.stringify(userAccountData.bio!, null, 2),
             link: userAccountData.link!,
             privacy: userAccountData.privacy
         })
     }
 
+    async function handleSecurity(data: z.infer<typeof FormSchema>) {
+        setUserAccountData({
+            ...userAccountData,
+            'link': data.url,
+        });
+        setShowPrivacyPage(true)
+    }
+
+
+
     return (
         <div className='mx-auto flex flex-col gap-6 justify-center w-full max-w-lg items-center h-[95vh]'>
             {!showPrivacyPage
                 ? (
-                    <div className='flex flex-col gap-1 justify-center items-center w-full'>
-                        <h2 className="scroll-m-20 tracking-wide text-4xl font-bold">
-                            Profile
-                        </h2>
-                        <p className="leading-7 text-muted-foreground ">
-                            Customize your Threads profile
-                        </p>
-                        <Card className='w-full p-6 px-8 bg-transparent rounded-2xl my-4 sm:mt-10'>
-                            <div className="flex flex-col gap-4">
-                                <div className='flex justify-between items-center'>
-                                    <div className='w-full'>
-                                        <Label htmlFor="username">Name</Label>
-                                        <div className=" flex items-center gap-2  w-full my-1 h-7">
-                                            <Lock className="h-4 w-4 text-[#4D4D4D]" />
-                                            <div className="flex-grow overflow-hidden outline-none text-[15px] text-accent-foreground break-words tracking-wide w-fullselect-none"
-                                            >
-                                                {`${user?.firstName} ${user?.lastName}${" "}(${userAccountData?.username})`}
+                    <Form {...form}>
+                        <form
+                            className="w-full flex flex-col py-4 gap-1.5 text-start"
+                            onSubmit={(...args) => void form.handleSubmit(handleSecurity)(...args)}
+                        >
+                            <div className='flex flex-col gap-1 justify-center items-center w-full'>
+                                <h2 className="scroll-m-20 tracking-wide text-4xl font-bold">
+                                    Profile
+                                </h2>
+                                <p className="leading-7 text-muted-foreground ">
+                                    Customize your Threads profile
+                                </p>
+                                <Card className='w-full p-6 px-8 bg-transparent rounded-2xl my-4 sm:mt-10'>
+                                    <div className="flex flex-col gap-4">
+                                        <div className='flex justify-between items-center'>
+                                            <div className='w-full'>
+                                                <Label htmlFor="username">Name</Label>
+                                                <div className=" flex items-center gap-2  w-full my-1 h-7">
+                                                    <Lock className="h-4 w-4 text-[#4D4D4D]" />
+                                                    <div className="flex-grow overflow-hidden outline-none text-[15px] text-accent-foreground break-words tracking-wide w-full select-none"
+                                                    >
+                                                        {`${user?.firstName} ${user?.lastName}${" "}(${userAccountData?.username})`}
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div className='h-12 w-12'>
+                                                <Avatar className=" h-full w-full relative overflow-visible">
+                                                    <AvatarImage src={user?.imageUrl} alt="Avatar" className='rounded-full' />
+                                                    <AvatarFallback>
+                                                        <User2 className='h-5 w-5' />
+                                                    </AvatarFallback>
+                                                </Avatar>
                                             </div>
                                         </div>
+                                        <Label htmlFor="bio">Bio</Label>
+                                        <div className='flex gap-2 '>
+                                            <Plus className="h-4 w-4 text-[#4D4D4D] mt-1" />
+                                            <ResizeTextarea
+                                                name='bio'
+                                                className='select-none whitespace-break-spaces'
+                                                maxLength={100}
+                                                value={userAccountData.bio!}
+                                                onChange={handleFieldChange}
+                                                placeholder="Write bio" />
+                                        </div>
+                                        <FormField
+                                            control={form.control}
+                                            name="url"
+                                            rules={{ required: false }}
+                                            render={({ field }) => (
+                                                <FormItem>
+                                                    <FormLabel>Link</FormLabel>
+                                                    <FormControl>
+                                                        <div className=" flex items-center gap-2  my-1 h-7">
+                                                            <Plus className="h-4 w-4 text-[#4D4D4D]" />
+                                                            <Input
+                                                                maxLength={50}
+                                                                type='url'
+                                                                className="outline-none border-0  ring-0  focus-visible:ring-offset-0 resize-none min-h-min focus-visible:ring-0 p-0 bg-transparent rounded-none placeholder:text-[#777777] text-[15px] text-accent-foreground select-none whitespace-break-spaces"
+                                                                placeholder="Add link"
+                                                                {...field}
+                                                            />
+                                                        </div>
+                                                    </FormControl>
+                                                </FormItem>
+                                            )} />
                                     </div>
-                                    <div className='h-12 w-12'>
-                                        <Avatar className=" h-full w-full relative overflow-visible">
-                                            <AvatarImage src={user?.imageUrl} alt="Avatar" className='rounded-full' />
-                                            <AvatarFallback>
-                                                <User2 className='h-5 w-5' />
-                                            </AvatarFallback>
-                                        </Avatar>
-                                    </div>
-                                </div>
-                                <Label htmlFor="bio">Bio</Label>
-                                <div className='flex gap-2 '>
-                                    <Plus className="h-4 w-4 text-[#4D4D4D] mt-1" />
-                                    <ResizeTextarea
-                                        name='bio'
-                                        className='select-none whitespace-break-spaces'
-                                        maxLength={100}
-                                        value={userAccountData.bio!}
-                                        onChange={handleFieldChange}
-                                        placeholder="Write bio" />
-                                </div>
-                                <div className="grid gap-2 mt-1">
-                                    <Label htmlFor="link">Link</Label>
-                                    <div className=" flex items-center gap-2  my-1 h-7">
-                                        <Plus className="h-4 w-4 text-[#4D4D4D]" />
-                                        <Input
-                                            maxLength={50}
-                                            type='url'
-                                            name='link'
-                                            className="outline-none border-0  ring-0  focus-visible:ring-offset-0 resize-none min-h-min focus-visible:ring-0 p-0 bg-transparent rounded-none placeholder:text-[#777777] text-[15px] text-accent-foreground select-none whitespace-break-spaces"
-                                            placeholder="Add link"
-                                            value={userAccountData.link!}
-                                            onChange={handleFieldChange}
-                                        />
-                                    </div>
-                                </div>
+                                </Card>
+                                <Button type="submit" className='w-full'>Continue &rarr;</Button>
                             </div>
-                        </Card>
-                        <Button className='w-full' onClick={() => setShowPrivacyPage(true)}>Continue &rarr;</Button>
-                    </div>
+                        </form>
+                    </Form>
                 ) : (
                     <div className='flex flex-col gap-1 justify-center items-center w-full'>
                         <h2 className="scroll-m-20 tracking-wide text-4xl font-bold">

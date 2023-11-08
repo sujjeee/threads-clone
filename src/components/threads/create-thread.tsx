@@ -395,7 +395,7 @@ export function InsideCard({ isOpen, user, onTextareaChange, replyThreadInfo }: 
                 {replyThreadInfo
                     ?
                     <Avatar className='h-9 w-9 outline outline-1 outline-[#333333] rounded-full '>
-                        <AvatarImage src={replyThreadInfo.author.image} alt={replyThreadInfo.author.username} className='object-cover' />
+                        <AvatarImage src={replyThreadInfo.author.image ?? ''} alt={replyThreadInfo.author.username} className='object-cover' />
                         <AvatarFallback>{replyThreadInfo.author.username.slice(0, 2).toUpperCase()}</AvatarFallback>
                     </Avatar>
                     : <Avatar className='h-9 w-9 outline outline-1 outline-[#333333] rounded-full  '>

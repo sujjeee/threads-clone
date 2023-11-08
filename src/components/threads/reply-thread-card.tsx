@@ -107,7 +107,7 @@ const ReplyThreadCard: React.FC<ThreadProps> = ({ threadInfo, parentThreads }) =
                     <button className='relative '>
                         <div className='h-9 w-9 outline outline-1 outline-[#333333] rounded-full ml-[1px]'>
                             <Avatar className="rounded-full w-full h-full ">
-                                <AvatarImage src={author.image} alt={author.username} className='object-cover' />
+                                <AvatarImage src={author.image ?? ""} alt={author.username} className='object-cover' />
                                 <AvatarFallback>{author.username?.slice(0, 2).toUpperCase()}</AvatarFallback>
                             </Avatar>
                         </div>

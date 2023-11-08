@@ -3,7 +3,7 @@
 import React from 'react'
 import Link from 'next/link'
 import { toast } from 'sonner'
-import { Plus, Text } from 'lucide-react'
+import { Plus } from 'lucide-react'
 import { Icons } from '@/components/icons'
 import { cn, formatTimeAgo } from '@/lib/utils'
 import { api } from '@/trpc/react'
@@ -90,7 +90,7 @@ const ThreadCard: React.FC<ThreadCardProps> = ({
                             <button className='relative '>
                                 <div className='h-9 w-9 outline outline-1 outline-[#333333] rounded-full ml-[1px]'>
                                     <Avatar className="rounded-full w-full h-full ">
-                                        <AvatarImage src={author.image} alt={author.username} className='object-cover' />
+                                        <AvatarImage src={author.image ?? ''} alt={author.username} className='object-cover' />
                                         <AvatarFallback>{author.username?.slice(0, 2).toUpperCase()}</AvatarFallback>
                                     </Avatar>
                                 </div>
@@ -190,11 +190,6 @@ const ThreadCard: React.FC<ThreadCardProps> = ({
 
                     {replyCount > 0 && likeUpdate.current.likeCount > 0 && <p className='mx-2'> · </p>}
 
-                    {/* {likeUpdate.current.likeCount > 0 && (
-                        <p className='hover:underline'>
-                            {likeUpdate.current.likeCount} {likeUpdate.current.likeCount === 1 ? 'like' : 'likes'}
-                        </p>
-                    )} */}
                     {likeUpdate.current.likeCount > 0 && (
                         <PostActivity
                             author={author}

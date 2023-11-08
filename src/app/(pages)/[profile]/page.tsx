@@ -7,6 +7,7 @@ import UserProfile from '@/components/user-profile'
 import Loading from '../loading'
 import ThreadCard from '@/components/threads/thread-card'
 import { Separator } from '@/components/ui/separator'
+import NotFound from '@/app/not-found'
 
 export default function page() {
   const path = usePathname()
@@ -19,23 +20,15 @@ export default function page() {
     return null;
   }
 
-  const { data, isLoading } = api.user.profileInfo.useQuery({ username })
+  const { data, isLoading, isError, error } = api.user.profileInfo.useQuery({ username })
 
   if (isLoading) return <Loading />
-  if (!data) {
-    return (
-      <div className="h-[50vh] w-full justify-center items-center flex text-[#777777]">
-        <p>No results.</p>
-      </div>
-    )
-  }
-
+  if (isError) return <NotFound />
 
   return (
     <div>
       <UserProfile {...data.userDetails} />
       {data && data.threads.map((threads, index) => {
-        console.log(threads)
         return (
           <>
             <ThreadCard key={threads.id} {...threads} />

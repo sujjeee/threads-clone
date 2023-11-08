@@ -43,14 +43,20 @@ const UserProfile: React.FC<UserProfileInfoProps> = ({
                     </div>
                 </div>
                 <Avatar className="h-[80px] w-[80px] overflow-visible outline outline-2 outline-[#505050] relative">
-                    <AvatarImage src={image} alt={fullname} className="h-min w-full rounded-full object-cover " />
+                    <AvatarImage src={image ?? ""} alt={fullname ?? ''} className="h-min w-full rounded-full object-cover " />
                     <AvatarFallback></AvatarFallback>
                     <div className='absolute bottom-0 -left-0.5'>
                         <Icons.verified2 className='h-6 w-6' />
                     </div>
                 </Avatar>
             </div>
-            <p className='text-[15px]'>{bio}</p>
+
+            {bio &&
+                <p dangerouslySetInnerHTML={{
+                    __html: bio?.slice(1, -1).replace(/\\n/g, '\n')
+                }} className='text-[15px] whitespace-pre-line' />
+            }
+
             <div className='flex justify-between items-center'>
                 <div className="hidden sm:flex -space-x-1 overflow-hidden w-full items-center ">
                     <img className="inline-block h-4 w-4 rounded-full ring-2 ring-background " src="https://images.unsplash.com/photo-1491528323818-fdd1faba62cc?ixlib=rb-1.2.1&amp;ixid=eyJhcHBfaWQiOjEyMDd9&amp;auto=format&amp;fit=facearea&amp;facepad=2&amp;w=256&amp;h=256&amp;q=80" alt="" />

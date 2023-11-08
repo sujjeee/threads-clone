@@ -18,6 +18,17 @@ export const userRouter = createTRPCRouter({
         )
         .query(async ({ input, ctx }) => {
 
+            const isUser = await ctx.db.user.findUnique({
+                where: {
+                    username: input.username,
+                    verified: true
+                },
+            });
+
+            if (!isUser) {
+                throw new TRPCError({ code: 'NOT_FOUND' })
+            }
+
             const userProfileInfo = await ctx.db.user.findUnique({
                 where: {
                     username: input.username
