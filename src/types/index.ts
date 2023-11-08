@@ -62,3 +62,10 @@ export type TriggerVariant =
 export interface TriggerProps {
     variant: TriggerVariant;
 }
+
+export interface ThreadInfo {
+    id: string;
+    text: string;
+    image: string | undefined;
+    author: AuthorInfoProps;
+}

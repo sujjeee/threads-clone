@@ -8,7 +8,7 @@ import React from 'react'
 import Loading from '../loading'
 import Username from '@/components/threads/username'
 import { formatTimeAgo, truncateText } from '@/lib/utils'
-import UserAvatar from '@/components/user-avatar'
+import NotificationUserAvatar from '@/components/notification-user-avatar'
 import Link from 'next/link'
 
 export default function ActivityPage() {
@@ -23,10 +23,10 @@ export default function ActivityPage() {
             {data && data.length > 0 ? (
                 data.map((activity, index) => (
                     <div key={index} className='flex w-full mt-4 '>
-                        <UserAvatar
+                        <NotificationUserAvatar
                             username={activity.user.username}
-                            image={activity.user.image}
-                            fullname={activity.user.fullname}
+                            image={activity.user.image ?? ''}
+                            fullname={activity.user.fullname ?? ''}
                             type={activity.type}
                         />
                         <div className='flex flex-col w-full ml-3'>

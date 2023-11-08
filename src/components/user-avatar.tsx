@@ -1,52 +1,37 @@
 import React from 'react'
 import {
-  Avatar,
-  AvatarImage,
-  AvatarFallback,
+    Avatar,
+    AvatarImage,
+    AvatarFallback,
 } from '@/components/ui/avatar'
 import Link from 'next/link'
-import { NotificationType } from '@prisma/client'
-import { Icons } from './icons'
-import { cn } from '@/lib/utils'
 
 interface UserAvatarProps {
-  username: string
-  image: string
-  fullname: string
-  type: NotificationType
+    image: string | null | undefined
+    username: string
+    fullname: string | null | undefined
 }
 
-const UserAvatar: React.FC<UserAvatarProps> = ({ username, image, fullname, type }) => {
-
-  function enumToLower(enumValue: string): string {
-    return enumValue.toLowerCase();
-  }
-  const icon_name = enumToLower(type) as keyof typeof Icons
-
-  const Icon = Icons[icon_name]
-
-  return (
-    <Link href={`/@${username}`} >
-      <div className='outline outline-1 outline-[#333333] rounded-full ml-[1px]'>
-        <Avatar className="h-10 w-10 relative overflow-visible cursor-pointer ">
-          <AvatarImage src={image} alt={fullname} className="rounded-full w-full h-full object-cover" />
-          <AvatarFallback>{username.slice(0, 2).toUpperCase()}</AvatarFallback>
-          <div
-            className={cn(
-              'absolute -bottom-0.5 -right-0.5 rounded-2xl border-2 border-background text-white',
-              {
-                'bg-[#fe0169]': icon_name === 'like',
-                'bg-[#6e3def]': icon_name === 'follow',
-                'bg-[#24c3ff]': icon_name === 'reply',
-              }
-            )}
-          >
-            {type !== 'ADMIN' && <Icon className='h-[18px] w-[18px] p-1' fill='white' />}
-          </div>
-        </Avatar>
-      </div>
-    </Link>
-  )
+const UserAvatar: React.FC<UserAvatarProps> = ({
+    username,
+    image,
+    fullname,
+}) => {
+    return (
+        <Link href={`/@${username}`} >
+            <div className='outline outline-1 outline-[#333333] rounded-full ml-[1px]'>
+                <Avatar className="h-9 w-9 outline outline-1 outline-[#333333] rounded-full  ">
+                    <AvatarImage
+                        src={image ?? ""}
+                        alt={fullname ?? ""}
+                        className="rounded-full w-full h-full object-cover" />
+                    <AvatarFallback>
+                        {username.slice(0, 2).toUpperCase()}
+                    </AvatarFallback>
+                </Avatar>
+            </div>
+        </Link>
+    )
 }
 
 export default UserAvatar

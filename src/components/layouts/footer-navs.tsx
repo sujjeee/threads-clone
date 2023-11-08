@@ -41,7 +41,7 @@ export default function FooterNavs() {
                         )}
                     />
                 </Link>
-                <CreateThread showIcon={true} />
+                <CreateThread variant='create' />
                 <Link href={'/'} className="flex items-center justify-center px-5 hover:bg-[#1C1C1C]/80 py-5  rounded-lg transform transition-all duration-150 ease-out hover:scale-100 active:scale-90 w-full">
                     <Icons.like
                         className={cn(
