@@ -9,13 +9,6 @@ import { Card } from '@/components/ui/card'
 import { Dialog, DialogContent, DialogTrigger } from '@/components/ui/dialog'
 import { usePathname, useRouter } from 'next/navigation'
 import { cn } from '@/lib/utils'
-import {
-    DropdownMenu,
-    DropdownMenuContent,
-    DropdownMenuItem,
-    DropdownMenuSeparator,
-    DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu"
 import { api } from '@/trpc/react'
 import { toast } from 'sonner'
 import { useUser } from '@clerk/nextjs'
@@ -43,25 +36,33 @@ interface ThreadInfo {
 interface CreateThreadProps {
     showIcon: boolean;
     replyThreadInfo?: ThreadInfo;
+    isQuote?: string
 }
 
-const CreateThread: React.FC<CreateThreadProps> = ({ showIcon, replyThreadInfo }) => {
+const CreateThread: React.FC<CreateThreadProps> = ({ showIcon, replyThreadInfo, isQuote }) => {
 
     const path = usePathname()
     const router = useRouter()
     const { user } = useUser()
+    const { postPrivacy } = usePost();
 
     const { selectedFile, isSelectedImageSafe } = useFileStore();
+
     const [isOpen, setIsOpen] = React.useState(false)
 
     const { startUpload } = useUploadThing("postMedia")
 
     const [threadData, setThreadData] = React.useState({
-        privacy: "Anyone can reply",
+        privacy: postPrivacy,
         text: "",
         images: []
     })
-
+    React.useEffect(() => {
+        setThreadData((prevThreadData) => ({
+            ...prevThreadData,
+            privacy: postPrivacy,
+        }));
+    }, [postPrivacy]);
 
     const trpcUtils = api.useUtils();
 
@@ -118,7 +119,9 @@ const CreateThread: React.FC<CreateThreadProps> = ({ showIcon, replyThreadInfo }
                                 replyCount: 0
                             },
                             likes: [],
-                            replies: []
+                            replies: [],
+                            reposts: []
+
                         },
                         ...latestPage.threads
                     ]
@@ -155,18 +158,21 @@ const CreateThread: React.FC<CreateThreadProps> = ({ showIcon, replyThreadInfo }
     });
 
     async function handleCreateThread() {
+
         const imgRes = await startUpload(selectedFile)
 
         if (replyThreadInfo) {
             replyToPost({
                 text: JSON.stringify(threadData.text, null, 2),
                 threadId: replyThreadInfo.id,
-                imageUrl: imgRes ? imgRes[0]?.url : undefined
+                imageUrl: imgRes ? imgRes[0]?.url : undefined,
+                privacy: threadData.privacy
             });
         } else {
             createThread({
                 text: JSON.stringify(threadData.text, null, 2),
-                imageUrl: imgRes ? imgRes[0]?.url : undefined
+                imageUrl: imgRes ? imgRes[0]?.url : undefined,
+                privacy: threadData.privacy
             });
         }
     }
@@ -181,22 +187,30 @@ const CreateThread: React.FC<CreateThreadProps> = ({ showIcon, replyThreadInfo }
     return (
         <Dialog open={isOpen} onOpenChange={setIsOpen}>
             <DialogTrigger asChild>
+                {/* TODO: Need to fix these triggers  */}
                 {showIcon ? (
                     !replyThreadInfo?.text ? (
-                        <div
-                            onClick={() => {
-                                setIsOpen(true)
-                            }}
-                            className="flex items-center justify-center px-5 hover:bg-[#1C1C1C]/80 py-5 rounded-lg transform transition-all duration-150 ease-out hover:scale-100 active:scale-90 w-full">
-                            <Icons.create
-                                className={cn(
-                                    "h-6 w-6",
-                                    path === '/create'
-                                        ? "text-forground"
-                                        : "text-[#4D4D4D]",
-                                )}
-                            />
-                        </div>
+                        isQuote ? (
+                            <div className='flex items-center justify-between w-full'>
+                                Quote
+                                <Icons.quote className='w-5 h-5 ' />
+                            </div>
+                        ) : (
+                            <div
+                                onClick={() => {
+                                    setIsOpen(true)
+                                }}
+                                className="flex items-center justify-center px-5 hover:bg-[#1C1C1C]/80 py-5 rounded-lg transform transition-all duration-150 ease-out hover:scale-100 active:scale-90 w-full">
+                                <Icons.create
+                                    className={cn(
+                                        "h-6 w-6",
+                                        path === '/create'
+                                            ? "text-forground"
+                                            : "text-[#4D4D4D]",
+                                    )}
+                                />
+                            </div>
+                        )
                     ) : (
                         <div className='flex items-center justify-center hover:bg-[#1E1E1E] rounded-full p-2 w-fit h-fit active:scale-95'>
                             <Icons.reply className='w-5 h-5 ' />
@@ -250,47 +264,7 @@ const CreateThread: React.FC<CreateThreadProps> = ({ showIcon, replyThreadInfo }
                         <InsideCard isOpen={isOpen} user={user!} onTextareaChange={handleFieldChange} />
                     </div>
                     <div className='flex justify-between items-center w-full p-6'>
-                        <DropdownMenu>
-                            <DropdownMenuTrigger asChild>
-                                <button className='text-[15px] text-[#777777] tracking-normal z-50 cursor-pointer select-none'>{threadData.privacy}</button>
-                            </DropdownMenuTrigger>
-                            <DropdownMenuContent align="start" className='bg-[#181818] rounded-2xl w-[190px] mt-1'>
-                                <DropdownMenuItem
-                                    className='focus:bg-transparent px-4 tracking-normal select-none font-semibold py-2 cursor-pointer text-[15px]'
-                                    onClick={() => {
-                                        setThreadData({
-                                            ...threadData,
-                                            privacy: "Anyone can reply",
-                                        });
-                                    }}
-                                >
-                                    Anyone
-                                </DropdownMenuItem>
-                                <DropdownMenuSeparator className='bg-[#393939] h-[1.2px] ' />
-                                <DropdownMenuItem
-                                    className='focus:bg-transparent px-4 tracking-normal  select-none font-semibold py-2 cursor-pointer text-[15px]'
-                                    onClick={() => {
-                                        setThreadData({
-                                            ...threadData,
-                                            privacy: "Profiles you follow can reply",
-                                        });
-                                    }}
-                                >
-                                    Profiles you follow
-                                </DropdownMenuItem>
-                                <DropdownMenuSeparator className='bg-[#393939] h-[1.2px]' />
-                                <DropdownMenuItem
-                                    className='focus:bg-transparent px-4 tracking-normal select-none font-semibold py-2 cursor-pointer text-[15px]'
-                                    onClick={() => {
-                                        setThreadData({
-                                            ...threadData,
-                                            privacy: "Profiles you mention can reply",
-                                        });
-                                    }}>
-                                    Mentioned only
-                                </DropdownMenuItem>
-                            </DropdownMenuContent>
-                        </DropdownMenu>
+                        <PostPrivacy />
                         <Button
                             size={'sm'}
                             onClick={handleCreateThread}
@@ -317,7 +291,8 @@ export default CreateThread
 
 
 import NSFWFilter from 'nsfw-filter';
-
+import PostPrivacy from '../clickables/post-privacy'
+import usePost from '@/store/post'
 
 export function InsideCard({ isOpen, user, onTextareaChange, replyThreadInfo }: {
     isOpen: boolean

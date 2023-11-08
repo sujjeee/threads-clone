@@ -6,10 +6,11 @@ import {
     DropdownMenuSeparator,
     DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
-import { Icons } from '../icons';
+import { Icons } from '@/components/icons';
 import { cn } from '@/lib/utils';
 import { api } from '@/trpc/react';
 import { toast } from 'sonner';
+import CreateThread from '../threads/create-thread';
 
 interface RepostButtonProps {
     id: string
@@ -88,8 +89,7 @@ const RepostButton: React.FC<RepostButtonProps> = ({
                     <DropdownMenuItem
                         className='focus:bg-transparent px-4 tracking-normal select-none font-semibold py-3 cursor-pointer text-[15px] rounded-none active:bg-[#0a0a0a] w-full justify-between'
                     >
-                        Quote
-                        <Icons.quote className='w-5 h-5 ' />
+                        <CreateThread showIcon={true} isQuote={id} />
                     </DropdownMenuItem>
                 </DropdownMenuContent>
             </DropdownMenu>

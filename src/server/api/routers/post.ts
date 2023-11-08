@@ -9,7 +9,7 @@ import { getUserEmail } from "@/lib/utils";
 import { currentUser } from "@clerk/nextjs";
 import { GET_USER } from "@/server/constant";
 import { GET_COUNT } from "@/server/constant";
-import { Prisma } from "@prisma/client";
+import { PostPrivacy, Prisma } from "@prisma/client";
 import { ParentThreadsProps } from "@/types";
 import Filter from 'bad-words';
 
@@ -21,7 +21,8 @@ export const postRouter = createTRPCRouter({
         text: z.string().min(3, {
           message: "Text must be at least 3 character",
         }),
-        imageUrl: z.string().optional()
+        imageUrl: z.string().optional(),
+        privacy: z.nativeEnum(PostPrivacy)
       })
     )
     .mutation(async ({ ctx, input }) => {
@@ -48,6 +49,7 @@ export const postRouter = createTRPCRouter({
           text: filteredText,
           authorId: userId,
           images: input.imageUrl ? [input.imageUrl] : [],
+          privacy: input.privacy
         }
       })
 
@@ -264,7 +266,8 @@ export const postRouter = createTRPCRouter({
         text: z.string().min(3, {
           message: "Text must be at least 3 character",
         }),
-        imageUrl: z.string().optional()
+        imageUrl: z.string().optional(),
+        privacy: z.nativeEnum(PostPrivacy)
       })
     )
     .mutation(async ({ ctx, input }) => {
@@ -288,6 +291,7 @@ export const postRouter = createTRPCRouter({
         data: {
           text: input.text,
           images: input.imageUrl ? [input.imageUrl] : [],
+          privacy: input.privacy,
           author: {
             connect: {
               id: userId,
