@@ -597,6 +597,48 @@ export const postRouter = createTRPCRouter({
       }
     }),
 
+  createQuotePost: privateProcedure
+    .input(
+      z.object({
+        id: z.string(),
+        text: z.string().min(3, {
+          message: "Text must be at least 3 character",
+        }),
+        imageUrl: z.string().optional()
+      })
+    )
+    .mutation(async ({ ctx, input }) => {
+      const { user, userId } = ctx;
+      const email = getUserEmail(user)
+      const dbUser = await ctx.db.user.findUnique({
+        where: {
+          email: email
+        },
+        select: {
+          verified: true
+        }
+      })
+
+      if (!dbUser) {
+        throw new TRPCError({ code: 'NOT_FOUND' })
+      }
+
+      const filter = new Filter()
+      const filteredText = filter.clean(input.text)
+
+      const newpost = await ctx.db.thread.create({
+        data: {
+          quoteId: input.id,
+          text: filteredText,
+          authorId: userId,
+          images: input.imageUrl ? [input.imageUrl] : [],
+        }
+      })
+
+      return { newpost, success: true }
+
+    }),
+
 });
 
 
