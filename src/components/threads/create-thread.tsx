@@ -22,17 +22,18 @@ import {
     TriggerVariant
 } from '@/types'
 import Trigger from '@/components/trigger'
-import PostPrivacy from '../clickables/post-privacy'
-import CreateThreadInput from '../create-thread-input'
+import PostPrivacy from '@/components/clickables/post-privacy'
+import CreateThreadInput from '@/components/create-thread-input'
 
 export type ParentThreadInfo = Pick<ThreadCardProps, 'id' | 'text' | 'images' | 'author'>
 
 interface CreateThreadProps {
     variant: TriggerVariant;
     replyThreadInfo?: ParentThreadInfo;
+    quoteInfo?: Pick<ThreadCardProps, 'id' | 'text' | 'author'>
 }
 
-const CreateThread: React.FC<CreateThreadProps> = ({ variant, replyThreadInfo }) => {
+const CreateThread: React.FC<CreateThreadProps> = ({ variant, replyThreadInfo, quoteInfo }) => {
     const router = useRouter()
     const { user } = useUser()
     const { postPrivacy } = usePost();
@@ -115,8 +116,8 @@ const CreateThread: React.FC<CreateThreadProps> = ({ variant, replyThreadInfo })
                             },
                             likes: [],
                             replies: [],
-                            reposts: []
-
+                            reposts: [],
+                            quoteId: ''
                         },
                         ...latestPage.threads
                     ]
@@ -167,7 +168,8 @@ const CreateThread: React.FC<CreateThreadProps> = ({ variant, replyThreadInfo })
             createThread({
                 text: JSON.stringify(threadData.text, null, 2),
                 imageUrl: imgRes ? imgRes[0]?.url : undefined,
-                privacy: threadData.privacy
+                privacy: threadData.privacy,
+                quoteId: quoteInfo?.id
             });
         }
     }
@@ -179,10 +181,10 @@ const CreateThread: React.FC<CreateThreadProps> = ({ variant, replyThreadInfo })
         });
     };
 
-    const createVarient = variant === "home" || variant === "create"
+    const createVarient = variant !== 'reply'
 
     return (
-        <Dialog open={isOpen} onOpenChange={setIsOpen}>
+        <Dialog>
             <DialogTrigger className={cn({
                 "w-full": createVarient
             })}>
@@ -207,6 +209,7 @@ const CreateThread: React.FC<CreateThreadProps> = ({ variant, replyThreadInfo })
                         <CreateThreadInput
                             isOpen={isOpen}
                             onTextareaChange={handleFieldChange}
+                            quoteInfo={quoteInfo}
                         />
                     </div>
                     <div className='flex justify-between items-center w-full p-6'>

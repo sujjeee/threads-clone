@@ -22,7 +22,8 @@ export const postRouter = createTRPCRouter({
           message: "Text must be at least 3 character",
         }),
         imageUrl: z.string().optional(),
-        privacy: z.nativeEnum(PostPrivacy)
+        privacy: z.nativeEnum(PostPrivacy),
+        quoteId: z.string().optional()
       })
     )
     .mutation(async ({ ctx, input }) => {
@@ -49,7 +50,8 @@ export const postRouter = createTRPCRouter({
           text: filteredText,
           authorId: userId,
           images: input.imageUrl ? [input.imageUrl] : [],
-          privacy: input.privacy
+          privacy: input.privacy,
+          quoteId: input.quoteId
         }
       })
 
@@ -106,6 +108,7 @@ export const postRouter = createTRPCRouter({
           },
           reposts: true,
           ...GET_COUNT,
+          quoteId: true
         },
       });
 
@@ -131,6 +134,7 @@ export const postRouter = createTRPCRouter({
           },
           likes: thread.likes,
           replies: thread.replies,
+          quoteId: thread.quoteId,
           images: thread.images,
           reposts: thread.reposts
         })),
@@ -643,6 +647,67 @@ export const postRouter = createTRPCRouter({
 
       return { newpost, success: true }
 
+    }),
+
+  getQuotedPost: publicProcedure
+    .input(
+      z.object({
+        id: z.string().optional(),
+      })
+    )
+    .query(async ({ input, ctx }) => {
+
+      const threadInfo = await ctx.db.thread.findUnique({
+        where: {
+          id: input.id
+        },
+        select: {
+          id: true,
+          createdAt: true,
+          text: true,
+          likes: {
+            select: {
+              userId: true
+            }
+          },
+          images: true,
+          replies: {
+            select: {
+              author: {
+                select: {
+                  id: true,
+                  username: true,
+                  image: true,
+                }
+              }
+            }
+          },
+          author: {
+            select: {
+              ...GET_USER,
+            }
+          },
+          ...GET_COUNT,
+        }
+      });
+
+
+      if (!threadInfo) {
+        throw new TRPCError({ code: 'NOT_FOUND' })
+      }
+
+      return {
+        threadInfo: {
+          id: threadInfo.id,
+          text: threadInfo.text,
+          createdAt: threadInfo.createdAt,
+          likeCount: threadInfo._count.likes,
+          replyCount: threadInfo._count.replies,
+          user: threadInfo.author,
+          likes: threadInfo.likes,
+          replies: threadInfo.replies
+        }
+      }
     }),
 
 });

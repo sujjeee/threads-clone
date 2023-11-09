@@ -160,7 +160,7 @@ export default function AccountSetupForm({ username }: { username: string }) {
                                             <Plus className="h-4 w-4 text-[#4D4D4D] mt-1" />
                                             <ResizeTextarea
                                                 name='bio'
-                                                className='select-none whitespace-break-spaces'
+                                                className='select-none whitespace-break-spaces max-h-[100px]'
                                                 maxLength={100}
                                                 value={userAccountData.bio!}
                                                 onChange={handleFieldChange}

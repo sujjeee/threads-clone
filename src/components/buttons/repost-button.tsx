@@ -10,15 +10,20 @@ import { Icons } from '@/components/icons';
 import { cn } from '@/lib/utils';
 import { api } from '@/trpc/react';
 import { toast } from 'sonner';
-import CreateThread from '../threads/create-thread';
+import CreateThread from '@/components/threads/create-thread';
+import { AuthorInfoProps } from '@/types';
 
 interface RepostButtonProps {
     id: string
+    text: string
+    author: AuthorInfoProps
     isRepostedByMe: boolean
 }
 
 const RepostButton: React.FC<RepostButtonProps> = ({
     id,
+    text,
+    author,
     isRepostedByMe
 }) => {
 
@@ -33,6 +38,11 @@ const RepostButton: React.FC<RepostButtonProps> = ({
 
             repostUpdate.current.isRepostedByMe = !repostUpdate.current.isRepostedByMe;
 
+            if (repostUpdate.current.isRepostedByMe === true) {
+                toast('Reposted')
+            } else {
+                toast('Removed')
+            }
 
             return { previousRepostByMe };
 
@@ -43,13 +53,6 @@ const RepostButton: React.FC<RepostButtonProps> = ({
             toast.error("RepostError: Something went wrong!")
 
         },
-        onSuccess: (data) => {
-            if (!data.createdRepost) {
-                toast('Removed')
-            } else {
-                toast('Reposted')
-            }
-        }
     });
 
     return (
@@ -58,14 +61,14 @@ const RepostButton: React.FC<RepostButtonProps> = ({
                 <DropdownMenuTrigger asChild >
                     <button
                         disabled={isLoading}
-                        className='flex items-center justify-center hover:bg-[#1E1E1E] rounded-full p-2 w-fit h-fit active:scale-95'>
+                        className='flex items-center justify-center hover:bg-[#1E1E1E] rounded-full p-2 w-fit h-fit active:scale-95 outline-none'>
                         {repostUpdate.current.isRepostedByMe
                             ? <Icons.reposted className='w-5 h-5 ' />
                             : <Icons.repost className='w-5 h-5 ' />
                         }
                     </button>
                 </DropdownMenuTrigger>
-                <DropdownMenuContent align="start" className='bg-[#181818] rounded-2xl w-[190px]  p-0'>
+                <DropdownMenuContent align="start" className='bg-[#181818] rounded-2xl w-[190px] p-0'>
                     <DropdownMenuItem
                         disabled={isLoading}
                         onClick={() => {
@@ -86,11 +89,15 @@ const RepostButton: React.FC<RepostButtonProps> = ({
                         })} />
                     </DropdownMenuItem>
                     <DropdownMenuSeparator className='bg-[#393939] h-[1.2px] my-0' />
-                    <DropdownMenuItem
-                        className='focus:bg-transparent px-4 tracking-normal select-none font-semibold py-3 cursor-pointer text-[15px] rounded-none active:bg-[#0a0a0a] w-full justify-between'
-                    >
-                        <CreateThread variant='quote' />
-                    </DropdownMenuItem>
+                    <div className='focus:bg-transparent px-4 tracking-normal select-none font-semibold py-3 cursor-pointer text-[15px] rounded-none active:bg-[#0a0a0a] w-full justify-between'>
+                        <CreateThread
+                            variant='quote'
+                            quoteInfo={{
+                                text,
+                                id,
+                                author
+                            }} />
+                    </div>
                 </DropdownMenuContent>
             </DropdownMenu>
         </>

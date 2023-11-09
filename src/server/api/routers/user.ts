@@ -64,6 +64,7 @@ export const userRouter = createTRPCRouter({
                                 }
                             },
                             ...GET_COUNT,
+                            reposts: true
                         },
                     }
                 }
@@ -88,6 +89,7 @@ export const userRouter = createTRPCRouter({
                     },
                     likes: thread.likes,
                     replies: thread.replies,
+                    reposts: thread.reposts,
                 })),
 
                 userDetails: {

@@ -16,17 +16,20 @@ import {
     useDropzone,
     type Accept,
 } from "react-dropzone";
+import PostPreview from './post-preview';
 
 interface CreateThreadInputProps {
     isOpen: boolean
     replyThreadInfo?: ParentThreadInfo
     onTextareaChange: (textValue: string) => void;
+    quoteInfo?: Pick<ParentThreadInfo, 'id' | 'text' | 'author'>
 }
 
 const CreateThreadInput: React.FC<CreateThreadInputProps> = ({
     isOpen,
     replyThreadInfo,
-    onTextareaChange
+    onTextareaChange,
+    quoteInfo
 }) => {
     const { user } = useUser()
     const { setSelectedFile, setIsSelectedImageSafe } = useFileStore();
@@ -183,6 +186,9 @@ const CreateThreadInput: React.FC<CreateThreadInputProps> = ({
                     </div>
                 }
 
+                {quoteInfo &&
+                    <PostPreview {...quoteInfo} />
+                }
             </div>
         </div>
     )

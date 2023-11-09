@@ -27,6 +27,7 @@ import {
     DialogContent,
     DialogTrigger,
 } from "@/components/ui/dialog"
+import PostPreview from '../post-preview'
 
 const ThreadCard: React.FC<ThreadCardProps> = ({
     id,
@@ -37,7 +38,8 @@ const ThreadCard: React.FC<ThreadCardProps> = ({
     author,
     count,
     images,
-    reposts
+    reposts,
+    quoteId
 }) => {
 
     const { user: loggedUser } = useUser()
@@ -141,6 +143,9 @@ const ThreadCard: React.FC<ThreadCardProps> = ({
                                 </div>
                             }
 
+                            {quoteId &&
+                                <PostPreview quoteId={quoteId} />}
+
                             <div className="flex  font-bold -ml-2 mt-2 w-full">
                                 <div className='flex items-center justify-center hover:bg-[#1E1E1E] rounded-full p-2 w-fit h-fit active:scale-95'>
                                     <button disabled={isLoading}>
@@ -162,7 +167,12 @@ const ThreadCard: React.FC<ThreadCardProps> = ({
                                         images: images,
                                         author: { ...author }
                                     }} />
-                                <RepostButton id={id} isRepostedByMe={isRepostedByMe} />
+                                <RepostButton
+                                    id={id}
+                                    text={text}
+                                    author={author}
+                                    isRepostedByMe={isRepostedByMe}
+                                />
                                 <ShareButton
                                     id={id}
                                     author={author.username}
@@ -175,7 +185,7 @@ const ThreadCard: React.FC<ThreadCardProps> = ({
 
 
             <div className={cn('flex items-center select-none pb-2', {
-                " gap-2 pb-4 ": replyCount > 0 || likeUpdate.current.likeCount > 0
+                " gap-2 pb-3.5 ": replyCount > 0 || likeUpdate.current.likeCount > 0
             })}>
 
                 <div className={cn("flex invisible justify-center items-center w-[36px] ", {

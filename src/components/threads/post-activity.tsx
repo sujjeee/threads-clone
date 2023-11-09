@@ -41,7 +41,7 @@ const PostActivity: React.FC<PostActivityProps> = ({ likeCount, id, text, author
                     <Card className='overflow-hidden p-4 mx-6 mb-2 rounded-lg space-y-1.5 bg-transparent border-[#393939]'>
                         <div className='flex items-center gap-2'>
                             <Avatar className="rounded-full w-7 h-7">
-                                <AvatarImage src={author.image} alt='author.username' />
+                                <AvatarImage src={author.image ?? ''} alt='author.username' />
                                 <AvatarFallback>OG</AvatarFallback>
                             </Avatar>
                             <Username author={author} />
@@ -125,7 +125,7 @@ const DisplayInsight: React.FC<DisplayInsightProps> = ({ id }) => {
                         <button className='relative ml-4 mr-3'>
                             <div className='h-9 w-9 outline outline-1 outline-[#333333] rounded-full'>
                                 <Avatar className="rounded-full w-full h-full">
-                                    <AvatarImage src={post.user.image} alt={post.user.fullname} />
+                                    <AvatarImage src={post.user.image ?? ''} alt={post.user.fullname ?? ""} />
                                     <AvatarFallback>{post.user.username.slice(0, 2).toUpperCase()}</AvatarFallback>
                                 </Avatar>
                             </div>
