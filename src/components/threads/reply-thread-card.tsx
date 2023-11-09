@@ -46,7 +46,6 @@ const ReplyThreadCard: React.FC<ThreadProps> = ({ threadInfo, parentThreads }) =
         author,
         count,
         createdAt,
-        parentThreadId,
         text,
         images
     } = threadInfo
@@ -98,6 +97,7 @@ const ReplyThreadCard: React.FC<ThreadProps> = ({ threadInfo, parentThreads }) =
                             replies={post.replies}
                             images={post.images}
                             text={post.text}
+                            quoteId={post.}
                         />
                     </>
                 ))}
@@ -163,7 +163,7 @@ const ReplyThreadCard: React.FC<ThreadProps> = ({ threadInfo, parentThreads }) =
                                 <CreateThread showIcon={true} replyThreadInfo={{
                                     id,
                                     text,
-                                    image: postImage,
+                                    images: postImage,
                                     author: { ...author }
                                 }} />
 

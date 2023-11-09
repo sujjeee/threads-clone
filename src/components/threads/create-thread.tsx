@@ -74,6 +74,7 @@ const CreateThread: React.FC<CreateThreadProps> = ({ variant, replyThreadInfo, q
 
             await trpcUtils.post.getInfinitePost.cancel()
 
+            // TODO: This optimistic update not working need to update the code later
             const previousPostData = trpcUtils.post.getInfinitePost.getInfiniteData()
 
             trpcUtils.post.getInfinitePost.setInfiniteData(

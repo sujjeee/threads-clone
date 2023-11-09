@@ -1,22 +1,54 @@
-import React from 'react'
-import { Card } from './ui/card'
+"use client"
 
-export default function AreYouSure() {
+import React from 'react'
+import {
+    AlertDialog,
+    AlertDialogClose,
+    AlertDialogContent,
+    AlertDialogDelete,
+    AlertDialogTrigger,
+} from "@/components/ui/alert-dialog"
+import { api } from '@/trpc/react';
+import { toast } from 'sonner';
+
+interface AreYouSureProps {
+    id: string
+}
+
+const AreYouSure: React.FC<AreYouSureProps> = ({ id }) => {
+
+    const trpcUtils = api.useUtils();
+
+    const { mutate: deletePost } = api.post.deletePost.useMutation({
+        onSuccess: async () => {
+            await trpcUtils.post.getInfinitePost.invalidate()
+        },
+        onError: () => {
+            toast.error("PostCallbackError: Something went wrong!")
+        },
+    });
+
     return (
-        <div className='flex h-screen justify-center items-center'>
-            <Card className='max-w-[280px] w-full rounded-2xl overflow-hidden border-[#474747] bg-[#181818]'>
+        <AlertDialog>
+            <AlertDialogTrigger className='focus:bg-transparent px-4 tracking-normal select-none font-bold py-3 cursor-pointer text-[15px] text-red-700 focus:text-red-700 active:bg-[#0a0a0a] rounded-none w-full  text-start'>
+                Delete
+            </AlertDialogTrigger>
+            <AlertDialogContent className='max-w-[280px] w-full rounded-2xl overflow-hidden border-[#474747] bg-[#181818] p-0 gap-0'>
                 <div className='w-full flex justify-center items-center py-5 text-[16px] border-b font-bold border-[#474747]'>
                     Are you sure?
                 </div>
                 <div className='flex justify-center items-center'>
-                    <div className='w-full flex justify-center items-center py-4 border-r border-[#474747] font-semibold'>
+                    <AlertDialogClose className=' w-full flex justify-center items-center py-4 border-r border-[#474747] font-semibold mt-0 focus:bg-transparent px-4 tracking-normal select-none cursor-pointer text-[15px]  active:bg-[#0a0a0a] rounded-none'>
                         Cancel
-                    </div>
-                    <div className='w-full flex justify-center text-red-600 items-center py-4 border-[#474747] font-semibold'>
+                    </AlertDialogClose>
+                    <AlertDialogDelete
+                        onClick={() => deletePost({ id })}
+                        className='w-full flex justify-center text-red-600 items-center py-4 border-[#474747] font-semibold mt-0 focus:bg-transparent px-4 tracking-normal select-none cursor-pointer text-[15px]  active:bg-[#0a0a0a] rounded-none'>
                         Delete
-                    </div>
+                    </AlertDialogDelete>
                 </div>
-            </Card>
-        </div>
+            </AlertDialogContent>
+        </AlertDialog>
     )
 }
+export default AreYouSure

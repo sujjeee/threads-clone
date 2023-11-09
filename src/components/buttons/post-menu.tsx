@@ -8,9 +8,17 @@ import {
 } from "@/components/ui/dropdown-menu"
 import { MoreHorizontal } from 'lucide-react';
 import { useUser } from '@clerk/nextjs';
+import AreYouSure from '../are-you-sure';
+import { id_ID } from '@faker-js/faker';
 
 export default function PostMenu(
-    { id }: { id: string }
+    {
+        id,
+        threadId
+    }: {
+        threadId: string
+        id: string
+    }
 ) {
     const { user } = useUser()
     const isLoggedUser = id === user?.id
@@ -61,11 +69,7 @@ export default function PostMenu(
                             Hide like count
                         </DropdownMenuItem>
                         <DropdownMenuSeparator className='bg-[#393939] h-[1.2px] my-0 ' />
-                        <DropdownMenuItem
-                            className='focus:bg-transparent px-4 tracking-normal select-none font-bold py-3 cursor-pointer text-[15px] text-red-700 focus:text-red-700 active:bg-[#0a0a0a] rounded-none'
-                        >
-                            Delete
-                        </DropdownMenuItem>
+                        <AreYouSure id={threadId} />
                     </DropdownMenuContent>
                 }
             </DropdownMenu>

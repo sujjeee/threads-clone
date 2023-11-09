@@ -20,9 +20,9 @@ const PostPreview: React.FC<PostPreviewProps & { quoteId?: string }> = ({
         const { data, isLoading } = api.post.getQuotedPost.useQuery(
             { id: quoteId },
             {
+                // Testing caching will this work or not 
                 enabled: !!quoteId,
                 staleTime: Infinity,
-
             }
         );
 

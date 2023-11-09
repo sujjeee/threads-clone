@@ -652,7 +652,7 @@ export const postRouter = createTRPCRouter({
   getQuotedPost: publicProcedure
     .input(
       z.object({
-        id: z.string().optional(),
+        id: z.string(),
       })
     )
     .query(async ({ input, ctx }) => {
@@ -710,6 +710,33 @@ export const postRouter = createTRPCRouter({
       }
     }),
 
+  deletePost: privateProcedure
+    .input(
+      z.object({
+        id: z.string(),
+      })
+    )
+    .mutation(async ({ input, ctx }) => {
+      const { userId } = ctx
+      console.log("userid to dlete", userId)
+      console.log("thread id to delete", input.id)
+      const threadInfo = await ctx.db.thread.delete({
+        where: {
+          id: input.id,
+          authorId: userId
+        },
+        select: {
+          id: true
+        }
+      });
+
+      console.log("delete threadInfo", threadInfo)
+      if (!threadInfo) {
+        throw new TRPCError({ code: 'NOT_FOUND' })
+      }
+
+      return { success: true }
+    }),
 });
 
 
