@@ -9,17 +9,13 @@ import {
 import { MoreHorizontal } from 'lucide-react';
 import { useUser } from '@clerk/nextjs';
 import AreYouSure from '../are-you-sure';
-import { id_ID } from '@faker-js/faker';
 
-export default function PostMenu(
-    {
-        id,
-        threadId
-    }: {
-        threadId: string
-        id: string
-    }
-) {
+interface PostMenuProps {
+    threadId: string
+    id: string
+}
+
+const PostMenu: React.FC<PostMenuProps> = ({ id, threadId }) => {
     const { user } = useUser()
     const isLoggedUser = id === user?.id
     return (
@@ -76,3 +72,5 @@ export default function PostMenu(
         </>
     )
 }
+
+export default PostMenu

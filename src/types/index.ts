@@ -26,6 +26,11 @@ export type ParentThreadsProps = {
     likes: {
         userId: string;
     }[];
+    quoteId: string | null;
+    reposts: {
+        userId: string;
+        threadId: string;
+    }[];
     parentThreadId: string | null;
     replies: {
         author: {

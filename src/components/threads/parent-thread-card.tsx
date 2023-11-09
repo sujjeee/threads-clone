@@ -36,7 +36,8 @@ const ParentThreadCard: React.FC<ThreadCardProps> = ({
     replies,
     author,
     count,
-    images
+    images,
+    reposts
 }) => {
 
     console.log('count', count)
@@ -58,6 +59,10 @@ const ParentThreadCard: React.FC<ThreadCardProps> = ({
         isLikedByMe,
         likeCount
     });
+
+    const isRepostedByMe = reposts.some((user) =>
+        user?.userId || user?.userId === loggedUser?.id
+    );
 
     const { mutate: toggleLike, isLoading } = api.like.toggleLike.useMutation({
         onMutate: async () => {
@@ -128,7 +133,7 @@ const ParentThreadCard: React.FC<ThreadCardProps> = ({
                                     <time className="text-right text-[15px] leading-none self-stretch  text-[#777777] cursor-default">
                                         {formatTimeAgo(createdAt)}
                                     </time>
-                                    <PostMenu id={author.id} />
+                                    <PostMenu id={author.id} threadId={id} />
                                 </div>
                             </div>
 
@@ -156,14 +161,19 @@ const ParentThreadCard: React.FC<ThreadCardProps> = ({
                                     </button>
                                 </div>
                                 <CreateThread
-                                    showIcon={true}
+                                    variant='reply'
                                     replyThreadInfo={{
                                         id,
                                         text,
-                                        image: images.length > 0 ? images[0] : '',
+                                        images: images,
                                         author: { ...author }
                                     }} />
-                                <RepostButton id={id} />
+                                <RepostButton
+                                    id={id}
+                                    text={text}
+                                    author={author}
+                                    isRepostedByMe={isRepostedByMe}
+                                />
                                 <ShareButton
                                     id={id}
                                     author={author.username}

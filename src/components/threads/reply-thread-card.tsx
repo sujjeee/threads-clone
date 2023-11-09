@@ -97,7 +97,8 @@ const ReplyThreadCard: React.FC<ThreadProps> = ({ threadInfo, parentThreads }) =
                             replies={post.replies}
                             images={post.images}
                             text={post.text}
-                            quoteId={post.}
+                            quoteId={post.quoteId}
+                            reposts={post.reposts}
                         />
                     </>
                 ))}
@@ -124,7 +125,7 @@ const ReplyThreadCard: React.FC<ThreadProps> = ({ threadInfo, parentThreads }) =
                             <time className="text-right text-[15px] leading-none self-stretch  text-[#777777] cursor-default">
                                 {formatTimeAgo(createdAt)}
                             </time>
-                            <PostMenu id={author.id} />
+                            <PostMenu id={author.id} threadId={id} />
                         </div>
                     </div>
 
@@ -160,12 +161,14 @@ const ReplyThreadCard: React.FC<ThreadProps> = ({ threadInfo, parentThreads }) =
                                         )} />
                                 </div>
 
-                                <CreateThread showIcon={true} replyThreadInfo={{
-                                    id,
-                                    text,
-                                    images: postImage,
-                                    author: { ...author }
-                                }} />
+                                <CreateThread
+                                    variant='reply'
+                                    replyThreadInfo={{
+                                        id,
+                                        text,
+                                        images: images,
+                                        author: { ...author }
+                                    }} />
 
                                 <div className='flex items-center justify-center hover:bg-[#1E1E1E] rounded-full p-2 w-fit h-fit'>
                                     <Icons.repost className='w-5 h-5 ' />

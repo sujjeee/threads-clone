@@ -7,8 +7,7 @@ import {
 } from "@/server/api/trpc";
 import { getUserEmail } from "@/lib/utils";
 import { currentUser } from "@clerk/nextjs";
-import { GET_USER } from "@/server/constant";
-import { GET_COUNT } from "@/server/constant";
+import { GET_USER, GET_COUNT, GET_REPOSTS } from "@/server/constant";
 import { PostPrivacy, Prisma } from "@prisma/client";
 import { ParentThreadsProps } from "@/types";
 import Filter from 'bad-words';
@@ -106,9 +105,9 @@ export const postRouter = createTRPCRouter({
               ...GET_USER,
             }
           },
-          reposts: true,
           ...GET_COUNT,
-          quoteId: true
+          quoteId: true,
+          ...GET_REPOSTS
         },
       });
 
@@ -352,6 +351,8 @@ export const postRouter = createTRPCRouter({
               createdAt: true,
               text: true,
               images: true,
+              quoteId: true,
+              ...GET_REPOSTS,
               likes: {
                 select: {
                   userId: true
@@ -376,7 +377,9 @@ export const postRouter = createTRPCRouter({
               },
               ...GET_COUNT,
             },
-          }
+          },
+          quoteId: true,
+          ...GET_REPOSTS
         },
       });
 
@@ -422,7 +425,11 @@ export const postRouter = createTRPCRouter({
               JOIN "User" ru ON r."authorId" = ru.id
               WHERE r."parentThreadId" = t.id) AS replies,
               (SELECT count(*) FROM "Like" l WHERE l."threadId" = t.id) AS like_count,
-              (SELECT count(*) FROM "Thread" r WHERE r."parentThreadId" = t.id) AS reply_count  
+              (SELECT count(*) FROM "Thread" r WHERE r."parentThreadId" = t.id) AS reply_count,
+              (SELECT "quoteId" FROM "Thread" WHERE "id" = t.id) AS quote_id,
+              (SELECT jsonb_agg(jsonb_build_object('userId', "userId", 'threadId', "threadId")) 
+                FROM "Repost" 
+                WHERE "threadId" = t.id) AS reposts
             FROM "Thread" t
             JOIN "User" u ON t."authorId" = u.id
             WHERE t.id = ${id}
@@ -468,7 +475,11 @@ export const postRouter = createTRPCRouter({
               JOIN "User" ru ON r."authorId" = ru.id
               WHERE r."parentThreadId" = t.id) AS replies,
               (SELECT count(*) FROM "Like" l WHERE l."threadId" = t.id) AS like_count,
-              (SELECT count(*) FROM "Thread" r WHERE r."parentThreadId" = t.id) AS reply_count
+              (SELECT count(*) FROM "Thread" r WHERE r."parentThreadId" = t.id) AS reply_count,
+              (SELECT "quoteId" FROM "Thread" WHERE "id" = t.id) AS quote_id,
+              (SELECT jsonb_agg(jsonb_build_object('userId', "userId", 'threadId', "threadId")) 
+                FROM "Repost" 
+                WHERE "threadId" = t.id) AS reposts
             FROM "Thread" t
             JOIN "User" u ON t."authorId" = u.id
             JOIN threads_tree tt ON t.id = tt."parentThreadId"
@@ -490,6 +501,8 @@ export const postRouter = createTRPCRouter({
           createdAt: getThreads.createdAt,
           text: getThreads.text,
           images: getThreads.images,
+          quoteId: getThreads.quoteId,
+          reposts: getThreads.reposts,
           parentThreadId: getThreads.parentThreadId,
           author: getThreads.author,
           count: {
@@ -523,6 +536,8 @@ export const postRouter = createTRPCRouter({
               },
               likes: parent.likes ?? [],
               replies: parent.replies ?? [],
+              quoteId: parent.quoteId,
+              reposts: parent.reposts,
             };
           }).reverse()
       }

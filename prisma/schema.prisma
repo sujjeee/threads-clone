@@ -73,11 +73,10 @@ model Like {
 }
 
 model Repost {
-    createdAt DateTime @default(now())
-    thread    Thread   @relation(fields: [threadId], references: [id], onDelete: Cascade)
-    threadId  String
-    user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
-    userId    String
+    thread   Thread @relation(fields: [threadId], references: [id], onDelete: Cascade)
+    threadId String
+    user     User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+    userId   String
 
     @@id([threadId, userId])
     @@index([userId])

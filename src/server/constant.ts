@@ -23,3 +23,13 @@ export const GET_COUNT = {
         }
     },
 }
+
+export const GET_REPOSTS = {
+    reposts: {
+        select: {
+            threadId: true,
+            userId: true
+        }
+    },
+}
+
