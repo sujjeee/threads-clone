@@ -1,6 +1,6 @@
 "use client"
 
-import React, { useEffect } from 'react'
+import React from 'react'
 import { Icons } from '@/components/icons'
 import { Button } from '@/components/ui/button'
 import { Card } from '@/components/ui/card'
@@ -65,8 +65,6 @@ const CreateThread: React.FC<CreateThreadProps> = ({ variant, replyThreadInfo, q
 
     const { isLoading, mutateAsync: createThread } = api.post.createPost.useMutation({
         onMutate: async ({ text }) => {
-            // setIsOpen(false)
-
             backupText.current = text
 
             setThreadData({
