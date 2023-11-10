@@ -51,10 +51,17 @@ export const postRouter = createTRPCRouter({
           images: input.imageUrl ? [input.imageUrl] : [],
           privacy: input.privacy,
           quoteId: input.quoteId
+        },
+        select: {
+          id: true,
+          author: true
         }
       })
 
-      return { newpost, success: true }
+      return {
+        createPost: newpost,
+        success: true
+      }
 
     }),
 
@@ -305,10 +312,16 @@ export const postRouter = createTRPCRouter({
               id: input.threadId
             }
           },
-
         },
+        select: {
+          id: true,
+          author: true
+        }
       })
-      return { repliedThreadPost, success: true }
+      return {
+        createPost: repliedThreadPost,
+        success: true
+      }
     }),
 
   getNestedThreads: publicProcedure

@@ -60,7 +60,7 @@ const ParentThreadCard: React.FC<ThreadCardProps> = ({
         likeCount
     });
 
-    const isRepostedByMe = reposts.some((user) =>
+    const isRepostedByMe = reposts?.some((user) =>
         user?.userId || user?.userId === loggedUser?.id
     );
 
@@ -114,7 +114,7 @@ const ParentThreadCard: React.FC<ThreadCardProps> = ({
                         // TODO: need to fix this
                         <div className='relative h-full '>
                             <div className="h-full w-0.5 bg-[#313639] rounded-full  leading-[0]" />
-                            <div className='h-full absolute -left-[14px] z-[50]  leading-[0] transform -translate-y-1'>
+                            <div className='h-full absolute -left-[14px] z-[10]  leading-[0] transform -translate-y-1'>
                                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="29" viewBox="0 0 17 29" fill="none">
                                     <path d="M16 27.5V15.5C16 10.7858 11.7871 5.70534 7.23886 5.70533C2.69067 5.70532 1.92432 8.83932 1.92432 10.6923C1.92432 12.5452 2.85983 15.4303 7.23957 15.4303C12.2931 15.4303 16 10.5535 16 5.5V1.5" stroke="#313639" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" />
                                 </svg>

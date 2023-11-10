@@ -1,6 +1,6 @@
 "use client"
 
-import React from 'react'
+import React, { useEffect } from 'react'
 import { Icons } from '@/components/icons'
 import { Button } from '@/components/ui/button'
 import { Card } from '@/components/ui/card'
@@ -24,6 +24,8 @@ import {
 import Trigger from '@/components/trigger'
 import PostPrivacy from '@/components/clickables/post-privacy'
 import CreateThreadInput from '@/components/create-thread-input'
+import Link from 'next/link'
+import { Check } from 'lucide-react'
 
 export type ParentThreadInfo = Pick<ThreadCardProps, 'id' | 'text' | 'images' | 'author'>
 
@@ -61,9 +63,9 @@ const CreateThread: React.FC<CreateThreadProps> = ({ variant, replyThreadInfo, q
 
     const backupText = React.useRef('')
 
-    const { mutate: createThread, isLoading } = api.post.createPost.useMutation({
+    const { isLoading, mutateAsync: createThread } = api.post.createPost.useMutation({
         onMutate: async ({ text }) => {
-            setIsOpen(false)
+            // setIsOpen(false)
 
             backupText.current = text
 
@@ -144,36 +146,75 @@ const CreateThread: React.FC<CreateThreadProps> = ({ variant, replyThreadInfo, q
         retry: false,
     });
 
-    const { mutate: replyToPost, isLoading: isReplying } = api.post.replyToPost.useMutation({
+    const { isLoading: isReplying, mutateAsync: replyToPost } = api.post.replyToPost.useMutation({
         onError: (err) => {
             toast.error("PostCallbackError: Something went wrong!")
             if (err.data?.code === 'UNAUTHORIZED') {
                 router.push('/login')
             }
         },
+        onSettled: async () => {
+            await trpcUtils.post.getInfinitePost.invalidate()
+        },
         retry: false,
     });
 
 
-    async function handleCreateThread() {
+    async function handleMutation() {
         const imgRes = await startUpload(selectedFile)
 
-        if (replyThreadInfo) {
-            replyToPost({
+        const promise = replyThreadInfo
+            ? replyToPost({
                 text: JSON.stringify(threadData.text, null, 2),
                 threadId: replyThreadInfo.id,
                 imageUrl: imgRes ? imgRes[0]?.url : undefined,
-                privacy: threadData.privacy
-            });
-        } else {
-            createThread({
+                privacy: threadData.privacy,
+            })
+            : createThread({
                 text: JSON.stringify(threadData.text, null, 2),
                 imageUrl: imgRes ? imgRes[0]?.url : undefined,
                 privacy: threadData.privacy,
-                quoteId: quoteInfo?.id
+                quoteId: quoteInfo?.id,
             });
-        }
+
+        return promise
     }
+
+    async function handleCreateThread() {
+
+        setIsOpen(false)
+
+        const promise = handleMutation()
+
+        toast.promise(promise, {
+            loading: (
+                <div className='w-[270px] justify-start items-center flex p-0 gap-1.5'>
+                    <div>
+                        <Icons.loading className='w-8 h-8 ' />
+                    </div>
+                    Posting...
+                </div>
+            ),
+            success: (data) => {
+                return (
+                    <div className='w-[270px] justify-between items-center flex p-0 '>
+                        <div className='flex justify-center items-center gap-1.5'>
+                            <Check className='w-5 h-5 ' />
+                            Posted
+                        </div>
+                        <Link
+                            href={`/${data.createPost.author.username}/post/${data.createPost.id}`}
+                            className='hover:text-blue-900'>
+                            View
+                        </Link>
+                    </div>
+                )
+            },
+            error: 'Error',
+        });
+    }
+
+
 
     const handleFieldChange = (textValue: string) => {
         setThreadData({
@@ -185,7 +226,7 @@ const CreateThread: React.FC<CreateThreadProps> = ({ variant, replyThreadInfo, q
     const createVarient = variant !== 'reply'
 
     return (
-        <Dialog>
+        <Dialog open={isOpen} onOpenChange={setIsOpen}>
             <DialogTrigger className={cn({
                 "w-full": createVarient
             })}>

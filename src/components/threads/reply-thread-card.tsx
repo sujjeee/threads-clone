@@ -55,7 +55,6 @@ const ReplyThreadCard: React.FC<ThreadProps> = ({ threadInfo, parentThreads }) =
         likeCount: count.likeCount
     });
 
-    const postImage = images.length > 0 ? images[0] : ''
 
     const { mutate: toggleLike } = api.like.toggleLike.useMutation({
 
@@ -103,9 +102,9 @@ const ReplyThreadCard: React.FC<ThreadProps> = ({ threadInfo, parentThreads }) =
                     </>
                 ))}
 
-                <div className="flex items-center gap-3 z-50 w-full pr-2 ">
+                <div className="flex items-center gap-3 w-full pr-2 ">
 
-                    <button className='relative '>
+                    <button className='relative  '>
                         <div className='h-9 w-9 outline outline-1 outline-[#333333] rounded-full ml-[1px]'>
                             <Avatar className="rounded-full w-full h-full ">
                                 <AvatarImage src={author.image ?? ""} alt={author.username} className='object-cover' />
@@ -117,8 +116,8 @@ const ReplyThreadCard: React.FC<ThreadProps> = ({ threadInfo, parentThreads }) =
                         </div>
                     </button>
 
-                    <div className="flex w-full justify-between gap-5 pl-0.5">
-                        <span className="flex items-center justify-center gap-1.5 cursor-pointer">
+                    <div className="flex w-full justify-between gap-5 pl-0.5 ">
+                        <span className="flex items-center justify-center gap-1.5 cursor-pointer ">
                             <Username author={author} />
                         </span>
                         <div className="justify-between items-center self-stretch flex gap-3">
@@ -147,7 +146,7 @@ const ReplyThreadCard: React.FC<ThreadProps> = ({ threadInfo, parentThreads }) =
                                 </div>
                             }
 
-                            <div className="flex  font-bold -ml-2 mt-2 w-full z-50">
+                            <div className="flex  font-bold -ml-2 mt-2 w-full ">
 
                                 <div className='flex items-center justify-center hover:bg-[#1E1E1E] rounded-full p-2 w-fit h-fit'>
                                     <Icons.heart
@@ -183,7 +182,7 @@ const ReplyThreadCard: React.FC<ThreadProps> = ({ threadInfo, parentThreads }) =
                     </div>
                     {/* <div ref={scrollDownRef} /> */}
 
-                    <Link href={`/@${author.username}/post/${id}`} className={cn('flex items-center gap-2 text-[#777777] text-[15px] text-center z-50 ', {
+                    <Link href={`/@${author.username}/post/${id}`} className={cn('flex items-center gap-2 text-[#777777] text-[15px] text-center ', {
                         'mb-4': replies.length > 0 || likeUpdate.current.likeCount > 0
                     })}>
                         {replies.length > 0 && <p className='hover:underline mt-0.5'>
