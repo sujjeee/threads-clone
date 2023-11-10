@@ -26,7 +26,9 @@ export default function page() {
 
     return (
         <>
-            <SearchContainer />
+            <div className='relative'>
+                <SearchContainer />
+            </div>
             <div className='pt-16'>
                 {!isLoading
                     ? <>

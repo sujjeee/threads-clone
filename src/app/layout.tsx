@@ -36,9 +36,9 @@ export default function RootLayout({
               disableTransitionOnChange
             >
               {children}
-              {/* <div className='fixed text-white cursor-pointer  border-[none] right-5 bottom-5 z-50'>
+              <div className='fixed text-white cursor-pointer  border-[none] right-5 bottom-5 z-50'>
                 <ThemeToggle />
-              </div> */}
+              </div>
               <Toaster />
             </ThemeProvider>
           </TRPCReactProvider>

@@ -199,9 +199,9 @@ const ThreadCard: React.FC<ThreadCardProps> = ({
                     <Link
                         href={`/@${author.username}/post/${id}`}>
                         {replyCount > 0 && (
-                            <p className='hover:underline '>
+                            <span className='hover:underline '>
                                 {replyCount} {replyCount === 1 ? 'reply' : 'replies'}
-                            </p>
+                            </span>
                         )}
                     </Link>
 

@@ -26,17 +26,15 @@ export default function SearchContainer() {
     }, [debouncedSearch])
 
     return (
-        <div className={cn('absolute rounded-2xl  border border-[#333333] bg-black max-w-xl w-full mb-3 transition-transform duration-300 z-50',
-            {
-                'scale-105': searchValue !== '',
-                'scale-100': searchValue === '',
-            }
-        )}>
+        <div className={cn('absolute rounded-2xl  border border-[#333333] bg-black max-w-xl w-full mb-3 transition-transform duration-300 z-50', {
+            'scale-105': searchValue !== '',
+            'scale-100': searchValue === '',
+        })}>
             <div className='relative w-full flex  px-3 py-2  ring-offset-background placeholder:text-muted-foreground pl-14 h-[60px]' >
                 <Icons.search className="h-4 w-4 text-[#4D4D4D] absolute left-6 -translate-y-2/4 top-2/4 " />
                 <input
                     value={searchValue}
-                    className=" mini-scrollbar resize-none text-base bg-transparent w-full placeholder:text-[#777777] outline-none placeholder:text-[15px]"
+                    className="resize-none text-base bg-transparent w-full placeholder:text-[#777777] outline-none placeholder:text-[15px]"
                     placeholder="Search"
                     onChange={(e) => setSearchValue(e.target.value)}
                 />
@@ -95,7 +93,7 @@ const DisplaySearchedResults: React.FC<DisplaySearchedResultsProps> = ({ debounc
                     <button className='mx-5 '>
                         <div className='h-9 w-9 outline outline-1  outline-[#333333] rounded-full'>
                             <Avatar className="rounded-full w-full h-full">
-                                <AvatarImage src={user.image} alt={user.fullname} />
+                                <AvatarImage src={user.image ?? ""} alt={user.fullname ?? ''} />
                                 <AvatarFallback>OG</AvatarFallback>
                             </Avatar>
                         </div>

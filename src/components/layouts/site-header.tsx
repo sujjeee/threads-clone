@@ -13,7 +13,7 @@ import NavMenu from '../buttons/nav-menu'
 
 
 export default function SiteHeader() {
-    const { isMobile } = useWindow()
+    const { isMobile, isDesktop } = useWindow()
     const [isScrolled, setIsScrolled] = React.useState(false)
 
     // change background color on scroll
@@ -33,15 +33,20 @@ export default function SiteHeader() {
                 isScrolled ? "bg-[#101010D9]  backdrop-blur-2xl" : "bg-transparent"
             )}
         >
-            <nav className="sm:container sm:max-w-[1250px] px-5 ">
-                <div className="py-1 flex w-full justify-between items-center z-50 max-h-[60px] sm:max-h-full h-full">
+            <nav className="sm:container sm:max-w-[1250px] px-4 ">
+                <div className="relative py-1 flex w-full justify-between items-center z-50 max-h-[60px] sm:max-h-full h-full">
                     <Link href={'/'} className="text-2xl font-semibold tracking-wide flex gap-2.5 items-center cursor-pointer active:scale-95  transform transition-all duration-150 ease-out hover:scale-105 z-[50] w-full sm:w-fit py-4 justify-center ">
                         <Icons.logo className='h-[34px] w-[34px]' />
                     </Link>
-                    <div className='hidden sm:flex justify-between items-center gap-2 max-w-[480px] w-full'>
+                    <div className='hidden sm:flex justify-between items-center gap-2 max-w-[480px] w-full '>
                         <Navs />
                     </div>
-                    <NavMenu />
+                    {isMobile
+                        ? <div className='absolute right-0 -translate-y-2/4 top-2/4 '>
+                            <NavMenu />
+                        </div>
+                        : <NavMenu />
+                    }
                 </div>
             </nav>
         </header>
