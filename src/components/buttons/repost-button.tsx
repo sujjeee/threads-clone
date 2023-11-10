@@ -68,7 +68,7 @@ const RepostButton: React.FC<RepostButtonProps> = ({
                         }
                     </button>
                 </DropdownMenuTrigger>
-                <DropdownMenuContent align="start" className='bg-background rounded-2xl w-[190px] p-0'>
+                <DropdownMenuContent align="start" className='bg-background shadow-xl dark:bg-[#181818] rounded-2xl w-[190px] p-0'>
                     <DropdownMenuItem
                         disabled={isLoading}
                         onClick={() => {

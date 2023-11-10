@@ -31,7 +31,7 @@ export default function ShareButton(
                         <Icons.share className='w-5 h-5 ' />
                     </div>
                 </DropdownMenuTrigger>
-                <DropdownMenuContent align="start" className='bg-background rounded-2xl w-[190px]  p-0'>
+                <DropdownMenuContent align="start" className='bg-background shadow-xl dark:bg-[#181818] rounded-2xl w-[190px]  p-0'>
                     <DropdownMenuItem
                         onClick={copyLinkToClipboard}
                         className='focus:bg-transparent px-4 tracking-normal select-none font-semibold py-3 cursor-pointer text-[15px]  active:bg-primary-foreground  rounded-none'

@@ -13,7 +13,6 @@ import { ThreadCardProps } from '@/types'
 type ProfileInfoCardProps = ThreadCardProps['author']
 
 const ProfileInfoCard: React.FC<ProfileInfoCardProps> = ({
-    id,
     bio,
     image,
     username,
@@ -22,28 +21,33 @@ const ProfileInfoCard: React.FC<ProfileInfoCardProps> = ({
     link
 }) => {
     return (
-        <div className=" z-[10] flex  flex-col space-y-4 h-fit  rounded-2xl p-6 bg-[#181818]">
-            <div className="flex w-full items-center ">
+        <div className="z-[10] flex  flex-col space-y-4 h-fit  rounded-2xl p-6 bg-background shadow-xl dark:bg-[#181818]">
+            <Link href={`/@${username}`} className="flex w-full items-center ">
                 <div className="flex w-full flex-col  gap-1 truncate ">
-                    <h1 className="text-[25px] font-extrabold tracking-normal truncate ">{fullname}</h1>
+                    <h1 className="text-[25px] font-extrabold tracking-normal truncate ">
+                        {fullname}
+                    </h1>
                     <div className="flex gap-1">
-                        <h4 className="text-[15px]">{username}</h4>
-                        <span className="ml-0.5 rounded-2xl bg-[#1E1E1E] text-[#777777] text-xm px-1.5 py-1 text-[11px] font-medium">threads.net</span>
+                        <h4 className="text-[15px] truncate">
+                            {username}
+                        </h4>
+                        <span className="ml-0.5 rounded-2xl bg-primary text-[#777777] text-xm px-1.5 py-1 text-[11px] font-medium">threads.net</span>
                     </div>
                 </div>
-                <Avatar className="h-[64px] w-[64px] overflow-visible outline outline-2 outline-[#505050] relative">
-                    <AvatarImage src={image} alt={fullname} className="h-min w-full rounded-full object-cover " />
+                <Avatar className="h-[64px] w-[64px] overflow-visible outline outline-2 outline-border relative">
+                    <AvatarImage src={image ?? ''} alt={fullname ?? ''} className="h-min w-full rounded-full object-cover " />
                     <AvatarFallback></AvatarFallback>
                     <div className='absolute bottom-0 -left-1'>
-                        <Icons.verified2 className='h-5 w-5' />
+                        <Icons.verified2 className='h-5 w-5 text-background' />
                     </div>
                 </Avatar>
+            </Link>
 
-            </div>
             {bio &&
-                <p className='text-[15px] '>
-                    {truncateText(bio, 100)}
-                </p>
+                <span dangerouslySetInnerHTML={{
+                    __html: bio.slice(1, -1).replace(/\\n/g, '\n')
+                }}
+                    className='text-[15px] max-h-[100px] whitespace-pre-line text-overflow-ellipsis' />
             }
             <div className='flex  items-center'>
                 <div className="flex -space-x-1 overflow-hidden items-center ">
@@ -52,13 +56,13 @@ const ProfileInfoCard: React.FC<ProfileInfoCardProps> = ({
                             <img
                                 // key={index}
                                 className="inline-block h-4 w-4 rounded-full ring-2 ring-[#181818]"
-                                src={image}
+                                src={image ?? ''}
                                 alt="Follower"
                             />
                             <img
                                 // key={index}
                                 className="inline-block h-4 w-4 rounded-full ring-2 ring-[#181818]"
-                                src={image}
+                                src={image ?? ''}
                                 alt="Follower"
                             />
                         </>
@@ -75,17 +79,16 @@ const ProfileInfoCard: React.FC<ProfileInfoCardProps> = ({
 
                     {link &&
                         <>
-                            <Link href={'/'} className='text-[#777777] text-[15px] hover:underline cursor-pointer active:text-[#4d4d4d]'>
+                            <Link href={link} className='text-[#777777] text-[15px] hover:underline cursor-pointer active:text-[#4d4d4d]'>
                                 {formatURL(link)}
                             </Link>
 
                         </>
                     }
 
-
                 </div>
             </div>
-            <Button className='w-full rounded-xl'>
+            <Button className='w-full rounded-xl bg-foreground hover:bg-foreground select-none text-white dark:text-black'>
                 Follow
             </Button>
         </div>
