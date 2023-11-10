@@ -116,7 +116,6 @@ const ThreadCard: React.FC<ThreadCardProps> = ({
                     {replyCount > 0 &&
                         <div className="h-full w-0.5 bg-[#333638] rounded-full my-[1px]" />
                     }
-
                 </div>
 
                 <div className="flex flex-col w-full px-2">
@@ -133,7 +132,7 @@ const ThreadCard: React.FC<ThreadCardProps> = ({
                             </div>
 
                             <Link href={`/@${author.username}/post/${id}`} className='w-full '>
-                                <div dangerouslySetInnerHTML={{ __html: text.slice(1, -1).replace(/\\n/g, '\n') }} className="text-white text-[15px] leading-5 mt-1 max-md:max-w-full whitespace-pre-line" />
+                                <div dangerouslySetInnerHTML={{ __html: text.slice(1, -1).replace(/\\n/g, '\n') }} className="text-accent-foreground text-[15px] leading-5 mt-1 max-md:max-w-full whitespace-pre-line" />
                             </Link>
 
                             {images.length > 0 &&
@@ -147,7 +146,7 @@ const ThreadCard: React.FC<ThreadCardProps> = ({
                             }
 
                             <div className="flex  font-bold -ml-2 mt-2 w-full">
-                                <div className='flex items-center justify-center hover:bg-[#1E1E1E] rounded-full p-2 w-fit h-fit active:scale-95'>
+                                <div className='flex items-center justify-center hover:bg-primary rounded-full p-2 w-fit h-fit active:scale-95'>
                                     <button disabled={isLoading}>
                                         <Icons.heart
                                             onClick={() => {

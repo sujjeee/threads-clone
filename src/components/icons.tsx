@@ -87,10 +87,7 @@ export const Icons = {
 
     ),
     activity: (props: IconProps | React.SVGProps<SVGSVGElement>) => (
-        <svg aria-label="Activity" width="24" height="24" viewBox="0 0 25 24" fill="transparent" xmlns="http://www.w3.org/2000/svg" {...props}>
-            <title>Activity</title>
-            <path d="M20.6483 3.38503C17.344 0.720274 13.9651 3.38502 12.75 4.60992C11.5348 3.38502 8.15603 0.720274 4.85169 3.38503C1.54734 6.04978 0.82919 11.5791 5.45925 16.2464C10.0893 20.9137 12.75 21.7585 12.75 21.7585C12.75 21.7585 15.4107 20.9137 20.0407 16.2464C24.6708 11.5791 23.9526 6.04978 20.6483 3.38503Z" stroke="currentColor" strokeWidth="2.5" />
-        </svg>
+        <svg aria-label="Notifications" fill="transparent" height="26" role="img" viewBox="0 0 26 26" width="26" {...props}><title>Notifications</title><path d="M2.5 9.85683C2.5 14.224 6.22178 18.5299 12.0332 22.2032C12.3554 22.397 12.7401 22.5909 13 22.5909C13.2703 22.5909 13.655 22.397 13.9668 22.2032C19.7782 18.5299 23.5 14.224 23.5 9.85683C23.5 6.11212 20.8698 3.5 17.4599 3.5C15.4847 3.5 13.9356 4.39792 13 5.74479C12.0851 4.40812 10.5257 3.5 8.5401 3.5C5.14059 3.5 2.5 6.11212 2.5 9.85683Z" stroke="currentColor" stroke-width="2.5"></path></svg>
 
     ),
     create: (props: IconProps | React.SVGProps<SVGSVGElement>) => (

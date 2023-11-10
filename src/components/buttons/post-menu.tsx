@@ -22,14 +22,14 @@ const PostMenu: React.FC<PostMenuProps> = ({ id, threadId }) => {
         <>
             <DropdownMenu>
                 <DropdownMenuTrigger asChild>
-                    <div className='flex items-center justify-center relative hover:before:content-[""] hover:before:absolute hover:before:bg-[#1E1E1E] hover:before:z-[-1] hover:before:-inset-2 hover:before:rounded-full cursor-pointer '>
+                    <div className='flex items-center justify-center relative hover:before:content-[""] hover:before:absolute hover:before:bg-primary hover:before:z-[-1] hover:before:-inset-2 hover:before:rounded-full cursor-pointer '>
                         <MoreHorizontal className='aspect-square object-cover object-center h-4 w-4 overflow-hidden flex-1  ' />
                     </div>
                 </DropdownMenuTrigger>
                 {!isLoggedUser
-                    ? <DropdownMenuContent align="end" className='bg-[#181818] rounded-2xl w-[190px] mt-1 p-0'>
+                    ? <DropdownMenuContent align="end" className='bg-background rounded-2xl w-[190px] mt-1 p-0'>
                         <DropdownMenuItem
-                            className='focus:bg-transparent px-4 tracking-normal select-none font-semibold py-3 cursor-pointer text-[15px]  active:bg-[#0a0a0a] rounded-none'
+                            className='focus:bg-transparent px-4 tracking-normal select-none font-semibold py-3 cursor-pointer text-[15px]  active:bg-primary rounded-none'
                         >
                             Mute
                         </DropdownMenuItem>
@@ -47,24 +47,24 @@ const PostMenu: React.FC<PostMenuProps> = ({ id, threadId }) => {
                         </DropdownMenuItem>
                         <DropdownMenuSeparator className='bg-[#393939] h-[1.2px] my-0 ' />
                         <DropdownMenuItem
-                            className='focus:bg-transparent px-4 tracking-normal select-none font-bold py-3 cursor-pointer text-[15px] text-red-700 focus:text-red-700 active:bg-[#0a0a0a] rounded-none'
+                            className='focus:bg-transparent px-4 tracking-normal select-none font-bold py-3 cursor-pointer text-[15px] text-red-700 focus:text-red-700 active:bg-primary-foreground rounded-none'
                         >
                             Report
                         </DropdownMenuItem>
                     </DropdownMenuContent>
-                    : <DropdownMenuContent align="end" className='bg-[#181818] rounded-2xl w-[190px] mt-1 p-0'>
+                    : <DropdownMenuContent align="end" className='bg-background rounded-2xl w-[190px] mt-1 p-0'>
                         <DropdownMenuItem
-                            className='focus:bg-transparent px-4 tracking-normal select-none font-semibold py-3 cursor-pointer text-[15px]  active:bg-[#0a0a0a] rounded-none'
+                            className='focus:bg-transparent px-4 tracking-normal select-none font-semibold py-3 cursor-pointer text-[15px] active:bg-primary-foreground rounded-none'
                         >
                             Who can reply
                         </DropdownMenuItem>
-                        <DropdownMenuSeparator className='bg-[#393939] h-[1.2px] my-0' />
+                        <DropdownMenuSeparator className=' h-[1.2px] my-0' />
                         <DropdownMenuItem
-                            className='focus:bg-transparent px-4 tracking-normal  select-none font-semibold py-3 cursor-pointer text-[15px] rounded-none active:bg-[#0a0a0a]'
+                            className='focus:bg-transparent px-4 tracking-normal  select-none font-semibold py-3 cursor-pointer text-[15px] rounded-none active:bg-primary-foreground '
                         >
                             Hide like count
                         </DropdownMenuItem>
-                        <DropdownMenuSeparator className='bg-[#393939] h-[1.2px] my-0 ' />
+                        <DropdownMenuSeparator className=' h-[1.2px] my-0 ' />
                         <AreYouSure id={threadId} />
                     </DropdownMenuContent>
                 }

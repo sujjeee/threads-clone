@@ -1,19 +1,16 @@
 "use client"
 
 import React from 'react'
-import { Icons } from '../icons'
-import Navs from './navs'
+import { Icons } from '@/components/icons'
+import Navs from '@/components/layouts/navs'
 import useWindow from '@/hooks/use-window'
-import FooterNavs from './footer-navs'
-import MenuOptions from '../menu-options'
-import { usePathname } from 'next/navigation'
 import { cn } from '@/lib/utils'
 import Link from 'next/link'
-import NavMenu from '../buttons/nav-menu'
+import NavMenu from '@/components/buttons/nav-menu'
 
 
 export default function SiteHeader() {
-    const { isMobile, isDesktop } = useWindow()
+    const { isMobile } = useWindow()
     const [isScrolled, setIsScrolled] = React.useState(false)
 
     // change background color on scroll
@@ -30,7 +27,7 @@ export default function SiteHeader() {
             aria-label="Header"
             className={cn(
                 "sticky top-0 z-[100] w-full",
-                isScrolled ? "bg-[#101010D9]  backdrop-blur-2xl" : "bg-transparent"
+                isScrolled ? "dark:bg-[#101010D9] bg-background backdrop-blur-2xl" : "bg-transparent"
             )}
         >
             <nav className="sm:container sm:max-w-[1250px] px-4 ">
