@@ -53,7 +53,6 @@ export const authRouter = createTRPCRouter({
                     const params = { username: created_user.username };
 
                     const updateUsername = await clerkClient.users.updateUser(userId, params);
-                    console.log("updateUsername", updateUsername)
 
                     // TODO: use in prod.
                     // await prisma.notification.create({
