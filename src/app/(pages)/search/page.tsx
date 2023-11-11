@@ -9,11 +9,12 @@ import { api } from '@/trpc/react'
 import Error from '@/app/error'
 import SearchContainer from '@/components/search-container'
 import ThreadCard from '@/components/threads/thread-card'
-import { useSearchParams } from 'next/navigation'
+import { redirect, useSearchParams } from 'next/navigation'
 import { Separator } from '@/components/ui/separator'
 
-export default function page() {
+interface pageProps { }
 
+const SearchPage: React.FC<pageProps> = ({ }) => {
     const searchParams = useSearchParams()
     const search = searchParams.get('q')
 
@@ -22,6 +23,7 @@ export default function page() {
     })
 
     const allUsers = data?.pages.flatMap((page) => page.allUsers)
+
     if (isError) return <Error />
 
     return (
@@ -34,9 +36,9 @@ export default function page() {
                     ? <>
                         {search === null ? (
                             <InfiniteScroll
-                                dataLength={allUsers?.length!}
+                                dataLength={allUsers ? allUsers.length : 0}
                                 next={fetchNextPage}
-                                hasMore={hasNextPage!}
+                                hasMore={hasNextPage ?? false}
                                 loader={
                                     <div className="h-[100px] w-full justify-center items-center flex ">
                                         <Icons.loading className='h-11 w-11' />
@@ -60,6 +62,7 @@ export default function page() {
     )
 }
 
+export default SearchPage
 
 interface DisplayQueryPostsProps {
     searchQuery: string
@@ -67,18 +70,18 @@ interface DisplayQueryPostsProps {
 
 const DisplayQueryPosts: React.FC<DisplayQueryPostsProps> = ({ searchQuery }) => {
 
-    if (searchQuery === '') return
+    if (searchQuery === '') redirect('/search')
 
     const { data, isLoading, isError, hasNextPage, fetchNextPage } = api.post.getInfinitePost.useInfiniteQuery({ searchQuery }, {
         getNextPageParam: (lastPage) => lastPage.nextCursor
     })
 
-    const allThread = data?.pages.flatMap((page) => page.threads)
+    const allThreads = data?.pages.flatMap((page) => page.threads)
 
     if (isLoading) return <Loading />
     if (isError) return <Error />
 
-    if (allThread?.length === 0 || allThread === undefined) {
+    if (allThreads?.length === 0 || allThreads === undefined) {
         return (
             <div className="h-[50vh] w-full justify-center items-center flex text-[#777777]">
                 <p>No results.</p>
@@ -89,20 +92,20 @@ const DisplayQueryPosts: React.FC<DisplayQueryPostsProps> = ({ searchQuery }) =>
     return (
         <div className='mt-2'>
             <InfiniteScroll
-                dataLength={allThread?.length!}
+                dataLength={allThreads ? allThreads.length : 0}
                 next={fetchNextPage}
-                hasMore={hasNextPage!}
+                hasMore={hasNextPage ?? false}
                 loader={
                     <div className="h-[100px] w-full justify-center items-center flex ">
                         <Icons.loading className='h-11 w-11' />
                     </div>
                 }
             >
-                {allThread?.map((post, index) => {
+                {allThreads?.map((post, index) => {
                     return (
                         <>
                             <ThreadCard key={index} {...post} />
-                            {index !== allThread.length - 1 && <Separator />}
+                            {index !== allThreads.length - 1 && <Separator />}
                         </>
                     )
                 })}

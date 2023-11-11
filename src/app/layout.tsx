@@ -4,7 +4,6 @@ import { Inter } from "next/font/google";
 import { headers } from "next/headers";
 import { TRPCReactProvider } from "@/trpc/react";
 import { ThemeProvider } from "@/components/providers/theme-provider";
-import ThemeToggle from "@/components/theme-toggle";
 import { Toaster } from "@/components/ui/toaster";
 import { ClerkProvider } from "@clerk/nextjs";
 
@@ -36,9 +35,6 @@ export default function RootLayout({
               disableTransitionOnChange
             >
               {children}
-              <div className='fixed text-white cursor-pointer  border-[none] right-5 bottom-5 z-50'>
-                <ThemeToggle />
-              </div>
               <Toaster />
             </ThemeProvider>
           </TRPCReactProvider>

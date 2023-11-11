@@ -25,7 +25,6 @@ export default async function PagesLayout({ children }: PagesLayoutProps) {
 
     if (!dbUser) redirect('/account?origin=/')
 
-
     return (
         <>
             <SiteHeader />

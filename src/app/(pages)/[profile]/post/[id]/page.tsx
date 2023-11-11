@@ -1,7 +1,7 @@
 "use client"
 
 import React from 'react'
-import Loading from '@/app/(pages)/loading'
+import Loading from '@/app/loading'
 import NotFound from '@/app/not-found'
 import ReplyThreadCard from '@/components/threads/reply-thread-card'
 import ThreadCard from '@/components/threads/thread-card'
@@ -9,9 +9,9 @@ import { api } from '@/trpc/react'
 import { usePathname, useRouter } from 'next/navigation'
 import { Separator } from '@/components/ui/separator'
 
-interface pageProps { }
+interface PostInfoPage { }
 
-const page: React.FC<pageProps> = ({ }) => {
+const PostInfoPage: React.FC<PostInfoPage> = ({ }) => {
     const path = usePathname()
     const router = useRouter()
 
@@ -26,28 +26,26 @@ const page: React.FC<pageProps> = ({ }) => {
 
     const { data, isLoading, isError } = api.post.getNestedThreads.useQuery({ id })
 
-    // console.dir(data, { depth: Infinity });
-
     if (isLoading) return <Loading />
     if (isError) return <NotFound />
 
-    if (!data) {
-        return <p>not found post</p>
-    }
-
     return (
         <>
-            <ReplyThreadCard {...data} />
-            {data.threadInfo.replies.map((post, index) => {
-                return (
-                    <div className='mb-8'>
-                        <Separator />
-                        <ThreadCard key={index} {...post} />
-                    </div>
-                );
-            })}
+            {data ? (
+                <>
+                    <ReplyThreadCard {...data} />
+                    {data.threadInfo.replies.map((post, index) => (
+                        <div key={index} className='mb-8'>
+                            <Separator />
+                            <ThreadCard {...post} />
+                        </div>
+                    ))}
+                </>
+            ) : (
+                <NotFound />
+            )}
         </>
     )
 }
 
-export default page
+export default PostInfoPage

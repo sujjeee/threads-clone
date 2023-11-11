@@ -1,4 +1,4 @@
-import { generateUsername } from '@/_actions/generateUsername'
+import { generateUsername } from '@/app/_actions/generate-username'
 import AccountSetupForm from '@/components/auth/account-setup-form'
 import { getUserEmail } from '@/lib/utils'
 import { db } from '@/server/db'

@@ -4,12 +4,15 @@ import { usePathname, useRouter } from 'next/navigation'
 import React from 'react'
 import { api } from '@/trpc/react'
 import UserProfile from '@/components/user-profile'
-import Loading from '../loading'
+import Loading from '@/app/loading'
 import ThreadCard from '@/components/threads/thread-card'
 import { Separator } from '@/components/ui/separator'
 import NotFound from '@/app/not-found'
 
-export default function page() {
+interface pageProps { }
+
+const ProfilePage: React.FC<pageProps> = ({ }) => {
+
   const path = usePathname()
   const router = useRouter()
   const username = path.substring(2);
@@ -27,20 +30,22 @@ export default function page() {
 
   return (
     <div>
-      <UserProfile {...data.userDetails} />
-      {data && data.threads.map((threads, index) => {
-        return (
-          <>
-            <ThreadCard key={threads.id} {...threads} />
-            {index !== data.threads.length - 1 && <Separator />}
-          </>
-        )
-      })}
+      {data && data.userDetails ? (
+        <>
+          <UserProfile {...data.userDetails} />
+          {data.threads.map((threads, index) => (
+            <div key={threads.id}>
+              <ThreadCard {...threads} />
+              {index !== data.threads.length - 1 && <Separator />}
+            </div>
+          ))}
+        </>
+      ) : (
+        <NotFound />
+      )}
     </div>
-  )
+  );
+
 }
 
-
-
-
-
+export default ProfilePage

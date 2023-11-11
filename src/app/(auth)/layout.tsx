@@ -1,13 +1,17 @@
-import Banner from "@/components/banner"
+import Banner from "@/components/threads-banner"
 import SiteFooter from "@/components/layouts/site-footer"
 import QRcode from "@/components/qr-code"
+import { currentUser } from "@clerk/nextjs"
+import { redirect } from "next/navigation"
 
 interface AuthLayoutProps {
     children: React.ReactNode
 }
 
-// design: https://excalidraw.com/#json=bvIRLqsPUGGCyDTZsXHjV,Dyv57Q8lQRKZuNh4m1nR9Q
 export default async function AuthLayout({ children }: AuthLayoutProps) {
+    const user = await currentUser()
+    if (user) redirect('/')
+
     return (
         <>
             <div className="bg-[#101010] h-screen">

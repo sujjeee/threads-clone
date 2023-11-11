@@ -9,12 +9,16 @@ import {
     DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
 import { useClerk } from '@clerk/nextjs';
-import { Icons } from '../icons';
+import { Icons } from '@/components/icons';
 import { useRouter } from 'next/navigation';
+import { useTheme } from 'next-themes';
 
 export default function NavMenu() {
+
     const router = useRouter()
+    const { theme, setTheme } = useTheme()
     const { signOut } = useClerk();
+
     return (
         <>
             <DropdownMenu>
@@ -25,6 +29,7 @@ export default function NavMenu() {
                 </DropdownMenuTrigger>
                 <DropdownMenuContent align="end" className='bg-background shadow-xl dark:bg-[#181818] z-[999] rounded-2xl w-[185px] mt-1 p-0'>
                     <DropdownMenuItem
+                        onClick={() => setTheme(theme === "light" ? "dark" : "light")}
                         className='focus:bg-transparent px-4 tracking-normal select-none font-semibold py-3 cursor-pointer text-[15px] active:bg-primary-foreground rounded-none'
                     >
                         Switch appearance
@@ -45,12 +50,12 @@ export default function NavMenu() {
                     <DropdownMenuItem
                         className='focus:bg-transparent px-4 tracking-normal select-none font-semibold py-3 cursor-pointer text-[15px]  active:bg-primary-foreground rounded-none'
                     >
-                        <button
+                        <div
                             aria-label="Log out"
                             onClick={() => signOut(() => router.push("/"))}
                         >
                             Log out
-                        </button>
+                        </div>
                     </DropdownMenuItem>
                 </DropdownMenuContent>
             </DropdownMenu>

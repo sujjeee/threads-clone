@@ -1,13 +1,8 @@
 import OAuthLogin from '@/components/auth/oauth-login'
 import LoginForm from '@/components/forms/login-form'
-import { currentUser } from '@clerk/nextjs'
-import { redirect } from 'next/navigation'
 import React from 'react'
 
-export default async function LoginPage() {
-    const user = await currentUser()
-    if (user) redirect('/')
-
+export default function LoginPage() {
     return (
         <div className='max-w-[370px] mx-auto py-16 w-full z-50 text-center'>
             <LoginForm />

@@ -1,8 +1,7 @@
-'use client' // Error components must be Client Components
+'use client'
 
 import { Button } from '@/components/ui/button'
 import Link from 'next/link'
-import { useEffect } from 'react'
 
 export default function Error() {
     return (

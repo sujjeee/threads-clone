@@ -5,7 +5,7 @@ import { api } from '@/trpc/react'
 import ThreadCard from '@/components/threads/thread-card'
 import { Icons } from '@/components/icons'
 import CreateThread from '@/components/threads/create-thread'
-import Loading from '@/app/(pages)/loading'
+import Loading from '@/app/loading'
 import Error from '@/app/error'
 import InfiniteScroll from 'react-infinite-scroll-component'
 import { Separator } from '@/components/ui/separator'
@@ -17,7 +17,7 @@ export default function page() {
     getNextPageParam: (lastPage) => lastPage.nextCursor
   })
 
-  const allThread = data?.pages.flatMap((page) => page.threads)
+  const allThreads = data?.pages.flatMap((page) => page.threads)
 
   if (isLoading) return <Loading />
   if (isError) return <Error />
@@ -28,9 +28,9 @@ export default function page() {
         <CreateThread variant='home' />
       </div>
       <InfiniteScroll
-        dataLength={allThread?.length!}
+        dataLength={allThreads?.length ?? 0}
         next={fetchNextPage}
-        hasMore={hasNextPage!}
+        hasMore={hasNextPage ?? false}
         loader={
           <div className="h-[100px] w-full justify-center items-center flex  mb-[10vh] sm:mb-0">
             <Icons.loading className='h-11 w-11' />
@@ -38,11 +38,11 @@ export default function page() {
         }
       >
         <div>
-          {allThread?.map((post, index) => {
+          {allThreads?.map((post, index) => {
             return (
-              <div key={index} className={cn({ 'mb-[10vh]': index == allThread.length - 1 })}>
+              <div key={index} className={cn({ 'mb-[10vh]': index == allThreads.length - 1 })}>
                 <ThreadCard {...post} />
-                {index !== allThread.length - 1 && <Separator />}
+                {index !== allThreads.length - 1 && <Separator />}
               </div>
             );
           })}
