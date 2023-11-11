@@ -1,29 +1,36 @@
 "use client"
 
 import React from 'react'
-import { useUser } from '@clerk/nextjs'
+import Link from 'next/link'
+import { Plus } from 'lucide-react'
 import { toast } from 'sonner'
+import { useUser } from '@clerk/nextjs'
 import { Icons } from '@/components/icons'
 import { api } from '@/trpc/react'
-import { cn, formatTimeAgo } from '@/lib/utils'
-import CreateThread from '@/components/threads/create-thread'
-import Link from 'next/link'
+import CreatePostCard from '@/components/cards/create-post-card'
 import { ThreadProps } from '@/types'
+import Username from '@/components/username'
+import PostActionMenu from '@/components/menus/post-action-menu'
+import PostParentCard from '@/components/cards/post-parent-card'
+import ProfileInfoCard from '@/components/cards/user-profile-card'
+import RepostButton from '@/components/buttons/repost-button'
+import ShareButton from '@/components/buttons/share-button'
+import {
+    cn,
+    formatTimeAgo
+} from '@/lib/utils'
 import {
     Avatar,
     AvatarFallback,
     AvatarImage
 } from '@/components/ui/avatar'
-import Username from '@/components/threads/username'
-import PostActionMenu from '@/components/menus/post-action-menu'
-import ParentThreadCard from '@/components/threads/parent-thread-card'
-import { Plus } from 'lucide-react'
-import { Dialog, DialogContent, DialogTrigger } from '../ui/dialog'
-import ProfileInfoCard from './profile-info-card'
-import RepostButton from '../buttons/repost-button'
-import ShareButton from '../buttons/share-button'
+import {
+    Dialog,
+    DialogContent,
+    DialogTrigger
+} from '@/components/ui/dialog'
 
-const ReplyThreadCard: React.FC<ThreadProps> = ({ threadInfo, parentThreads }) => {
+const PostReplyCard: React.FC<ThreadProps> = ({ threadInfo, parentThreads }) => {
     React.useEffect(() => {
         const scrollToPost = async () => {
             const postIdFromUrl = threadInfo.id;
@@ -91,7 +98,7 @@ const ReplyThreadCard: React.FC<ThreadProps> = ({ threadInfo, parentThreads }) =
 
                 {parentThreads && parentThreads.map((post, index) => (
                     <>
-                        <ParentThreadCard
+                        <PostParentCard
                             key={index}
                             author={post.author}
                             count={post.count}
@@ -172,7 +179,7 @@ const ReplyThreadCard: React.FC<ThreadProps> = ({ threadInfo, parentThreads }) =
                                         )} />
                                 </div>
 
-                                <CreateThread
+                                <CreatePostCard
                                     variant='reply'
                                     replyThreadInfo={{
                                         id,
@@ -194,7 +201,6 @@ const ReplyThreadCard: React.FC<ThreadProps> = ({ threadInfo, parentThreads }) =
                             </div>
                         </div>
                     </div>
-                    {/* <div ref={scrollDownRef} /> */}
 
                     <Link href={`/@${author.username}/post/${id}`} className={cn('flex items-center gap-2 text-[#777777] text-[15px] text-center ', {
                         'mb-4': replies.length > 0 || likeUpdate.current.likeCount > 0
@@ -213,5 +219,5 @@ const ReplyThreadCard: React.FC<ThreadProps> = ({ threadInfo, parentThreads }) =
     )
 }
 
-export default ReplyThreadCard
+export default PostReplyCard
 

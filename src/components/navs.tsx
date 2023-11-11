@@ -3,10 +3,9 @@
 import React from 'react'
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
-import { Icons } from './icons'
+import { Icons } from '@/components/icons'
 import { cn } from '@/lib/utils'
-import { useTheme } from 'next-themes'
-import CreateThread from './threads/create-thread'
+import CreatePostCard from '@/components/cards/create-post-card'
 import { useUser } from '@clerk/nextjs'
 
 export default function Navs() {
@@ -33,7 +32,7 @@ export default function Navs() {
                     )}
                 />
             </Link>
-            <CreateThread variant='create' />
+            <CreatePostCard variant='create' />
             <Link href={'/activity'} className='hover:bg-primary p-4  sm:py-5 sm:px-8  rounded-lg transform transition-all duration-150 ease-out hover:scale-100 active:scale-90 flex items-center justify-center w-full'>
                 <Icons.activity
                     className={cn(

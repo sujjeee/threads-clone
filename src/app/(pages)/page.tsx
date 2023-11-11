@@ -2,9 +2,9 @@
 
 import React from 'react'
 import { api } from '@/trpc/react'
-import ThreadCard from '@/components/threads/thread-card'
+import PostCard from '@/components/cards/post-card'
 import { Icons } from '@/components/icons'
-import CreateThread from '@/components/threads/create-thread'
+import CreatePostCard from '@/components/cards/create-post-card'
 import Loading from '@/app/loading'
 import Error from '@/app/error'
 import InfiniteScroll from 'react-infinite-scroll-component'
@@ -25,7 +25,7 @@ export default function page() {
   return (
     <>
       <div className='w-full sm:flex hidden'>
-        <CreateThread variant='home' />
+        <CreatePostCard variant='home' />
       </div>
       <InfiniteScroll
         dataLength={allThreads?.length ?? 0}
@@ -41,7 +41,7 @@ export default function page() {
           {allThreads?.map((post, index) => {
             return (
               <div key={index} className={cn({ 'mb-[10vh]': index == allThreads.length - 1 })}>
-                <ThreadCard {...post} />
+                <PostCard {...post} />
                 {index !== allThreads.length - 1 && <Separator />}
               </div>
             );

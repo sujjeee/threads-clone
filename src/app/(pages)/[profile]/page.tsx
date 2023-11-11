@@ -5,7 +5,7 @@ import React from 'react'
 import { api } from '@/trpc/react'
 import UserProfile from '@/components/user-profile'
 import Loading from '@/app/loading'
-import ThreadCard from '@/components/threads/thread-card'
+import PostCard from '@/components/cards/post-card'
 import { Separator } from '@/components/ui/separator'
 import NotFound from '@/app/not-found'
 
@@ -35,7 +35,7 @@ const ProfilePage: React.FC<pageProps> = ({ }) => {
           <UserProfile {...data.userDetails} />
           {data.threads.map((threads, index) => (
             <div key={threads.id}>
-              <ThreadCard {...threads} />
+              <PostCard {...threads} />
               {index !== data.threads.length - 1 && <Separator />}
             </div>
           ))}

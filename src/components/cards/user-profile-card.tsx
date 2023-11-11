@@ -1,18 +1,18 @@
 import React from 'react'
 import Link from 'next/link'
-import { formatURL, truncateText } from '@/lib/utils'
+import { formatURL } from '@/lib/utils'
+import { Icons } from '@/components/icons'
+import { Button } from '@/components/ui/button'
+import { ThreadCardProps } from '@/types'
 import {
     Avatar,
     AvatarFallback,
     AvatarImage
 } from '@/components/ui/avatar'
-import { Icons } from '@/components/icons'
-import { Button } from '@/components/ui/button'
-import { ThreadCardProps } from '@/types'
 
-type ProfileInfoCardProps = ThreadCardProps['author']
+type UserProfileCardProps = ThreadCardProps['author']
 
-const ProfileInfoCard: React.FC<ProfileInfoCardProps> = ({
+const UserProfileCard: React.FC<UserProfileCardProps> = ({
     bio,
     image,
     username,
@@ -96,4 +96,4 @@ const ProfileInfoCard: React.FC<ProfileInfoCardProps> = ({
     )
 }
 
-export default ProfileInfoCard
+export default UserProfileCard

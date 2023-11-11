@@ -1,13 +1,12 @@
 "use client"
 
 import React from 'react'
-import { Card } from './ui/card'
-import Username from './threads/username'
-import { ParentThreadInfo } from './threads/create-thread'
-import UserAvatar from './user-avatar'
+import { Card } from '@/components/ui/card'
+import Username from '@/components/username'
+import { ParentThreadInfo } from '@/components/cards/create-post-card'
+import UserAvatar from '@/components/user-avatar'
 import { api } from '@/trpc/react'
-import { Icons } from './icons'
-import { AuthorInfoProps } from '@/types'
+import { Icons } from '@/components/icons'
 
 type PostPreviewProps = Partial<Pick<ParentThreadInfo, 'id' | 'text' | 'author'>>;
 
@@ -20,7 +19,6 @@ const PostPreview: React.FC<PostPreviewProps & { quoteId?: string }> = ({
         const { data, isLoading } = api.post.getQuotedPost.useQuery(
             { id: quoteId },
             {
-                // Testing caching will this work or not 
                 enabled: !!quoteId,
                 staleTime: Infinity,
             }

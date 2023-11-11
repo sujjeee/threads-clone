@@ -4,14 +4,14 @@ import React from 'react'
 import NSFWFilter from 'nsfw-filter';
 import useFileStore from '@/store/fileStore';
 import { EyeOff, X } from 'lucide-react'
-import Username from '@/components/threads/username';
+import Username from '@/components/username';
 import { ResizeTextarea } from '@/components/ui/resize-textarea'
 import { cn } from '@/lib/utils';
 import UserAvatar from '@/components/user-avatar';
 import { useUser } from '@clerk/nextjs';
 import { Icons } from '@/components/icons';
 import { Button } from '@/components/ui/button';
-import { ParentThreadInfo } from '@/components/threads/create-thread';
+import type { ParentThreadInfo } from '@/components/cards/create-post-card';
 import {
     useDropzone,
     type Accept,

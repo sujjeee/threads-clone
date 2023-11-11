@@ -3,11 +3,11 @@
 import React from 'react'
 import Loading from '@/app/loading'
 import NotFound from '@/app/not-found'
-import ReplyThreadCard from '@/components/threads/reply-thread-card'
-import ThreadCard from '@/components/threads/thread-card'
+import PostReplyCard from '@/components/cards/post-reply-card'
+import PostCard from '@/components/cards/post-card'
 import { api } from '@/trpc/react'
-import { usePathname, useRouter } from 'next/navigation'
 import { Separator } from '@/components/ui/separator'
+import { usePathname, useRouter } from 'next/navigation'
 
 interface PostInfoPage { }
 
@@ -33,11 +33,11 @@ const PostInfoPage: React.FC<PostInfoPage> = ({ }) => {
         <>
             {data ? (
                 <>
-                    <ReplyThreadCard {...data} />
+                    <PostReplyCard {...data} />
                     {data.threadInfo.replies.map((post, index) => (
                         <div key={index} className='mb-8'>
                             <Separator />
-                            <ThreadCard {...post} />
+                            <PostCard {...post} />
                         </div>
                     ))}
                 </>

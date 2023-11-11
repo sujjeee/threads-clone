@@ -4,7 +4,7 @@ import { Button } from '@/components/ui/button'
 import { Separator } from '@/components/ui/separator'
 import { UserCardProps } from '@/types'
 import Link from 'next/link'
-import Username from '@/components/threads/username'
+import Username from '@/components/username'
 import { Icons } from './icons'
 
 const UserCard: React.FC<UserCardProps> = ({

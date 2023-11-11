@@ -29,13 +29,13 @@ import {
 
 export type ParentThreadInfo = Pick<ThreadCardProps, 'id' | 'text' | 'images' | 'author'>
 
-interface CreateThreadProps {
+interface CreatePostCardProps {
     variant: TriggerVariant;
     replyThreadInfo?: ParentThreadInfo;
     quoteInfo?: Pick<ThreadCardProps, 'id' | 'text' | 'author'>
 }
 
-const CreateThread: React.FC<CreateThreadProps> = ({ variant, replyThreadInfo, quoteInfo }) => {
+const CreatePostCard: React.FC<CreatePostCardProps> = ({ variant, replyThreadInfo, quoteInfo }) => {
     const router = useRouter()
     const { user } = useUser()
     const { postPrivacy } = usePost();
@@ -276,4 +276,4 @@ const CreateThread: React.FC<CreateThreadProps> = ({ variant, replyThreadInfo, q
     )
 }
 
-export default CreateThread
+export default CreatePostCard

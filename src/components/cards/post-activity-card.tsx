@@ -1,36 +1,40 @@
 "use client"
 
 import React from 'react'
-import {
-    Dialog,
-    DialogContent,
-    DialogTrigger,
-} from "@/components/ui/dialog"
 import { Card } from '@/components/ui/card'
-import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
 import { Icons } from '@/components/icons'
 import { ChevronRight } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { api } from '@/trpc/react'
 import { AuthorInfoProps } from '@/types'
-import Username from './username'
+import Username from '@/components/username'
 import Link from 'next/link'
+import {
+    Dialog,
+    DialogContent,
+    DialogTrigger,
+} from "@/components/ui/dialog"
+import {
+    Avatar,
+    AvatarFallback,
+    AvatarImage
+} from '@/components/ui/avatar'
 
-interface PostActivityProps {
+interface PostActivityCardProps {
     likeCount: number
     id: string
     text: string
     author: AuthorInfoProps
 }
 
-const PostActivity: React.FC<PostActivityProps> = ({ likeCount, id, text, author }) => {
+const PostActivityCard: React.FC<PostActivityCardProps> = ({ likeCount, id, text, author }) => {
 
     return (
         <Dialog>
             <DialogTrigger>
-                <p className='hover:underline'>
+                <span className='hover:underline'>
                     {likeCount} {likeCount === 1 ? 'like' : 'likes'}
-                </p>
+                </span>
             </DialogTrigger>
             <DialogContent className='rounded-xl gap-0 p-0 bg-[#181818] border-[#393939] max-w-[520px] w-full'>
                 <div className='flex items-center  justify-between p-6'>
@@ -46,9 +50,9 @@ const PostActivity: React.FC<PostActivityProps> = ({ likeCount, id, text, author
                             </Avatar>
                             <Username author={author} />
                         </div>
-                        <p className='truncate'>
+                        <span className='truncate'>
                             {text}
-                        </p>
+                        </span>
                     </Card>
                     <DisplayInsight id={id} />
                 </section>
@@ -57,7 +61,7 @@ const PostActivity: React.FC<PostActivityProps> = ({ likeCount, id, text, author
     )
 }
 
-export default PostActivity
+export default PostActivityCard
 
 
 

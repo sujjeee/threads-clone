@@ -8,7 +8,7 @@ import Loading from '@/app/(pages)/loading'
 import { api } from '@/trpc/react'
 import Error from '@/app/error'
 import SearchContainer from '@/components/search-container'
-import ThreadCard from '@/components/threads/thread-card'
+import PostCard from '@/components/cards/post-card'
 import { redirect, useSearchParams } from 'next/navigation'
 import { Separator } from '@/components/ui/separator'
 
@@ -104,7 +104,7 @@ const DisplayQueryPosts: React.FC<DisplayQueryPostsProps> = ({ searchQuery }) =>
                 {allThreads?.map((post, index) => {
                     return (
                         <>
-                            <ThreadCard key={index} {...post} />
+                            <PostCard key={index} {...post} />
                             {index !== allThreads.length - 1 && <Separator />}
                         </>
                     )

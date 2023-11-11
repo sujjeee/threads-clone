@@ -6,8 +6,8 @@ import {
 } from "@/components/ui/hover-card"
 import { AuthorInfoProps } from '@/types'
 import Link from 'next/link'
-import { Icons } from '../icons'
-import ProfileInfoCard from './profile-info-card'
+import { Icons } from './icons'
+import ProfileInfoCard from './cards/user-profile-card'
 
 interface UsernameProps {
     author: AuthorInfoProps
