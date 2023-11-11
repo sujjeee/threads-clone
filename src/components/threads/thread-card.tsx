@@ -12,7 +12,7 @@ import { ThreadCardProps } from '@/types'
 import CreateThread from '@/components/threads/create-thread'
 import RepliesImageContainer from '@/components/threads/replies-image-container'
 import ProfileInfoCard from '@/components/threads/profile-info-card'
-import PostMenu from '@/components/buttons/post-menu'
+import PostMenu from '@/components/post-menu'
 import ShareButton from '@/components/buttons/share-button'
 import RepostButton from '@/components/buttons/repost-button'
 import Username from '@/components/threads/username'
@@ -28,6 +28,7 @@ import {
     DialogTrigger,
 } from "@/components/ui/dialog"
 import PostPreview from '../post-preview'
+import LikeButton from '../buttons/like-button'
 
 const ThreadCard: React.FC<ThreadCardProps> = ({
     id,
@@ -44,9 +45,7 @@ const ThreadCard: React.FC<ThreadCardProps> = ({
 
     const { user: loggedUser } = useUser()
 
-    const isLikedByMe = likes.some((like: any) =>
-        like?.userId || like?.user?.id === loggedUser?.id
-    );
+    const { replyCount } = count
 
     const isRepostedByMe = reposts.some((user) =>
         user?.userId || user?.userId === loggedUser?.id
@@ -58,37 +57,10 @@ const ThreadCard: React.FC<ThreadCardProps> = ({
         image: reply.author.image,
     }));
 
-    const { likeCount, replyCount } = count
-
-    const likeUpdate = React.useRef({
-        isLikedByMe,
-        likeCount
-    });
-
-    const { mutate: toggleLike, isLoading } = api.like.toggleLike.useMutation({
-        onMutate: async () => {
-
-            const previousLikedByMe = likeUpdate.current.isLikedByMe;
-            const previousLikeCount = likeUpdate.current.likeCount;
-
-            likeUpdate.current.isLikedByMe = !likeUpdate.current.isLikedByMe;
-            likeUpdate.current.likeCount = likeUpdate.current.isLikedByMe ? likeUpdate.current.likeCount + 1 : likeUpdate.current.likeCount - 1;
-
-
-            return { previousLikedByMe, previousLikeCount };
-
-        },
-        onError: (error, variables, context) => {
-
-            likeUpdate.current.isLikedByMe = context?.previousLikedByMe!;
-            likeUpdate.current.likeCount = context?.previousLikeCount!;
-
-            toast.error("LikeCallBack: Something went wrong!")
-
-        },
-    });
-
-
+    const [likeCount, setLikeCount] = React.useState(count.likeCount)
+    const handleLikeClick = () => {
+        setLikeCount(likeCount + 1);
+    };
 
     return (
         <>
@@ -146,18 +118,14 @@ const ThreadCard: React.FC<ThreadCardProps> = ({
                             }
 
                             <div className="flex  font-bold -ml-2 mt-2 w-full">
-                                <div className='flex items-center justify-center hover:bg-primary rounded-full p-2 w-fit h-fit active:scale-95'>
-                                    <button disabled={isLoading}>
-                                        <Icons.heart
-                                            onClick={() => {
-                                                toggleLike({ id })
-                                            }}
-                                            fill={likeUpdate.current.isLikedByMe ? '#ff3040' : 'none'}
-                                            className={cn('w-5 h-5 ', {
-                                                "text-[#ff3040]": likeUpdate.current.isLikedByMe
-                                            })} />
-                                    </button>
-                                </div>
+                                <LikeButton
+                                    likeInfo={{
+                                        id,
+                                        count,
+                                        likes
+                                    }}
+                                    onLike={handleLikeClick}
+                                />
                                 <CreateThread
                                     variant='reply'
                                     replyThreadInfo={{
@@ -165,7 +133,8 @@ const ThreadCard: React.FC<ThreadCardProps> = ({
                                         text,
                                         images: images,
                                         author: { ...author }
-                                    }} />
+                                    }}
+                                />
                                 <RepostButton
                                     id={id}
                                     text={text}
@@ -184,7 +153,7 @@ const ThreadCard: React.FC<ThreadCardProps> = ({
 
 
             <div className={cn('flex items-center select-none pb-2', {
-                " gap-2 pb-3.5 ": replyCount > 0 || likeUpdate.current.likeCount > 0
+                " gap-2 pb-3.5 ": replyCount > 0 || likeCount > 0
             })}>
 
                 <div className={cn("flex invisible justify-center items-center w-[36px] ", {
@@ -204,13 +173,13 @@ const ThreadCard: React.FC<ThreadCardProps> = ({
                         )}
                     </Link>
 
-                    {replyCount > 0 && likeUpdate.current.likeCount > 0 && <p className='mx-2'> · </p>}
+                    {replyCount > 0 && likeCount > 0 && <p className='mx-2'> · </p>}
 
-                    {likeUpdate.current.likeCount > 0 && (
+                    {likeCount > 0 && (
                         <PostActivity
                             author={author}
                             id={id}
-                            likeCount={likeUpdate.current.likeCount}
+                            likeCount={likeCount}
                             text={text}
                         />
                     )}

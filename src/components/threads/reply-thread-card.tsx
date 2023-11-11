@@ -15,7 +15,7 @@ import {
     AvatarImage
 } from '@/components/ui/avatar'
 import Username from '@/components/threads/username'
-import PostMenu from '@/components/buttons/post-menu'
+import PostMenu from '@/components/post-menu'
 import ParentThreadCard from '@/components/threads/parent-thread-card'
 import { Plus } from 'lucide-react'
 import { Dialog, DialogContent, DialogTrigger } from '../ui/dialog'

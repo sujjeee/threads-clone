@@ -5,7 +5,9 @@ import { Icons } from '../icons'
 import { cn } from '@/lib/utils'
 import { usePathname } from 'next/navigation'
 
-export default function Create() {
+interface CreateButtonProps { }
+
+const CreateButton: React.FC<CreateButtonProps> = ({ }) => {
     const path = usePathname()
     return (
         <div className='hover:bg-primary p-4 sm:py-5 sm:px-[34px]  rounded-lg transform transition-all duration-150 ease-out hover:scale-100 active:scale-90 flex items-center justify-center w-full'>
@@ -18,3 +20,5 @@ export default function Create() {
         </div>
     )
 }
+
+export default CreateButton

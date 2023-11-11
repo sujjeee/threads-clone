@@ -6,7 +6,7 @@ import Navs from '@/components/layouts/navs'
 import useWindow from '@/hooks/use-window'
 import { cn } from '@/lib/utils'
 import Link from 'next/link'
-import NavMenu from '@/components/buttons/nav-menu'
+import NavMenu from '@/components/nav-menu'
 
 
 export default function SiteHeader() {

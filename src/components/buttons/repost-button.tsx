@@ -56,51 +56,49 @@ const RepostButton: React.FC<RepostButtonProps> = ({
     });
 
     return (
-        <>
-            <DropdownMenu>
-                <DropdownMenuTrigger asChild >
-                    <button
-                        disabled={isLoading}
-                        className='flex items-center justify-center hover:bg-primary rounded-full p-2 w-fit h-fit active:scale-95 outline-none'>
-                        {repostUpdate.current.isRepostedByMe
-                            ? <Icons.reposted className='w-5 h-5 ' />
-                            : <Icons.repost className='w-5 h-5 ' />
-                        }
-                    </button>
-                </DropdownMenuTrigger>
-                <DropdownMenuContent align="start" className='bg-background shadow-xl dark:bg-[#181818] rounded-2xl w-[190px] p-0'>
-                    <DropdownMenuItem
-                        disabled={isLoading}
-                        onClick={() => {
-                            toggleRepost({ id })
-                        }}
-                        className={cn('focus:bg-transparent px-4 tracking-normal select-none font-semibold py-3 cursor-pointer text-[15px]  active:bg-primary-foreground  rounded-none w-full justify-between', {
-                            "text-red-600 focus:text-red-600": repostUpdate.current.isRepostedByMe
-                        })}
-                    >
+        <DropdownMenu>
+            <DropdownMenuTrigger asChild >
+                <button
+                    disabled={isLoading}
+                    className='flex items-center justify-center hover:bg-primary rounded-full p-2 w-fit h-fit active:scale-95 outline-none'>
+                    {repostUpdate.current.isRepostedByMe
+                        ? <Icons.reposted className='w-5 h-5 ' />
+                        : <Icons.repost className='w-5 h-5 ' />
+                    }
+                </button>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent align="start" className='bg-background shadow-xl dark:bg-[#181818] rounded-2xl w-[190px] p-0'>
+                <DropdownMenuItem
+                    disabled={isLoading}
+                    onClick={() => {
+                        toggleRepost({ id })
+                    }}
+                    className={cn('focus:bg-transparent px-4 tracking-normal select-none font-semibold py-3 cursor-pointer text-[15px]  active:bg-primary-foreground  rounded-none w-full justify-between', {
+                        "text-red-600 focus:text-red-600": repostUpdate.current.isRepostedByMe
+                    })}
+                >
 
-                        {repostUpdate.current.isRepostedByMe
-                            ? <>Remove</>
-                            : <>Repost</>
-                        }
+                    {repostUpdate.current.isRepostedByMe
+                        ? <>Remove</>
+                        : <>Repost</>
+                    }
 
-                        <Icons.repost className={cn('w-5 h-5 ', {
-                            "text-red-600": repostUpdate.current.isRepostedByMe
-                        })} />
-                    </DropdownMenuItem>
-                    <DropdownMenuSeparator className=' h-[1.2px] my-0' />
-                    <div className='focus:bg-transparent px-4 tracking-normal select-none font-semibold py-3 cursor-pointer text-[15px] rounded-none active:bg-primary-foreground  w-full justify-between'>
-                        <CreateThread
-                            variant='quote'
-                            quoteInfo={{
-                                text,
-                                id,
-                                author
-                            }} />
-                    </div>
-                </DropdownMenuContent>
-            </DropdownMenu>
-        </>
+                    <Icons.repost className={cn('w-5 h-5 ', {
+                        "text-red-600": repostUpdate.current.isRepostedByMe
+                    })} />
+                </DropdownMenuItem>
+                <DropdownMenuSeparator className=' h-[1.2px] my-0' />
+                <div className='focus:bg-transparent px-4 tracking-normal select-none font-semibold py-3 cursor-pointer text-[15px] rounded-none active:bg-primary-foreground  w-full justify-between'>
+                    <CreateThread
+                        variant='quote'
+                        quoteInfo={{
+                            text,
+                            id,
+                            author
+                        }} />
+                </div>
+            </DropdownMenuContent>
+        </DropdownMenu>
     )
 }
 
