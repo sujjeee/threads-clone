@@ -22,10 +22,6 @@ export default function SearchContainer() {
     const [searchValue, setSearchValue] = React.useState('')
     const debouncedSearch = useDebounce(searchValue, 2000)
 
-    React.useEffect(() => {
-        console.log("debouncedSearch?", debouncedSearch)
-    }, [debouncedSearch])
-
     return (
         <>
             {searchValue !== '' && <div className="fixed inset-0 z-[50] bg-background/70 backdrop-blur-sm data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0" />}

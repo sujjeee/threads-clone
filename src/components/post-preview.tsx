@@ -25,8 +25,6 @@ const PostPreview: React.FC<PostPreviewProps & { quoteId?: string }> = ({
                 staleTime: Infinity,
             }
         );
-
-        console.log("quoted tweet ", data)
         if (isLoading) {
             return (
                 <div className="h-[100px] w-full justify-center items-center flex ">

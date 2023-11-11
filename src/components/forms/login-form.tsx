@@ -55,7 +55,6 @@ export default function LoginForm() {
                     toast.error("Sorry, something went wrong. Please try again, or refresh the page.")
                 }
             } catch (err) {
-                console.log("this is error", err)
                 catchClerkError(err)
             }
         })

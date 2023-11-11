@@ -52,7 +52,6 @@ export function formatURL(originalURL: string) {
 }
 
 export function catchClerkError(err: unknown) {
-  console.log('clerk login error ', err)
   const unknownErr = "Something went wrong, please try again later."
 
   if (err instanceof z.ZodError) {

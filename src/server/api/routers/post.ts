@@ -292,7 +292,6 @@ export const postRouter = createTRPCRouter({
         }
       })
 
-      console.log("dbUser?", dbUser)
       if (!dbUser) {
         throw new TRPCError({ code: 'NOT_FOUND' })
       }
@@ -746,8 +745,6 @@ export const postRouter = createTRPCRouter({
     )
     .mutation(async ({ input, ctx }) => {
       const { userId } = ctx
-      console.log("userid to dlete", userId)
-      console.log("thread id to delete", input.id)
       const threadInfo = await ctx.db.thread.delete({
         where: {
           id: input.id,
@@ -757,8 +754,6 @@ export const postRouter = createTRPCRouter({
           id: true
         }
       });
-
-      console.log("delete threadInfo", threadInfo)
       if (!threadInfo) {
         throw new TRPCError({ code: 'NOT_FOUND' })
       }

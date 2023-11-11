@@ -41,8 +41,6 @@ const ParentThreadCard: React.FC<ThreadCardProps> = ({
     reposts
 }) => {
 
-    console.log('count', count)
-
     const { user: loggedUser } = useUser()
 
     // @ts-ignore

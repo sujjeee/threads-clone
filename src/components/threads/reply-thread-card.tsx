@@ -29,7 +29,6 @@ const ReplyThreadCard: React.FC<ThreadProps> = ({ threadInfo, parentThreads }) =
             const postIdFromUrl = threadInfo.id;
             if (postIdFromUrl) {
                 const postElement = document.getElementById(postIdFromUrl);
-                console.log('postElement?', postElement);
                 if (postElement) {
                     postElement.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'start' });
                 }
