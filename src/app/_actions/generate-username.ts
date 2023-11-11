@@ -2,8 +2,8 @@
 
 import { getUserEmail } from "@/lib/utils";
 import { clerkClient } from "@clerk/nextjs";
-import { User } from "@clerk/nextjs/server"
-import { UserResource } from "@clerk/types"
+import type { User } from "@clerk/nextjs/server"
+import type { UserResource } from "@clerk/types"
 
 export async function generateUsername(user: UserResource | User | null) {
     const email = getUserEmail(user);
