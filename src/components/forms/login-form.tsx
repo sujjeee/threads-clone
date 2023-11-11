@@ -20,7 +20,6 @@ import { Icons } from '@/components/icons'
 import { toast } from 'sonner'
 import { useRouter } from 'next/navigation'
 
-
 export default function LoginForm() {
     const router = useRouter()
     type Inputs = z.infer<typeof authSchema>

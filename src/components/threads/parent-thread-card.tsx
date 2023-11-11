@@ -12,7 +12,7 @@ import { ThreadCardProps } from '@/types'
 import CreateThread from '@/components/threads/create-thread'
 import RepliesImageContainer from '@/components/threads/replies-image-container'
 import ProfileInfoCard from '@/components/threads/profile-info-card'
-import PostMenu from '@/components/post-menu'
+import PostActionMenu from '@/components/menus/post-action-menu'
 import ShareButton from '@/components/buttons/share-button'
 import RepostButton from '@/components/buttons/repost-button'
 import Username from '@/components/threads/username'
@@ -134,7 +134,7 @@ const ParentThreadCard: React.FC<ThreadCardProps> = ({
                                     <time className="text-right text-[15px] leading-none self-stretch  text-[#777777] cursor-default">
                                         {formatTimeAgo(createdAt)}
                                     </time>
-                                    <PostMenu id={author.id} threadId={id} />
+                                    <PostActionMenu authorId={author.id} threadId={id} />
                                 </div>
                             </div>
 

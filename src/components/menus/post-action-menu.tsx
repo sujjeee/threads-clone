@@ -10,14 +10,14 @@ import { MoreHorizontal } from 'lucide-react';
 import { useUser } from '@clerk/nextjs';
 import AreYouSure from '@/components/are-you-sure';
 
-interface PostMenuProps {
+interface PostActionMenuProps {
     threadId: string
-    id: string
+    authorId: string
 }
 
-const PostMenu: React.FC<PostMenuProps> = ({ id, threadId }) => {
+const PostActionMenu: React.FC<PostActionMenuProps> = ({ authorId, threadId }) => {
     const { user } = useUser()
-    const isLoggedUser = id === user?.id
+    const isLoggedUser = authorId === user?.id
     return (
         <>
             <DropdownMenu>
@@ -73,4 +73,4 @@ const PostMenu: React.FC<PostMenuProps> = ({ id, threadId }) => {
     )
 }
 
-export default PostMenu
+export default PostActionMenu

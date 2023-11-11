@@ -2,7 +2,7 @@
 
 import React from 'react'
 import { Icons } from '@/components/icons'
-import Navs from '@/components/layouts/navs'
+import Navs from '@/components/navs'
 import useWindow from '@/hooks/use-window'
 import { cn } from '@/lib/utils'
 import Link from 'next/link'

@@ -12,6 +12,11 @@ import { useUser } from '@clerk/nextjs'
 import { useUploadThing } from '@/lib/uploadthing'
 import useFileStore from '@/store/fileStore'
 import usePost from '@/store/post'
+import Trigger from '@/components/trigger'
+import PostPrivacyMenu from '@/components/menus/post-privacy-menu'
+import CreateThreadInput from '@/components/create-thread-input'
+import Link from 'next/link'
+import { Check } from 'lucide-react'
 import {
     Dialog,
     DialogContent,
@@ -21,11 +26,6 @@ import {
     ThreadCardProps,
     TriggerVariant
 } from '@/types'
-import Trigger from '@/components/trigger'
-import PostPrivacy from '@/components/clickables/post-privacy'
-import CreateThreadInput from '@/components/create-thread-input'
-import Link from 'next/link'
-import { Check } from 'lucide-react'
 
 export type ParentThreadInfo = Pick<ThreadCardProps, 'id' | 'text' | 'images' | 'author'>
 
@@ -253,7 +253,7 @@ const CreateThread: React.FC<CreateThreadProps> = ({ variant, replyThreadInfo, q
                         />
                     </div>
                     <div className=' flex justify-between items-center w-full p-6'>
-                        <PostPrivacy />
+                        <PostPrivacyMenu />
                         <Button
                             size={'sm'}
                             onClick={handleCreateThread}

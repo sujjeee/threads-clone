@@ -3,9 +3,9 @@ import React from 'react'
 import { Button } from '@/components/ui/button'
 import { Separator } from '@/components/ui/separator'
 
-interface HomeCreateProps { }
+interface CreateWithInputProps { }
 
-const HomeCreate: React.FC<HomeCreateProps> = ({ }) => {
+const CreateWithInput: React.FC<CreateWithInputProps> = ({ }) => {
     const { user } = useUser()
 
     return (
@@ -36,4 +36,4 @@ const HomeCreate: React.FC<HomeCreateProps> = ({ }) => {
     )
 }
 
-export default HomeCreate
+export default CreateWithInput

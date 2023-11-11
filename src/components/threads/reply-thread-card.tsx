@@ -15,7 +15,7 @@ import {
     AvatarImage
 } from '@/components/ui/avatar'
 import Username from '@/components/threads/username'
-import PostMenu from '@/components/post-menu'
+import PostActionMenu from '@/components/menus/post-action-menu'
 import ParentThreadCard from '@/components/threads/parent-thread-card'
 import { Plus } from 'lucide-react'
 import { Dialog, DialogContent, DialogTrigger } from '../ui/dialog'
@@ -136,7 +136,7 @@ const ReplyThreadCard: React.FC<ThreadProps> = ({ threadInfo, parentThreads }) =
                             <time className="text-right text-[15px] leading-none self-stretch  text-[#777777] cursor-default">
                                 {formatTimeAgo(createdAt)}
                             </time>
-                            <PostMenu id={author.id} threadId={id} />
+                            <PostActionMenu authorId={author.id} threadId={id} />
                         </div>
                     </div>
 

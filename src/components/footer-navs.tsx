@@ -3,9 +3,9 @@
 import React from 'react'
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
-import { Icons } from '../icons'
+import { Icons } from './icons'
 import { useTheme } from 'next-themes'
-import CreateThread from '../threads/create-thread'
+import CreateThread from './threads/create-thread'
 import { cn } from '@/lib/utils'
 import Navs from './navs'
 

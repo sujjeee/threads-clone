@@ -1,4 +1,4 @@
-import FooterNavs from "@/components/layouts/footer-navs"
+import FooterNavs from "@/components/footer-navs"
 import SiteHeader from "@/components/layouts/site-header"
 import { db } from "@/server/db"
 import { currentUser } from "@clerk/nextjs"

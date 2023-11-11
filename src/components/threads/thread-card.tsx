@@ -2,17 +2,14 @@
 
 import React from 'react'
 import Link from 'next/link'
-import { toast } from 'sonner'
 import { Plus } from 'lucide-react'
-import { Icons } from '@/components/icons'
 import { cn, formatTimeAgo } from '@/lib/utils'
-import { api } from '@/trpc/react'
 import { useUser } from '@clerk/nextjs'
 import { ThreadCardProps } from '@/types'
 import CreateThread from '@/components/threads/create-thread'
 import RepliesImageContainer from '@/components/threads/replies-image-container'
 import ProfileInfoCard from '@/components/threads/profile-info-card'
-import PostMenu from '@/components/post-menu'
+import PostActionMenu from '@/components/menus/post-action-menu'
 import ShareButton from '@/components/buttons/share-button'
 import RepostButton from '@/components/buttons/repost-button'
 import Username from '@/components/threads/username'
@@ -99,7 +96,7 @@ const ThreadCard: React.FC<ThreadCardProps> = ({
                                     <time className="text-right text-[15px] leading-none self-stretch  text-[#777777] cursor-default">
                                         {formatTimeAgo(createdAt)}
                                     </time>
-                                    <PostMenu id={author.id} threadId={id} />
+                                    <PostActionMenu authorId={author.id} threadId={id} />
                                 </div>
                             </div>
 
