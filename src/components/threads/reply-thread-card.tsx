@@ -18,6 +18,10 @@ import Username from '@/components/threads/username'
 import PostMenu from '@/components/buttons/post-menu'
 import ParentThreadCard from '@/components/threads/parent-thread-card'
 import { Plus } from 'lucide-react'
+import { Dialog, DialogContent, DialogTrigger } from '../ui/dialog'
+import ProfileInfoCard from './profile-info-card'
+import RepostButton from '../buttons/repost-button'
+import ShareButton from '../buttons/share-button'
 
 const ReplyThreadCard: React.FC<ThreadProps> = ({ threadInfo, parentThreads }) => {
     React.useEffect(() => {
@@ -37,7 +41,7 @@ const ReplyThreadCard: React.FC<ThreadProps> = ({ threadInfo, parentThreads }) =
     }, [threadInfo]);
 
 
-    const { user: loginUser } = useUser()
+    const { user: loggedUser } = useUser()
 
     const {
         id,
@@ -47,15 +51,18 @@ const ReplyThreadCard: React.FC<ThreadProps> = ({ threadInfo, parentThreads }) =
         count,
         createdAt,
         text,
-        images
+        images,
+        reposts
     } = threadInfo
 
     const likeUpdate = React.useRef({
-        likedByMe: loginUser && likes.some((like: any) => like.userId === loginUser.id),
+        likedByMe: loggedUser && likes.some((like: any) => like.userId === loggedUser.id),
         likeCount: count.likeCount
     });
 
-
+    const isRepostedByMe = reposts.some((user) =>
+        user?.userId || user?.userId === loggedUser?.id
+    );
     const { mutate: toggleLike } = api.like.toggleLike.useMutation({
 
         onMutate: () => {
@@ -103,18 +110,24 @@ const ReplyThreadCard: React.FC<ThreadProps> = ({ threadInfo, parentThreads }) =
                 ))}
 
                 <div className="flex items-center gap-3 w-full pr-2 ">
-
-                    <button className='relative  '>
-                        <div className='h-9 w-9 outline outline-1 outline-[#333333] rounded-full ml-[1px]'>
-                            <Avatar className="rounded-full w-full h-full ">
-                                <AvatarImage src={author.image ?? ""} alt={author.username} className='object-cover' />
-                                <AvatarFallback>{author.username?.slice(0, 2).toUpperCase()}</AvatarFallback>
-                            </Avatar>
-                        </div>
-                        <div className='bg-foreground absolute -bottom-0.5 -right-0.5  rounded-2xl border-2 border-background text-background hover:scale-105 active:scale-95'>
-                            <Plus className='h-4 w-4 p-0.5' />
-                        </div>
-                    </button>
+                    <Dialog>
+                        <DialogTrigger asChild>
+                            <button className='relative '>
+                                <div className='h-9 w-9 outline outline-1 outline-border rounded-full ml-[1px]'>
+                                    <Avatar className="rounded-full w-full h-full ">
+                                        <AvatarImage src={author.image ?? ''} alt={author.username} className='object-cover' />
+                                        <AvatarFallback>{author.username?.slice(0, 2).toUpperCase()}</AvatarFallback>
+                                    </Avatar>
+                                </div>
+                                <div className='bg-foreground absolute -bottom-0.5 -right-0.5  rounded-2xl border-2 border-background text-background hover:scale-105 active:scale-95'>
+                                    <Plus className='h-4 w-4 p-0.5 text-white dark:text-black' />
+                                </div>
+                            </button>
+                        </DialogTrigger>
+                        <DialogContent className='max-w-[360px] w-full p-0 rounded-2xl  border-none'>
+                            <ProfileInfoCard {...author} />
+                        </DialogContent>
+                    </Dialog>
 
                     <div className="flex w-full justify-between gap-5 pl-0.5 ">
                         <span className="flex items-center justify-center gap-1.5 cursor-pointer ">
@@ -137,7 +150,7 @@ const ReplyThreadCard: React.FC<ThreadProps> = ({ threadInfo, parentThreads }) =
                             <div dangerouslySetInnerHTML={{
                                 __html: text.slice(1, -1).replace(/\\n/g, '\n')
                             }}
-                                className="text-white text-[15px] leading-5 mt-1 max-md:max-w-full whitespace-pre-line"
+                                className="text-accent-foreground text-[15px] leading-5 mt-1 max-md:max-w-full whitespace-pre-line"
                             />
 
                             {images.length > 0 &&
@@ -148,7 +161,7 @@ const ReplyThreadCard: React.FC<ThreadProps> = ({ threadInfo, parentThreads }) =
 
                             <div className="flex  font-bold -ml-2 mt-2 w-full ">
 
-                                <div className='flex items-center justify-center hover:bg-[#1E1E1E] rounded-full p-2 w-fit h-fit'>
+                                <div className='flex items-center justify-center  hover:bg-primary  rounded-full p-2 w-fit h-fit'>
                                     <Icons.heart
                                         onClick={() => {
                                             toggleLike({ id })
@@ -169,14 +182,16 @@ const ReplyThreadCard: React.FC<ThreadProps> = ({ threadInfo, parentThreads }) =
                                         author: { ...author }
                                     }} />
 
-                                <div className='flex items-center justify-center hover:bg-[#1E1E1E] rounded-full p-2 w-fit h-fit'>
-                                    <Icons.repost className='w-5 h-5 ' />
-                                </div>
-
-                                <div className='flex items-center justify-center hover:bg-[#1E1E1E] rounded-full p-2 '>
-                                    <Icons.share className='w-5 h-5 ' />
-                                </div>
-
+                                <RepostButton
+                                    id={id}
+                                    text={text}
+                                    author={author}
+                                    isRepostedByMe={isRepostedByMe}
+                                />
+                                <ShareButton
+                                    id={id}
+                                    author={author.username}
+                                />
                             </div>
                         </div>
                     </div>

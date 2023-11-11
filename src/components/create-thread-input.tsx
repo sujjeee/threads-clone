@@ -106,7 +106,7 @@ const CreateThreadInput: React.FC<CreateThreadInputProps> = ({
                 }
 
                 {replyThreadInfo?.text
-                    && <div className="h-full w-0.5 bg-[#313639] rounded-full mt-1.5 my-1" />
+                    && <div className="h-full w-0.5 bg-[#D8D8D8] dark:bg-[#313639] rounded-full mt-1.5 my-1" />
                 }
 
             </div>
@@ -123,9 +123,9 @@ const CreateThreadInput: React.FC<CreateThreadInputProps> = ({
                         </div>
                     </div>
                 ) : (
-                    <p className="text-[15px] font-medium leading-none tracking-normal">
+                    <span className="text-[15px] font-medium leading-none tracking-normal">
                         {user?.username}
-                    </p>
+                    </span>
                 )}
 
                 {replyThreadInfo ? (
@@ -135,7 +135,7 @@ const CreateThreadInput: React.FC<CreateThreadInputProps> = ({
                                 __html: replyThreadInfo.text.slice(1, -1).replace(/\\n/g, '\n')
                             }} />
                         </div>
-                        {replyThreadInfo.images[0] &&
+                        {replyThreadInfo?.images?.length > 0 &&
                             <div className='relative overflow-hidden rounded-[12px] border border-[#393939] w-fit'>
                                 <img
                                     src={replyThreadInfo.images[0]}
@@ -167,7 +167,7 @@ const CreateThreadInput: React.FC<CreateThreadInputProps> = ({
                                 <Button
                                     onClick={() => setPreviewURL('')}
                                     variant={"ghost"}
-                                    className="h-6 w-6 p-1 absolute top-2 right-2 z-50 rounded-full bg-black/80 transform active:scale-75 transition-transform cursor-pointer" >
+                                    className="h-6 w-6 p-1 absolute top-2 right-2 z-50 rounded-full bg-black/80 transform active:scale-75 transition-transform cursor-pointer bg-background " >
                                     <X />
                                 </Button>
                             </div>

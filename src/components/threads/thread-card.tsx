@@ -97,14 +97,14 @@ const ThreadCard: React.FC<ThreadCardProps> = ({
                     <Dialog>
                         <DialogTrigger asChild>
                             <button className='relative '>
-                                <div className='h-9 w-9 outline outline-1 outline-[#333333] rounded-full ml-[1px]'>
+                                <div className='h-9 w-9 outline outline-1 outline-border rounded-full ml-[1px]'>
                                     <Avatar className="rounded-full w-full h-full ">
                                         <AvatarImage src={author.image ?? ''} alt={author.username} className='object-cover' />
                                         <AvatarFallback>{author.username?.slice(0, 2).toUpperCase()}</AvatarFallback>
                                     </Avatar>
                                 </div>
                                 <div className='bg-foreground absolute -bottom-0.5 -right-0.5  rounded-2xl border-2 border-background text-background hover:scale-105 active:scale-95'>
-                                    <Plus className='h-4 w-4 p-0.5' />
+                                    <Plus className='h-4 w-4 p-0.5 text-white dark:text-black' />
                                 </div>
                             </button>
                         </DialogTrigger>
@@ -114,7 +114,7 @@ const ThreadCard: React.FC<ThreadCardProps> = ({
                     </Dialog>
 
                     {replyCount > 0 &&
-                        <div className="h-full w-0.5 bg-[#333638] rounded-full my-[1px]" />
+                        <div className="h-full w-0.5 bg-[#D8D8D8] dark:bg-[#313639]  rounded-full my-[1px]" />
                     }
                 </div>
 

@@ -40,7 +40,7 @@ const CreateThread: React.FC<CreateThreadProps> = ({ variant, replyThreadInfo, q
     const { user } = useUser()
     const { postPrivacy } = usePost();
 
-    const { selectedFile, isSelectedImageSafe } = useFileStore();
+    const { selectedFile, isSelectedImageSafe, setSelectedFile } = useFileStore();
 
     const [isOpen, setIsOpen] = React.useState(false)
 
@@ -230,14 +230,14 @@ const CreateThread: React.FC<CreateThreadProps> = ({ variant, replyThreadInfo, q
             })}>
                 <Trigger variant={variant} />
             </DialogTrigger>
-            <DialogContent className='border-none bg-transparent sm:max-w-[668px] max-w-lg w-full shadow-none select-none'>
-                <h1 className='w-full text-center font-bold mb-2'>
+            <DialogContent className='border-none bg-transparent sm:max-w-[668px] max-w-lg w-full shadow-none select-none outline-none'>
+                <h1 className='w-full text-center font-bold mb-2 text-white'>
                     {createVarient
                         ? <>New thread</>
                         : <>Reply</>
                     }
                 </h1>
-                <Card className="ring-offset-0 border-none ring-1 ring-[#393939] bg-[#181818] rounded-2xl ">
+                <Card className="ring-offset-0 border-none ring-1 ring-[#393939] bg-background shadow-2xl dark:bg-[#181818] rounded-2xl ">
                     <div className='overflow-y-auto no-scrollbar p-6 max-h-[70vh] '>
                         {replyThreadInfo &&
                             <CreateThreadInput
@@ -252,13 +252,13 @@ const CreateThread: React.FC<CreateThreadProps> = ({ variant, replyThreadInfo, q
                             quoteInfo={quoteInfo}
                         />
                     </div>
-                    <div className='flex justify-between items-center w-full p-6'>
+                    <div className=' flex justify-between items-center w-full p-6'>
                         <PostPrivacy />
                         <Button
                             size={'sm'}
                             onClick={handleCreateThread}
                             disabled={!isSelectedImageSafe || threadData.text === '' || isLoading || isReplying}
-                            className='rounded-full px-4 font-semibold'
+                            className='rounded-full px-4 font-semibold bg-foreground hover:bg-foreground select-none text-white dark:text-black'
                         >
                             {isLoading || isReplying && (
                                 <Icons.spinner

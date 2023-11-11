@@ -27,6 +27,7 @@ import {
     DialogContent,
     DialogTrigger,
 } from "@/components/ui/dialog"
+import { useTheme } from 'next-themes'
 
 const ParentThreadCard: React.FC<ThreadCardProps> = ({
     id,
@@ -87,6 +88,8 @@ const ParentThreadCard: React.FC<ThreadCardProps> = ({
         },
     });
 
+    const { theme } = useTheme()
+
     return (
         <>
             <div className='flex w-full gap-2'>
@@ -94,14 +97,14 @@ const ParentThreadCard: React.FC<ThreadCardProps> = ({
                     <Dialog>
                         <DialogTrigger asChild>
                             <button className='relative '>
-                                <div className='h-9 w-9 outline outline-1 outline-[#333333] rounded-full ml-[1px]'>
+                                <div className='h-9 w-9 outline outline-1 outline-border rounded-full ml-[1px]'>
                                     <Avatar className="rounded-full w-full h-full ">
-                                        <AvatarImage src={author.image ?? ""} alt={author.username} className='object-cover' />
+                                        <AvatarImage src={author.image ?? ''} alt={author.username} className='object-cover' />
                                         <AvatarFallback>{author.username?.slice(0, 2).toUpperCase()}</AvatarFallback>
                                     </Avatar>
                                 </div>
                                 <div className='bg-foreground absolute -bottom-0.5 -right-0.5  rounded-2xl border-2 border-background text-background hover:scale-105 active:scale-95'>
-                                    <Plus className='h-4 w-4 p-0.5' />
+                                    <Plus className='h-4 w-4 p-0.5 text-white dark:text-black' />
                                 </div>
                             </button>
                         </DialogTrigger>
@@ -113,10 +116,10 @@ const ParentThreadCard: React.FC<ThreadCardProps> = ({
                     {replyCount > 0 &&
                         // TODO: need to fix this
                         <div className='relative h-full '>
-                            <div className="h-full w-0.5 bg-[#313639] rounded-full  leading-[0]" />
-                            <div className='h-full absolute -left-[14px] z-[10]  leading-[0] transform -translate-y-1'>
+                            <div className="h-full w-0.5 bg-[#D8D8D8] dark:bg-[#313639] rounded-full  leading-[0]" />
+                            <div className='h-full absolute -left-[14px] z-[10]  leading-[0] transform -translate-y-1 text-[#D8D8D8] dark:text-[#313639]'>
                                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="29" viewBox="0 0 17 29" fill="none">
-                                    <path d="M16 27.5V15.5C16 10.7858 11.7871 5.70534 7.23886 5.70533C2.69067 5.70532 1.92432 8.83932 1.92432 10.6923C1.92432 12.5452 2.85983 15.4303 7.23957 15.4303C12.2931 15.4303 16 10.5535 16 5.5V1.5" stroke="#313639" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" />
+                                    <path d="M16 27.5V15.5C16 10.7858 11.7871 5.70534 7.23886 5.70533C2.69067 5.70532 1.92432 8.83932 1.92432 10.6923C1.92432 12.5452 2.85983 15.4303 7.23957 15.4303C12.2931 15.4303 16 10.5535 16 5.5V1.5" stroke={theme === 'light' ? '#D8D8D8' : '#313639'} strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" />
                                 </svg>
                             </div>
                         </div>
@@ -138,17 +141,17 @@ const ParentThreadCard: React.FC<ThreadCardProps> = ({
                             </div>
 
                             <Link href={`/@${author.username}/post/${id}`} className='w-full '>
-                                <div dangerouslySetInnerHTML={{ __html: text.slice(1, -1).replace(/\\n/g, '\n') }} className="text-white text-[15px] leading-5 mt-1 max-md:max-w-full whitespace-pre-line" />
+                                <div dangerouslySetInnerHTML={{ __html: text.slice(1, -1).replace(/\\n/g, '\n') }} className="text-accent-foreground text-[15px] leading-5 mt-1 max-md:max-w-full whitespace-pre-line" />
                             </Link>
 
-                            {images.length > 0 &&
+                            {images?.length > 0 &&
                                 <div className='relative overflow-hidden rounded-[12px] border border-[#393939] w-fit mt-2.5 '>
                                     <img src={images[0]} alt="" className='object-contain max-h-[520px] max-w-full  rounded-[12px]' />
                                 </div>
                             }
 
                             <div className="flex  font-bold -ml-2 mt-2 w-full">
-                                <div className='flex items-center justify-center hover:bg-[#1E1E1E] rounded-full p-2 w-fit h-fit active:scale-95'>
+                                <div className='flex items-center justify-center  hover:bg-primary rounded-full p-2 w-fit h-fit active:scale-95'>
                                     <button disabled={isLoading}>
                                         <Icons.heart
                                             onClick={() => {

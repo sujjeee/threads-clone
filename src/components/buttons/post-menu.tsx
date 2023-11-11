@@ -27,32 +27,32 @@ const PostMenu: React.FC<PostMenuProps> = ({ id, threadId }) => {
                     </div>
                 </DropdownMenuTrigger>
                 {!isLoggedUser
-                    ? <DropdownMenuContent align="end" className='bg-background rounded-2xl w-[190px] mt-1 p-0'>
+                    ? <DropdownMenuContent align="end" className='bg-background shadow-xl dark:bg-[#181818] rounded-2xl w-[190px] mt-1 p-0'>
                         <DropdownMenuItem
                             className='focus:bg-transparent px-4 tracking-normal select-none font-semibold py-3 cursor-pointer text-[15px]  active:bg-primary rounded-none'
                         >
                             Mute
                         </DropdownMenuItem>
-                        <DropdownMenuSeparator className='bg-[#393939] h-[1.2px] my-0' />
+                        <DropdownMenuSeparator className=' h-[1.2px] my-0' />
                         <DropdownMenuItem
                             className='focus:bg-transparent px-4 tracking-normal  select-none font-bold py-3 cursor-pointer text-[15px] text-red-700 focus:text-red-700 rounded-none active:bg-[#0a0a0a]'
                         >
                             Block
                         </DropdownMenuItem>
-                        <DropdownMenuSeparator className='bg-[#393939] h-[1.2px] my-0' />
+                        <DropdownMenuSeparator className=' h-[1.2px] my-0' />
                         <DropdownMenuItem
                             className='focus:bg-transparent px-4 tracking-normal select-none font-semibold py-3 cursor-pointer text-[15px] rounded-none active:bg-[#0a0a0a]'
                         >
                             Hide
                         </DropdownMenuItem>
-                        <DropdownMenuSeparator className='bg-[#393939] h-[1.2px] my-0 ' />
+                        <DropdownMenuSeparator className=' h-[1.2px] my-0 ' />
                         <DropdownMenuItem
                             className='focus:bg-transparent px-4 tracking-normal select-none font-bold py-3 cursor-pointer text-[15px] text-red-700 focus:text-red-700 active:bg-primary-foreground rounded-none'
                         >
                             Report
                         </DropdownMenuItem>
                     </DropdownMenuContent>
-                    : <DropdownMenuContent align="end" className='bg-background rounded-2xl w-[190px] mt-1 p-0'>
+                    : <DropdownMenuContent align="end" className='bg-background shadow-xl dark:bg-[#181818] rounded-2xl w-[190px] mt-1 p-0'>
                         <DropdownMenuItem
                             className='focus:bg-transparent px-4 tracking-normal select-none font-semibold py-3 cursor-pointer text-[15px] active:bg-primary-foreground rounded-none'
                         >

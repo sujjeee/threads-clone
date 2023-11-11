@@ -8,7 +8,7 @@ import { usePathname } from 'next/navigation'
 export default function Create() {
     const path = usePathname()
     return (
-        <div className='hover:bg-primary p-4  sm:py-5 sm:px-8  rounded-lg transform transition-all duration-150 ease-out hover:scale-100 active:scale-90 flex items-center justify-center w-full'>
+        <div className='hover:bg-primary p-4 sm:py-5 sm:px-[34px]  rounded-lg transform transition-all duration-150 ease-out hover:scale-100 active:scale-90 flex items-center justify-center w-full'>
             <Icons.create
                 className={cn(
                     "h-6 w-6",

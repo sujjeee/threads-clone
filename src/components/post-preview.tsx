@@ -51,11 +51,8 @@ const RenderCard: React.FC<PostPreviewProps> = ({
     author,
     text,
 }) => {
-    // if (!author || !text) return <>No information.</>
-    console.log("this is user quote", author)
-    console.log("tthsi is text", text)
     return (
-        <Card className='overflow-hidden p-4 mt-3 rounded-lg space-y-1.5 bg-transparent border-[#393939] w-full'>
+        <Card className='overflow-hidden p-4 mt-3 rounded-lg space-y-1.5 bg-transparent border-border w-full'>
             <div className='flex items-center gap-2'>
                 <UserAvatar
                     fullname={author?.fullname}

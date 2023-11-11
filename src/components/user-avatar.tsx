@@ -22,7 +22,7 @@ const UserAvatar: React.FC<UserAvatarProps> = ({
     return (
         <Link
             href={`/@${username}`}
-            className={cn('h-9 w-9 overflow-visible outline outline-[1.5px] outline-[#505050] rounded-full', className)}>
+            className={cn('h-9 w-9 overflow-visible outline outline-[1.5px] outline-border rounded-full', className)}>
             <Avatar className="h-min w-full rounded-full object-cover " >
                 <AvatarImage
                     src={image ?? ""}

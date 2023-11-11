@@ -33,7 +33,7 @@ const AreYouSure: React.FC<AreYouSureProps> = ({ id }) => {
             <AlertDialogTrigger className='focus:bg-transparent px-4 tracking-normal select-none font-bold py-3 cursor-pointer text-[15px] text-red-700 focus:text-red-700 active:bg-primary-foreground   rounded-none w-full text-start'>
                 Delete
             </AlertDialogTrigger>
-            <AlertDialogContent className='max-w-[280px] w-full rounded-2xl overflow-hidden border-border bg-background p-0 gap-0'>
+            <AlertDialogContent className='max-w-[280px] w-full rounded-2xl overflow-hidden border-border bg-background shadow-xl dark:bg-[#181818] p-0 gap-0'>
                 <div className='w-full flex justify-center items-center py-5 text-[16px] border-b font-bold border-border'>
                     Are you sure?
                 </div>
