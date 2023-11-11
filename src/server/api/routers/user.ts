@@ -5,8 +5,7 @@ import {
     publicProcedure
 } from "@/server/api/trpc";
 import { TRPCError } from "@trpc/server";
-import { GET_USER } from "@/server/constant";
-import { GET_COUNT } from "@/server/constant";
+import { GET_USER, GET_COUNT, GET_LIKES } from "@/server/constant";
 
 export const userRouter = createTRPCRouter({
 
@@ -35,19 +34,15 @@ export const userRouter = createTRPCRouter({
                 },
                 include: {
                     followers: true,
-                    threads: {
+                    posts: {
                         select: {
                             id: true,
                             createdAt: true,
                             text: true,
                             images: true,
                             quoteId: true,
-                            likes: {
-                                select: {
-                                    userId: true
-                                }
-                            },
-                            parentThreadId: true,
+                            ...GET_LIKES,
+                            parentPostId: true,
                             replies: {
                                 select: {
                                     author: {
@@ -77,21 +72,21 @@ export const userRouter = createTRPCRouter({
 
             return {
 
-                threads: userProfileInfo.threads.map((thread) => ({
-                    id: thread.id,
-                    createdAt: thread.createdAt,
-                    text: thread.text,
-                    images: thread.images,
-                    parentThreadId: thread.parentThreadId,
-                    author: thread.author,
+                post: userProfileInfo.posts.map((post) => ({
+                    id: post.id,
+                    createdAt: post.createdAt,
+                    text: post.text,
+                    images: post.images,
+                    parentPostId: post.parentPostId,
+                    author: post.author,
                     count: {
-                        likeCount: thread._count.likes,
-                        replyCount: thread._count.replies,
+                        likeCount: post._count.likes,
+                        replyCount: post._count.replies,
                     },
-                    likes: thread.likes,
-                    replies: thread.replies,
-                    reposts: thread.reposts,
-                    quoteId: thread.quoteId
+                    likes: post.likes,
+                    replies: post.replies,
+                    reposts: post.reposts,
+                    quoteId: post.quoteId
                 })),
 
                 userDetails: {
