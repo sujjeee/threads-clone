@@ -1,12 +1,11 @@
 import { z } from "zod";
-
 import {
     createTRPCRouter,
     privateProcedure,
     publicProcedure
 } from "@/server/api/trpc";
 import { TRPCError } from "@trpc/server";
-import { GET_USER } from "@/server/constant";
+import { GET_USER, GET_COUNT } from "@/server/constant";
 
 export const likeRouter = createTRPCRouter({
 
@@ -18,11 +17,11 @@ export const likeRouter = createTRPCRouter({
 
             const { userId } = ctx;
 
-            const data = { threadId: id, userId };
+            const data = { postId: id, userId };
 
             const existingLike = await ctx.db.like.findUnique({
                 where: {
-                    threadId_userId: data
+                    postId_userId: data
                 },
             });
 
@@ -33,7 +32,7 @@ export const likeRouter = createTRPCRouter({
                     const createdLike = await prisma.like.create({
                         data,
                         select: {
-                            thread: {
+                            post: {
                                 select: {
                                     text: true
                                 }
@@ -41,21 +40,22 @@ export const likeRouter = createTRPCRouter({
                         }
                     });
 
-                    const createNotification = await prisma.notification.create({
+                    const createdNotification = await prisma.notification.create({
                         data: {
                             type: 'LIKE',
                             userId: data.userId,
-                            threadId: data.threadId,
-                            message: createdLike.thread.text
+                            postId: data.postId,
+                            message: createdLike.post.text
                         }
                     });
 
                     return {
                         createdLike,
-                        createNotification
+                        createdNotification
                     };
 
                 });
+
                 if (!transactionResult) {
                     throw new TRPCError({ code: 'NOT_IMPLEMENTED' })
                 }
@@ -63,27 +63,35 @@ export const likeRouter = createTRPCRouter({
                 return { addedLike: true };
 
             } else {
-                await ctx.db.$transaction(async (prisma) => {
+                const transactionResult = await ctx.db.$transaction(async (prisma) => {
 
-                    await prisma.like.delete({
+                    const removeLike = await prisma.like.delete({
                         where: {
-                            threadId_userId: data
+                            postId_userId: data
                         }
                     });
 
-                    await prisma.notification.delete({
+                    const removeNotification = await prisma.notification.delete({
                         where: {
-                            userId_threadId_type: {
+                            userId_postId_type: {
                                 userId: data.userId,
-                                threadId: data.threadId,
+                                postId: data.postId,
                                 type: 'LIKE'
                             }
                         }
                     });
+
+                    return {
+                        removeLike,
+                        removeNotification
+                    };
                 });
 
-                return { addedLike: false };
+                if (!transactionResult) {
+                    throw new TRPCError({ code: 'NOT_IMPLEMENTED' })
+                }
 
+                return { addedLike: false };
             }
         }),
 
@@ -97,17 +105,12 @@ export const likeRouter = createTRPCRouter({
 
             const userProfileInfo = await ctx.db.like.findMany({
                 where: {
-                    threadId: input.id
+                    postId: input.id
                 },
                 select: {
-                    thread: {
+                    post: {
                         select: {
-                            _count: {
-                                select: {
-                                    likes: true,
-                                    replies: true
-                                }
-                            }
+                            ...GET_COUNT
                         }
                     },
                     user: {
@@ -117,12 +120,11 @@ export const likeRouter = createTRPCRouter({
                     }
                 }
             });
-            if (userProfileInfo) {
-                return userProfileInfo
-            } else {
+
+            if (!userProfileInfo) {
                 throw new TRPCError({ code: 'NOT_FOUND' });
             }
+
+            return userProfileInfo
         }),
-
-
 });

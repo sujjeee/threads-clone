@@ -5,7 +5,7 @@ import Link from 'next/link'
 import { Plus } from 'lucide-react'
 import { cn, formatTimeAgo } from '@/lib/utils'
 import { useUser } from '@clerk/nextjs'
-import { ThreadCardProps } from '@/types'
+import { PostCardProps } from '@/types'
 import CreatePostCard from '@/components/cards/create-post-card'
 import UserRepliesImages from '@/components/user/user-replies-images'
 import ProfileInfoCard from '@/components/cards/user-profile-card'
@@ -27,7 +27,7 @@ import {
     DialogTrigger,
 } from "@/components/ui/dialog"
 
-const PostCard: React.FC<ThreadCardProps> = ({
+const PostCard: React.FC<PostCardProps> = ({
     id,
     text,
     createdAt,

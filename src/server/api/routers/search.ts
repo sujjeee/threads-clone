@@ -1,10 +1,8 @@
 import { z } from "zod";
-
 import {
     createTRPCRouter,
     publicProcedure
 } from "@/server/api/trpc";
-
 import { GET_USER } from "@/server/constant";
 
 export const searchRouter = createTRPCRouter({

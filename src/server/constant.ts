@@ -27,9 +27,33 @@ export const GET_COUNT = {
 export const GET_REPOSTS = {
     reposts: {
         select: {
-            threadId: true,
+            postId: true,
             userId: true
         }
     },
 }
+
+export const GET_LIKES = {
+    likes: {
+        select: {
+            userId: true
+        }
+    },
+}
+
+export const GET_REPLIES = {
+    replies: {
+        select: {
+            author: {
+                select: {
+                    id: true,
+                    username: true,
+                    image: true,
+                }
+            }
+        }
+    },
+}
+
+
 

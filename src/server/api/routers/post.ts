@@ -6,11 +6,16 @@ import {
   publicProcedure
 } from "@/server/api/trpc";
 import { getUserEmail } from "@/lib/utils";
-import { currentUser } from "@clerk/nextjs";
-import { GET_USER, GET_COUNT, GET_REPOSTS } from "@/server/constant";
 import { PostPrivacy, Prisma } from "@prisma/client";
-import { ParentThreadsProps } from "@/types";
 import Filter from 'bad-words';
+import {
+  GET_USER,
+  GET_COUNT,
+  GET_REPOSTS,
+  GET_REPLIES,
+  GET_LIKES
+} from "@/server/constant";
+import { ParentPostsProps } from "@/types";
 
 export const postRouter = createTRPCRouter({
 
@@ -21,7 +26,7 @@ export const postRouter = createTRPCRouter({
           message: "Text must be at least 3 character",
         }),
         imageUrl: z.string().optional(),
-        privacy: z.nativeEnum(PostPrivacy),
+        privacy: z.nativeEnum(PostPrivacy).default('ANYONE'),
         quoteId: z.string().optional()
       })
     )
@@ -44,7 +49,7 @@ export const postRouter = createTRPCRouter({
       const filter = new Filter()
       const filteredText = filter.clean(input.text)
 
-      const newpost = await ctx.db.thread.create({
+      const newpost = await ctx.db.post.create({
         data: {
           text: filteredText,
           authorId: userId,
@@ -74,75 +79,60 @@ export const postRouter = createTRPCRouter({
       })
     )
     .query(async ({ input: { limit = 10, cursor, searchQuery }, ctx }) => {
-      const allThreads = await ctx.db.thread.findMany({
+      const allPosts = await ctx.db.post.findMany({
         where: {
           text: {
             contains: searchQuery
           },
-          parentThreadId: null
+          parentPostId: null
         },
         take: limit + 1,
-
         cursor: cursor ? { createdAt_id: cursor } : undefined,
         orderBy: [{ createdAt: "desc" }, { id: "desc" }],
         select: {
           id: true,
           createdAt: true,
           text: true,
-          likes: {
-            select: {
-              userId: true
-            }
-          },
           images: true,
-          parentThreadId: true,
-          replies: {
-            select: {
-              author: {
-                select: {
-                  id: true,
-                  username: true,
-                  image: true,
-                }
-              }
-            }
-          },
+          parentPostId: true,
+          quoteId: true,
           author: {
             select: {
               ...GET_USER,
             }
           },
+          ...GET_LIKES,
+          ...GET_REPLIES,
           ...GET_COUNT,
-          quoteId: true,
           ...GET_REPOSTS
         },
       });
 
       let nextCursor: typeof cursor | undefined;
 
-      if (allThreads.length > limit) {
-        const nextItem = allThreads.pop();
+      if (allPosts.length > limit) {
+        const nextItem = allPosts.pop();
         if (nextItem != null) {
           nextCursor = { id: nextItem.id, createdAt: nextItem.createdAt };
         }
       }
 
       return {
-        threads: allThreads.map((thread) => ({
-          id: thread.id,
-          createdAt: thread.createdAt,
-          text: thread.text,
-          parentThreadId: thread.parentThreadId,
-          author: thread.author,
+        post: allPosts.map((post) => ({
+          id: post.id,
+          createdAt: post.createdAt,
+          text: post.text,
+          parentPostId: post.parentPostId,
+          author: post.author,
           count: {
-            likeCount: thread._count.likes,
-            replyCount: thread._count.replies,
+            likeCount: post._count.likes,
+            replyCount: post._count.replies,
           },
-          likes: thread.likes,
-          replies: thread.replies,
-          quoteId: thread.quoteId,
-          images: thread.images,
-          reposts: thread.reposts
+          likes: post.likes,
+          replies: post.replies,
+          quoteId: post.quoteId,
+          images: post.images,
+          reposts: post.reposts
         })),
         nextCursor,
       };
@@ -155,9 +145,8 @@ export const postRouter = createTRPCRouter({
       })
     )
     .query(async ({ input, ctx }) => {
-      const user = await currentUser()
 
-      const threadInfo = await ctx.db.thread.findUnique({
+      const postInfo = await ctx.db.post.findUnique({
         where: {
           id: input.id
         },
@@ -166,12 +155,6 @@ export const postRouter = createTRPCRouter({
           text: true,
           createdAt: true,
           images: true,
-          _count: {
-            select: {
-              likes: true,
-              replies: true
-            }
-          },
           author: {
             select: {
               id: true,
@@ -199,17 +182,12 @@ export const postRouter = createTRPCRouter({
               }
             }
           },
-          parentThread: {
+          parentPost: {
             include: {
               likes: true,
-              _count: {
-                select: {
-                  likes: true,
-                  replies: true
-                }
-              },
+              ...GET_COUNT,
               author: true,
-              parentThread: true
+              parentPost: true
             }
           },
           replies: {
@@ -230,41 +208,30 @@ export const postRouter = createTRPCRouter({
                   },
                 }
               },
-              _count: {
-                select: {
-                  likes: true,
-                  replies: true
-                }
-              },
-              likes: {
-                where: {
-                  userId: user?.id
-                },
-                select: {
-                  userId: true
-                }
-              },
+              ...GET_COUNT,
+              ...GET_LIKES,
             }
-          }
+          },
+          ...GET_COUNT,
         }
       });
 
 
-      if (!threadInfo) {
+      if (!postInfo) {
         throw new TRPCError({ code: 'NOT_FOUND' })
       }
 
       return {
-        threadInfo: {
-          id: threadInfo.id,
-          text: threadInfo.text,
-          createdAt: threadInfo.createdAt,
-          likeCount: threadInfo._count.likes,
-          replyCount: threadInfo._count.replies,
-          user: threadInfo.author,
-          parentThread: threadInfo.parentThread,
-          likes: threadInfo.likes,
-          replies: threadInfo.replies
+        postInfo: {
+          id: postInfo.id,
+          text: postInfo.text,
+          createdAt: postInfo.createdAt,
+          likeCount: postInfo._count.likes,
+          replyCount: postInfo._count.replies,
+          user: postInfo.author,
+          parentPost: postInfo.parentPost,
+          likes: postInfo.likes,
+          replies: postInfo.replies
         }
       }
     }),
@@ -272,7 +239,7 @@ export const postRouter = createTRPCRouter({
   replyToPost: privateProcedure
     .input(
       z.object({
-        threadId: z.string(),
+        postId: z.string(),
         text: z.string().min(3, {
           message: "Text must be at least 3 character",
         }),
@@ -296,7 +263,7 @@ export const postRouter = createTRPCRouter({
         throw new TRPCError({ code: 'NOT_FOUND' })
       }
 
-      const repliedThreadPost = await ctx.db.thread.create({
+      const repliedPostPost = await ctx.db.post.create({
         data: {
           text: input.text,
           images: input.imageUrl ? [input.imageUrl] : [],
@@ -306,9 +273,9 @@ export const postRouter = createTRPCRouter({
               id: userId,
             },
           },
-          parentThread: {
+          parentPost: {
             connect: {
-              id: input.threadId
+              id: input.postId
             }
           },
         },
@@ -318,12 +285,12 @@ export const postRouter = createTRPCRouter({
         }
       })
       return {
-        createPost: repliedThreadPost,
+        createPost: repliedPostPost,
         success: true
       }
     }),
 
-  getNestedThreads: publicProcedure
+  getNestedPosts: publicProcedure
     .input(
       z.object({
         id: z.string()
@@ -331,7 +298,7 @@ export const postRouter = createTRPCRouter({
     )
     .query(async ({ input, ctx }) => {
       const { id } = input
-      const getThreads = await ctx.db.thread.findUnique({
+      const getPosts = await ctx.db.post.findUnique({
         where: {
           id
         },
@@ -339,24 +306,15 @@ export const postRouter = createTRPCRouter({
           id: true,
           text: true,
           createdAt: true,
-          _count: {
-            select: {
-              likes: true,
-              replies: true
-            }
-          },
+          ...GET_COUNT,
           images: true,
-          parentThreadId: true,
+          parentPostId: true,
           author: {
             select: {
               ...GET_USER
             }
           },
-          likes: {
-            select: {
-              userId: true
-            }
-          },
+          ...GET_LIKES,
           replies: {
             select: {
               id: true,
@@ -365,12 +323,8 @@ export const postRouter = createTRPCRouter({
               images: true,
               quoteId: true,
               ...GET_REPOSTS,
-              likes: {
-                select: {
-                  userId: true
-                }
-              },
-              parentThreadId: true,
+              ...GET_LIKES,
+              parentPostId: true,
               replies: {
                 select: {
                   author: {
@@ -395,9 +349,9 @@ export const postRouter = createTRPCRouter({
         },
       });
 
-      const parentThreads = await ctx.db.$queryRaw<ParentThreadsProps[]>(
+      const parentPosts = await ctx.db.$queryRaw<ParentPostsProps[]>(
         Prisma.sql`
-          WITH RECURSIVE threads_tree AS (
+          WITH RECURSIVE Posts_tree AS (
             SELECT
               t.*,
               0 AS depth,
@@ -423,7 +377,7 @@ export const postRouter = createTRPCRouter({
               ) AS author,
               (SELECT json_agg("userId")  
               FROM "Like" 
-              WHERE "threadId" = t.id) AS likes,
+              WHERE "postId" = t.id) AS likes,
               (SELECT jsonb_agg(
                 jsonb_build_object(
                   'author', jsonb_build_object(
@@ -433,16 +387,16 @@ export const postRouter = createTRPCRouter({
                   )
                 )
               )
-              FROM "Thread" r
+              FROM "Post" r
               JOIN "User" ru ON r."authorId" = ru.id
-              WHERE r."parentThreadId" = t.id) AS replies,
-              (SELECT count(*) FROM "Like" l WHERE l."threadId" = t.id) AS like_count,
-              (SELECT count(*) FROM "Thread" r WHERE r."parentThreadId" = t.id) AS reply_count,
-              (SELECT "quoteId" FROM "Thread" WHERE "id" = t.id) AS quote_id,
-              (SELECT jsonb_agg(jsonb_build_object('userId', "userId", 'threadId', "threadId")) 
+              WHERE r."parentPostId" = t.id) AS replies,
+              (SELECT count(*) FROM "Like" l WHERE l."postId" = t.id) AS like_count,
+              (SELECT count(*) FROM "Post" r WHERE r."parentPostId" = t.id) AS reply_count,
+              (SELECT "quoteId" FROM "Post" WHERE "id" = t.id) AS quote_id,
+              (SELECT jsonb_agg(jsonb_build_object('userId', "userId", 'postId', "postId")) 
                 FROM "Repost" 
-                WHERE "threadId" = t.id) AS reposts
-            FROM "Thread" t
+                WHERE "postId" = t.id) AS reposts
+            FROM "Post" t
             JOIN "User" u ON t."authorId" = u.id
             WHERE t.id = ${id}
       
@@ -473,7 +427,7 @@ export const postRouter = createTRPCRouter({
               ) AS author,
               (SELECT json_agg("userId")  
               FROM "Like" 
-              WHERE "threadId" = t.id) AS likes,
+              WHERE "postId" = t.id) AS likes,
               (SELECT jsonb_agg(
                 jsonb_build_object(
                   'author', jsonb_build_object(
@@ -483,46 +437,46 @@ export const postRouter = createTRPCRouter({
                   )
                 )
               )
-              FROM "Thread" r
+              FROM "Post" r
               JOIN "User" ru ON r."authorId" = ru.id
-              WHERE r."parentThreadId" = t.id) AS replies,
-              (SELECT count(*) FROM "Like" l WHERE l."threadId" = t.id) AS like_count,
-              (SELECT count(*) FROM "Thread" r WHERE r."parentThreadId" = t.id) AS reply_count,
-              (SELECT "quoteId" FROM "Thread" WHERE "id" = t.id) AS quote_id,
-              (SELECT jsonb_agg(jsonb_build_object('userId', "userId", 'threadId', "threadId")) 
+              WHERE r."parentPostId" = t.id) AS replies,
+              (SELECT count(*) FROM "Like" l WHERE l."postId" = t.id) AS like_count,
+              (SELECT count(*) FROM "Post" r WHERE r."parentPostId" = t.id) AS reply_count,
+              (SELECT "quoteId" FROM "Post" WHERE "id" = t.id) AS quote_id,
+              (SELECT jsonb_agg(jsonb_build_object('userId', "userId", 'postId', "postId")) 
                 FROM "Repost" 
-                WHERE "threadId" = t.id) AS reposts
-            FROM "Thread" t
+                WHERE "postId" = t.id) AS reposts
+            FROM "Post" t
             JOIN "User" u ON t."authorId" = u.id
-            JOIN threads_tree tt ON t.id = tt."parentThreadId"
+            JOIN Posts_tree tt ON t.id = tt."parentPostId"
           )
       
           SELECT *
-          FROM threads_tree
+          FROM Posts_tree
           ORDER BY depth;
         `
       );
 
-      if (!getThreads) {
+      if (!getPosts) {
         throw new TRPCError({ code: 'NOT_FOUND' })
       }
 
       return {
-        threadInfo: {
-          id: getThreads.id,
-          createdAt: getThreads.createdAt,
-          text: getThreads.text,
-          images: getThreads.images,
-          quoteId: getThreads.quoteId,
-          reposts: getThreads.reposts,
-          parentThreadId: getThreads.parentThreadId,
-          author: getThreads.author,
+        postInfo: {
+          id: getPosts.id,
+          createdAt: getPosts.createdAt,
+          text: getPosts.text,
+          images: getPosts.images,
+          quoteId: getPosts.quoteId,
+          reposts: getPosts.reposts,
+          parentPostId: getPosts.parentPostId,
+          author: getPosts.author,
           count: {
-            likeCount: getThreads._count.likes,
-            replyCount: getThreads._count.replies,
+            likeCount: getPosts._count.likes,
+            replyCount: getPosts._count.replies,
           },
-          likes: getThreads.likes,
-          replies: getThreads.replies.map(({ _count, ...reply }) => ({
+          likes: getPosts.likes,
+          replies: getPosts.replies.map(({ _count, ...reply }) => ({
             ...reply,
             count: {
               likeCount: _count.likes,
@@ -532,7 +486,7 @@ export const postRouter = createTRPCRouter({
         },
 
         // TODO: need to fix type here
-        parentThreads: parentThreads
+        parentPosts: parentPosts
           .filter(parent => parent.id !== id)
           .map((parent) => {
             return {
@@ -540,7 +494,7 @@ export const postRouter = createTRPCRouter({
               createdAt: new Date(parent.createdAt),
               text: parent.text,
               images: parent.images,
-              parentThreadId: parent.parentThreadId,
+              parentPostId: parent.parentPostId,
               author: parent.author,
               count: {
                 likeCount: Number(parent.like_count),
@@ -563,11 +517,11 @@ export const postRouter = createTRPCRouter({
 
       const { userId } = ctx;
 
-      const data = { threadId: id, userId };
+      const data = { postId: id, userId };
 
       const existingRepost = await ctx.db.repost.findUnique({
         where: {
-          threadId_userId: data
+          postId_userId: data
         },
       });
 
@@ -578,7 +532,7 @@ export const postRouter = createTRPCRouter({
           const createdRepost = await prisma.repost.create({
             data,
             select: {
-              thread: {
+              post: {
                 select: {
                   text: true
                 }
@@ -590,8 +544,8 @@ export const postRouter = createTRPCRouter({
             data: {
               type: 'REPOST',
               userId: data.userId,
-              threadId: data.threadId,
-              message: createdRepost.thread.text
+              postId: data.postId,
+              message: createdRepost.post.text
             }
           });
 
@@ -609,25 +563,34 @@ export const postRouter = createTRPCRouter({
         return { createdRepost: true };
 
       } else {
-        await ctx.db.$transaction(async (prisma) => {
+        const transactionResult = await ctx.db.$transaction(async (prisma) => {
 
-          await prisma.repost.delete({
+          const removeRepost = await prisma.repost.delete({
             where: {
-              threadId_userId: data
+              postId_userId: data
             }
           });
 
-          await prisma.notification.delete({
+          const removeNotification = await prisma.notification.delete({
             where: {
-              userId_threadId_type: {
+              userId_postId_type: {
                 userId: data.userId,
-                threadId: data.threadId,
+                postId: data.postId,
                 type: 'REPOST'
               }
             }
           });
 
+          return {
+            removeRepost,
+            removeNotification
+          }
+
         });
+
+        if (!transactionResult) {
+          throw new TRPCError({ code: 'NOT_IMPLEMENTED' })
+        }
 
         return { createdRepost: false };
 
@@ -663,7 +626,7 @@ export const postRouter = createTRPCRouter({
       const filter = new Filter()
       const filteredText = filter.clean(input.text)
 
-      const newpost = await ctx.db.thread.create({
+      const createdNewPost = await ctx.db.post.create({
         data: {
           quoteId: input.id,
           text: filteredText,
@@ -672,7 +635,11 @@ export const postRouter = createTRPCRouter({
         }
       })
 
-      return { newpost, success: true }
+      if (!createdNewPost) {
+        throw new TRPCError({ code: 'NOT_IMPLEMENTED' })
+      }
+
+      return { createdNewPost, success: true }
 
     }),
 
@@ -684,7 +651,7 @@ export const postRouter = createTRPCRouter({
     )
     .query(async ({ input, ctx }) => {
 
-      const threadInfo = await ctx.db.thread.findUnique({
+      const postInfo = await ctx.db.post.findUnique({
         where: {
           id: input.id
         },
@@ -692,11 +659,7 @@ export const postRouter = createTRPCRouter({
           id: true,
           createdAt: true,
           text: true,
-          likes: {
-            select: {
-              userId: true
-            }
-          },
+          ...GET_LIKES,
           images: true,
           replies: {
             select: {
@@ -719,20 +682,20 @@ export const postRouter = createTRPCRouter({
       });
 
 
-      if (!threadInfo) {
+      if (!postInfo) {
         throw new TRPCError({ code: 'NOT_FOUND' })
       }
 
       return {
-        threadInfo: {
-          id: threadInfo.id,
-          text: threadInfo.text,
-          createdAt: threadInfo.createdAt,
-          likeCount: threadInfo._count.likes,
-          replyCount: threadInfo._count.replies,
-          user: threadInfo.author,
-          likes: threadInfo.likes,
-          replies: threadInfo.replies
+        postInfo: {
+          id: postInfo.id,
+          text: postInfo.text,
+          createdAt: postInfo.createdAt,
+          likeCount: postInfo._count.likes,
+          replyCount: postInfo._count.replies,
+          user: postInfo.author,
+          likes: postInfo.likes,
+          replies: postInfo.replies
         }
       }
     }),
@@ -745,7 +708,7 @@ export const postRouter = createTRPCRouter({
     )
     .mutation(async ({ input, ctx }) => {
       const { userId } = ctx
-      const threadInfo = await ctx.db.thread.delete({
+      const PostInfo = await ctx.db.post.delete({
         where: {
           id: input.id,
           authorId: userId
@@ -754,7 +717,8 @@ export const postRouter = createTRPCRouter({
           id: true
         }
       });
-      if (!threadInfo) {
+
+      if (!PostInfo) {
         throw new TRPCError({ code: 'NOT_FOUND' })
       }
 

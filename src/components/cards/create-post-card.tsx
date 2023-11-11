@@ -23,16 +23,16 @@ import {
     DialogTrigger
 } from '@/components/ui/dialog'
 import {
-    ThreadCardProps,
+    PostCardProps,
     TriggerVariant
 } from '@/types'
 
-export type ParentThreadInfo = Pick<ThreadCardProps, 'id' | 'text' | 'images' | 'author'>
+export type ParentThreadInfo = Pick<PostCardProps, 'id' | 'text' | 'images' | 'author'>
 
 interface CreatePostCardProps {
     variant: TriggerVariant;
     replyThreadInfo?: ParentThreadInfo;
-    quoteInfo?: Pick<ThreadCardProps, 'id' | 'text' | 'author'>
+    quoteInfo?: Pick<PostCardProps, 'id' | 'text' | 'author'>
 }
 
 const CreatePostCard: React.FC<CreatePostCardProps> = ({ variant, replyThreadInfo, quoteInfo }) => {
@@ -104,7 +104,7 @@ const CreatePostCard: React.FC<CreatePostCardProps> = ({ variant, replyThreadInf
         const promise = replyThreadInfo
             ? replyToPost({
                 text: JSON.stringify(threadData.text, null, 2),
-                threadId: replyThreadInfo.id,
+                postId: replyThreadInfo.id,
                 imageUrl: imgRes ? imgRes[0]?.url : undefined,
                 privacy: threadData.privacy,
             })

@@ -1,12 +1,10 @@
 import { z } from "zod";
-
 import {
     createTRPCRouter,
-    privateProcedure,
     publicProcedure
 } from "@/server/api/trpc";
-
 import { GET_USER } from "@/server/constant";
+import { TRPCError } from "@trpc/server";
 
 export const notificationRouter = createTRPCRouter({
 
@@ -41,10 +39,14 @@ export const notificationRouter = createTRPCRouter({
                     createdAt: true,
                     message: true,
                     type: true,
-                    threadId: true
+                    postId: true
                 }
             });
+
+            if (!notification) {
+                throw new TRPCError({ code: 'NOT_FOUND' })
+            }
+
             return notification
         }),
-
 });

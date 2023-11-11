@@ -24,7 +24,7 @@ const PostInfoPage: React.FC<PostInfoPage> = ({ }) => {
     const segments = path.split('/');
     const id = segments[segments.length - 1] as string
 
-    const { data, isLoading, isError } = api.post.getNestedThreads.useQuery({ id })
+    const { data, isLoading, isError } = api.post.getNestedPosts.useQuery({ id })
 
     if (isLoading) return <Loading />
     if (isError) return <NotFound />
@@ -34,7 +34,7 @@ const PostInfoPage: React.FC<PostInfoPage> = ({ }) => {
             {data ? (
                 <>
                     <PostReplyCard {...data} />
-                    {data.threadInfo.replies.map((post, index) => (
+                    {data.postInfo.replies.map((post, index) => (
                         <div key={index} className='mb-8'>
                             <Separator />
                             <PostCard {...post} />

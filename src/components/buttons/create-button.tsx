@@ -1,7 +1,7 @@
 "use client"
 
 import React from 'react'
-import { Icons } from '../icons'
+import { Icons } from '@/components/icons'
 import { cn } from '@/lib/utils'
 import { usePathname } from 'next/navigation'
 

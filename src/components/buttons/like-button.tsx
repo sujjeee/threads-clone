@@ -4,12 +4,12 @@ import React from 'react'
 import { Icons } from '@/components/icons'
 import { cn } from '@/lib/utils'
 import { useUser } from '@clerk/nextjs'
-import { ThreadCardProps } from '@/types'
+import { PostCardProps } from '@/types'
 import { api } from '@/trpc/react'
 import { toast } from 'sonner'
 
 interface LikeButtonProps {
-    likeInfo: Pick<ThreadCardProps, 'id' | 'likes' | 'count'>
+    likeInfo: Pick<PostCardProps, 'id' | 'likes' | 'count'>
     onLike: () => void
 }
 

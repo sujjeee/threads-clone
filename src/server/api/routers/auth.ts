@@ -1,11 +1,13 @@
 import { z } from "zod";
-
-import { createTRPCRouter, privateProcedure } from "@/server/api/trpc";
 import { emailToUsername, getUserEmail } from "@/lib/utils";
 import { TRPCError } from "@trpc/server";
 import { Privacy } from "@prisma/client";
 import { generateUsername } from "@/app/_actions/generate-username";
 import { clerkClient } from "@clerk/nextjs";
+import {
+    createTRPCRouter,
+    privateProcedure
+} from "@/server/api/trpc";
 
 export const authRouter = createTRPCRouter({
     accountSetup: privateProcedure
@@ -13,9 +15,7 @@ export const authRouter = createTRPCRouter({
             z.object({
                 bio: z.string(),
                 link: z.string(),
-                privacy:
-                    z.enum(Object.values(Privacy) as [keyof typeof Privacy])
-                        .default('PUBLIC')
+                privacy: z.nativeEnum(Privacy).default('PUBLIC')
             })
         )
         .mutation(async ({ ctx, input }) => {
@@ -52,7 +52,7 @@ export const authRouter = createTRPCRouter({
 
                     const params = { username: created_user.username };
 
-                    const updateUsername = await clerkClient.users.updateUser(userId, params);
+                    await clerkClient.users.updateUser(userId, params);
 
                     // TODO: use in prod.
                     // await prisma.notification.create({

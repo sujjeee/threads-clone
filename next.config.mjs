@@ -5,10 +5,6 @@
 await import("./src/env.mjs");
 
 /** @type {import("next").NextConfig} */
-const config = {
-    experimental: {
-        serverActions: true
-    }
-};
+const config = {};
 
 export default config;

@@ -8,7 +8,7 @@ import { Icons } from '@/components/icons'
 import { cn, formatTimeAgo } from '@/lib/utils'
 import { api } from '@/trpc/react'
 import { useUser } from '@clerk/nextjs'
-import { ThreadCardProps } from '@/types'
+import { PostCardProps } from '@/types'
 import CreatePostCard from '@/components/cards/create-post-card'
 import UserRepliesImages from '@/components/user/user-replies-images'
 import ProfileInfoCard from '@/components/cards/user-profile-card'
@@ -29,7 +29,7 @@ import {
 } from "@/components/ui/dialog"
 import { useTheme } from 'next-themes'
 
-const PostParentCard: React.FC<ThreadCardProps> = ({
+const PostParentCard: React.FC<PostCardProps> = ({
     id,
     text,
     createdAt,

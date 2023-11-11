@@ -4,21 +4,17 @@ import { inferRouterOutputs } from "@trpc/server";
 type ArrayElement<ArrayType extends readonly unknown[]> = ArrayType[number];
 type RouterOutput = inferRouterOutputs<AppRouter>;
 
-export type ThreadCardProps = ArrayElement<RouterOutput['post']['getInfinitePost']['threads']>;
-export type AuthorInfoProps = ThreadCardProps['author'];
+export type PostCardProps = ArrayElement<RouterOutput['post']['getInfinitePost']['post']>;
 
-// export type ThreadProps = RouterOutput['post']['getsThreadInfo'];
-export type ThreadProps = RouterOutput['post']['getNestedThreads'];
+export type AuthorInfoProps = PostCardProps['author'];
 
-// export type AuthorProps = Pick<SingleThreadCardProps['user'], '_count' | 'username' | 'image' | 'id'>;
-
-export type ParentThreadCardProps = RouterOutput['post']['getPostInfo'];
+export type PostReplyCardProps = RouterOutput['post']['getNestedPosts'];
 
 export type UserCardProps = ArrayElement<RouterOutput['user']['allUsers']['allUsers']>;
 
 export type UserProfileInfoProps = RouterOutput['user']['profileInfo']['userDetails'];
 
-export type ParentThreadsProps = {
+export type ParentPostsProps = {
     id: string;
     createdAt: string;
     text: string;
@@ -29,9 +25,9 @@ export type ParentThreadsProps = {
     quoteId: string | null;
     reposts: {
         userId: string;
-        threadId: string;
+        postId: string;
     }[];
-    parentThreadId: string | null;
+    parentPostId: string | null;
     replies: {
         author: {
             username: string;

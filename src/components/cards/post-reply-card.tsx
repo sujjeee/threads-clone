@@ -8,7 +8,7 @@ import { useUser } from '@clerk/nextjs'
 import { Icons } from '@/components/icons'
 import { api } from '@/trpc/react'
 import CreatePostCard from '@/components/cards/create-post-card'
-import { ThreadProps } from '@/types'
+import { PostReplyCardProps } from '@/types'
 import Username from '@/components/user/user-username'
 import PostActionMenu from '@/components/menus/post-action-menu'
 import PostParentCard from '@/components/cards/post-parent-card'
@@ -30,10 +30,10 @@ import {
     DialogTrigger
 } from '@/components/ui/dialog'
 
-const PostReplyCard: React.FC<ThreadProps> = ({ threadInfo, parentThreads }) => {
+const PostReplyCard: React.FC<PostReplyCardProps> = ({ postInfo, parentPosts }) => {
     React.useEffect(() => {
         const scrollToPost = async () => {
-            const postIdFromUrl = threadInfo.id;
+            const postIdFromUrl = postInfo.id;
             if (postIdFromUrl) {
                 const postElement = document.getElementById(postIdFromUrl);
                 if (postElement) {
@@ -44,7 +44,7 @@ const PostReplyCard: React.FC<ThreadProps> = ({ threadInfo, parentThreads }) => 
 
         scrollToPost();
 
-    }, [threadInfo]);
+    }, [postInfo]);
 
 
     const { user: loggedUser } = useUser()
@@ -59,7 +59,7 @@ const PostReplyCard: React.FC<ThreadProps> = ({ threadInfo, parentThreads }) => 
         text,
         images,
         reposts
-    } = threadInfo
+    } = postInfo
 
     const likeUpdate = React.useRef({
         likedByMe: loggedUser && likes.some((like: any) => like.userId === loggedUser.id),
@@ -96,7 +96,7 @@ const PostReplyCard: React.FC<ThreadProps> = ({ threadInfo, parentThreads }) => 
                 "mb-0": replies.length > 0
             })}>
 
-                {parentThreads && parentThreads.map((post, index) => (
+                {parentPosts && parentPosts.map((post, index) => (
                     <>
                         <PostParentCard
                             key={index}
@@ -105,7 +105,7 @@ const PostReplyCard: React.FC<ThreadProps> = ({ threadInfo, parentThreads }) => 
                             id={post.id}
                             createdAt={post.createdAt}
                             likes={post.likes}
-                            parentThreadId={post.parentThreadId}
+                            parentPostId={post.parentPostId}
                             replies={post.replies}
                             images={post.images}
                             text={post.text}

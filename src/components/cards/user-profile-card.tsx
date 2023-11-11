@@ -3,14 +3,14 @@ import Link from 'next/link'
 import { formatURL } from '@/lib/utils'
 import { Icons } from '@/components/icons'
 import { Button } from '@/components/ui/button'
-import { ThreadCardProps } from '@/types'
+import { PostCardProps } from '@/types'
 import {
     Avatar,
     AvatarFallback,
     AvatarImage
 } from '@/components/ui/avatar'
 
-type UserProfileCardProps = ThreadCardProps['author']
+type UserProfileCardProps = PostCardProps['author']
 
 const UserProfileCard: React.FC<UserProfileCardProps> = ({
     bio,
