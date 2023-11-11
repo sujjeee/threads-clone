@@ -11,11 +11,11 @@ import {
 import { api } from '@/trpc/react';
 import { toast } from 'sonner';
 
-interface AreYouSureProps {
+interface ConfirmationCardProps {
     id: string
 }
 
-const AreYouSure: React.FC<AreYouSureProps> = ({ id }) => {
+const ConfirmationCard: React.FC<ConfirmationCardProps> = ({ id }) => {
 
     const trpcUtils = api.useUtils();
 
@@ -51,4 +51,4 @@ const AreYouSure: React.FC<AreYouSureProps> = ({ id }) => {
         </AlertDialog>
     )
 }
-export default AreYouSure
+export default ConfirmationCard

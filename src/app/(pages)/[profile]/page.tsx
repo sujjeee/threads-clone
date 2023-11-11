@@ -3,7 +3,7 @@
 import { usePathname, useRouter } from 'next/navigation'
 import React from 'react'
 import { api } from '@/trpc/react'
-import UserProfile from '@/components/user-profile'
+import UserProfile from '@/components/user/user-details'
 import Loading from '@/app/loading'
 import PostCard from '@/components/cards/post-card'
 import { Separator } from '@/components/ui/separator'

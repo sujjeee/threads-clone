@@ -1,6 +1,10 @@
 "use client"
 
 import React from 'react'
+import { useClerk } from '@clerk/nextjs';
+import { Icons } from '@/components/icons';
+import { useRouter } from 'next/navigation';
+import { useTheme } from 'next-themes';
 import {
     DropdownMenu,
     DropdownMenuContent,
@@ -8,12 +12,8 @@ import {
     DropdownMenuSeparator,
     DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
-import { useClerk } from '@clerk/nextjs';
-import { Icons } from '@/components/icons';
-import { useRouter } from 'next/navigation';
-import { useTheme } from 'next-themes';
 
-export default function NavMenu() {
+export default function NavigationMenu() {
 
     const router = useRouter()
     const { theme, setTheme } = useTheme()

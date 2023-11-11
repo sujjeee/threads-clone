@@ -7,14 +7,14 @@ import { cn, formatTimeAgo } from '@/lib/utils'
 import { useUser } from '@clerk/nextjs'
 import { ThreadCardProps } from '@/types'
 import CreatePostCard from '@/components/cards/create-post-card'
-import RepliesImageContainer from '@/components/replies-image-container'
+import UserRepliesImages from '@/components/user/user-replies-images'
 import ProfileInfoCard from '@/components/cards/user-profile-card'
 import PostActionMenu from '@/components/menus/post-action-menu'
 import ShareButton from '@/components/buttons/share-button'
 import RepostButton from '@/components/buttons/repost-button'
-import Username from '@/components/username'
+import Username from '@/components/user/user-username'
 import PostActivityCard from '@/components/cards/post-activity-card'
-import PostPreview from '@/components/post-preview'
+import PostPreview from '@/components/cards/post-preview-card'
 import LikeButton from '@/components/buttons/like-button'
 import {
     Avatar,
@@ -156,7 +156,7 @@ const PostCard: React.FC<ThreadCardProps> = ({
                 <div className={cn("flex invisible justify-center items-center w-[36px] ", {
                     "visible": replyCount > 0
                 })}>
-                    <RepliesImageContainer author={getThreadReplies} />
+                    <UserRepliesImages author={getThreadReplies} />
                 </div>
 
                 <div className="flex items-center  text-[#777777] text-[15px] text-center px-2">

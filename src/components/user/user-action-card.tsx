@@ -1,13 +1,17 @@
 import React from 'react'
-import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
+import Link from 'next/link'
 import { Button } from '@/components/ui/button'
 import { Separator } from '@/components/ui/separator'
 import { UserCardProps } from '@/types'
-import Link from 'next/link'
-import Username from '@/components/username'
-import { Icons } from './icons'
+import Username from '@/components/user/user-username'
+import { Icons } from '@/components/icons'
+import {
+    Avatar,
+    AvatarFallback,
+    AvatarImage
+} from '@/components/ui/avatar'
 
-const UserCard: React.FC<UserCardProps> = ({
+const UserActionCard: React.FC<UserCardProps> = ({
     id,
     bio,
     fullname,
@@ -65,4 +69,4 @@ const UserCard: React.FC<UserCardProps> = ({
     )
 }
 
-export default UserCard
+export default UserActionCard

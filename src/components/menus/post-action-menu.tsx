@@ -8,7 +8,7 @@ import {
 } from "@/components/ui/dropdown-menu"
 import { MoreHorizontal } from 'lucide-react';
 import { useUser } from '@clerk/nextjs';
-import AreYouSure from '@/components/are-you-sure';
+import AreYouSure from '@/components/cards/confirmation-card';
 
 interface PostActionMenuProps {
     threadId: string

@@ -4,28 +4,28 @@ import React from 'react'
 import NSFWFilter from 'nsfw-filter';
 import useFileStore from '@/store/fileStore';
 import { EyeOff, X } from 'lucide-react'
-import Username from '@/components/username';
+import Username from '@/components/user/user-username';
 import { ResizeTextarea } from '@/components/ui/resize-textarea'
 import { cn } from '@/lib/utils';
-import UserAvatar from '@/components/user-avatar';
+import UserAvatar from '@/components/user/user-avatar';
 import { useUser } from '@clerk/nextjs';
 import { Icons } from '@/components/icons';
 import { Button } from '@/components/ui/button';
 import type { ParentThreadInfo } from '@/components/cards/create-post-card';
+import PostPreview from '@/components/cards/post-preview-card';
 import {
     useDropzone,
     type Accept,
 } from "react-dropzone";
-import PostPreview from './post-preview';
 
-interface CreateThreadInputProps {
+interface CreatePostInputProps {
     isOpen: boolean
     replyThreadInfo?: ParentThreadInfo
     onTextareaChange: (textValue: string) => void;
     quoteInfo?: Pick<ParentThreadInfo, 'id' | 'text' | 'author'>
 }
 
-const CreateThreadInput: React.FC<CreateThreadInputProps> = ({
+const CreatePostInput: React.FC<CreatePostInputProps> = ({
     isOpen,
     replyThreadInfo,
     onTextareaChange,
@@ -194,4 +194,4 @@ const CreateThreadInput: React.FC<CreateThreadInputProps> = ({
     )
 }
 
-export default CreateThreadInput
+export default CreatePostInput

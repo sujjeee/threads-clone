@@ -8,7 +8,7 @@ import { cn } from '@/lib/utils'
 import CreatePostCard from '@/components/cards/create-post-card'
 import { useUser } from '@clerk/nextjs'
 
-export default function Navs() {
+export default function Navigation() {
     const { user } = useUser()
     const path = usePathname()
 

@@ -1,15 +1,15 @@
 "use client"
 
+import React from 'react'
+import Link from 'next/link'
+import { useUser } from '@clerk/nextjs'
 import { Button } from '@/components/ui/button'
 import { Separator } from '@/components/ui/separator'
 import { api } from '@/trpc/react'
-import { useUser } from '@clerk/nextjs'
-import React from 'react'
-import Loading from '../loading'
-import Username from '@/components/username'
+import Loading from '@/app/loading'
+import Username from '@/components/user/user-username'
 import { formatTimeAgo, truncateText } from '@/lib/utils'
-import NotificationUserAvatar from '@/components/notification-user-avatar'
-import Link from 'next/link'
+import UserNotificationAvtar from '@/components/user/user-notification-avatar'
 
 export default function ActivityPage() {
 
@@ -28,7 +28,7 @@ export default function ActivityPage() {
             {data && data.length > 0 ? (
                 data.map((activity, index) => (
                     <div key={index} className='flex w-full mt-4 '>
-                        <NotificationUserAvatar
+                        <UserNotificationAvtar
                             username={activity.user.username}
                             image={activity.user.image ?? ''}
                             fullname={activity.user.fullname ?? ''}

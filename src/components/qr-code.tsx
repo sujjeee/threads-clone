@@ -1,11 +1,9 @@
 "use client"
 
 import React from 'react'
-import { Card } from '@/components/ui/card'
 import useWindow from '@/hooks/use-window'
-import QRSvg from './qr-svg'
-import { Zoom } from './zoom'
-
+import QRCodeSvg from '@/components/qr-code-svg'
+import { Zoom } from '@/components/zoom'
 
 export default function QRcode() {
     const { isMobile } = useWindow()
@@ -15,7 +13,7 @@ export default function QRcode() {
                 <p className="text-[#777777] text-[13px] tracking-wide">Scan to get the code</p>
                 <div className='hover:scale-105 transform active:scale-95 transition-transform select-none '>
                     <Zoom>
-                        <QRSvg className=' w-[175px] h-[175px]  p-1 cursor-pointer border border-[#393939] z-50 rounded-2xl bg-[#181818] ' />
+                        <QRCodeSvg className=' w-[175px] h-[175px]  p-1 cursor-pointer border border-[#393939] z-50 rounded-2xl bg-[#181818] ' />
                     </Zoom>
                 </div>
             </div>

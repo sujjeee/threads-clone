@@ -13,7 +13,7 @@ import { cn } from '@/lib/utils'
 import { useDebounce } from '@/hooks/use-debounce'
 import { api } from '@/trpc/react'
 import { usePathname, useRouter } from 'next/navigation'
-import Username from '@/components/username'
+import Username from '@/components/user/user-username'
 import Link from 'next/link'
 
 export default function SearchContainer() {

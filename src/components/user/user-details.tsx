@@ -1,16 +1,19 @@
 "use client"
 
-import Post2 from 'tests/post2'
+import React from 'react'
 import { Instagram } from 'lucide-react'
 import Link from 'next/link'
 import { usePathname, useRouter } from 'next/navigation'
-import React from 'react'
 import { formatURL } from '@/lib/utils'
-import { Avatar, AvatarFallback, AvatarImage } from './ui/avatar'
-import { Icons } from './icons'
+import { Icons } from '@/components/icons'
 import { UserProfileInfoProps } from '@/types'
-import { Button } from './ui/button'
+import { Button } from '@/components/ui/button'
 import { useUser } from '@clerk/nextjs'
+import {
+    Avatar,
+    AvatarFallback,
+    AvatarImage
+} from '@/components/ui/avatar'
 
 const UserProfile: React.FC<UserProfileInfoProps> = ({
     id,

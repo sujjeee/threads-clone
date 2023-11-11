@@ -4,7 +4,7 @@ interface Props {
     className?: string;
 }
 
-export default function QRSvg({ className }: Props) {
+export default function QRCodeSvg({ className }: Props) {
     return (
         <svg width="150" height="150" viewBox="-3 -3 31 31" xmlns="http://www.w3.org/2000/svg" xmlnsXlink="http://www.w3.org/1999/xlink" shapeRendering="geometricPrecision" id="qr code" className={className} >
             <rect id="qr background" fillOpacity={1} fill="rgb(24, 24, 24)" x="-3" y="-3" width="31" height="31"></rect>

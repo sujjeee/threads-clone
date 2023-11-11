@@ -2,15 +2,15 @@
 
 import React from 'react'
 import { Card } from '@/components/ui/card'
-import Username from '@/components/username'
-import { ParentThreadInfo } from '@/components/cards/create-post-card'
-import UserAvatar from '@/components/user-avatar'
+import Username from '@/components/user/user-username'
+import type { ParentThreadInfo } from '@/components/cards/create-post-card'
+import UserAvatar from '@/components/user/user-avatar'
 import { api } from '@/trpc/react'
 import { Icons } from '@/components/icons'
 
-type PostPreviewProps = Partial<Pick<ParentThreadInfo, 'id' | 'text' | 'author'>>;
+type PostPreviewCardProps = Partial<Pick<ParentThreadInfo, 'id' | 'text' | 'author'>>;
 
-const PostPreview: React.FC<PostPreviewProps & { quoteId?: string }> = ({
+const PostPreviewCard: React.FC<PostPreviewCardProps & { quoteId?: string }> = ({
     author,
     text,
     quoteId
@@ -41,9 +41,9 @@ const PostPreview: React.FC<PostPreviewProps & { quoteId?: string }> = ({
 
 }
 
-export default PostPreview
+export default PostPreviewCard
 
-const RenderCard: React.FC<PostPreviewProps> = ({
+const RenderCard: React.FC<PostPreviewCardProps> = ({
     author,
     text,
 }) => {

@@ -3,7 +3,7 @@
 import React from 'react'
 import InfiniteScroll from 'react-infinite-scroll-component'
 import { Icons } from '@/components/icons'
-import UserCard from '@/components/user-card'
+import UserCard from '@/components/user/user-action-card'
 import Loading from '@/app/(pages)/loading'
 import { api } from '@/trpc/react'
 import Error from '@/app/error'

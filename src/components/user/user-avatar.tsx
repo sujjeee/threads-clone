@@ -1,11 +1,11 @@
 import React from 'react'
+import Link from 'next/link'
+import { cn } from '@/lib/utils'
 import {
     Avatar,
     AvatarImage,
     AvatarFallback,
 } from '@/components/ui/avatar'
-import Link from 'next/link'
-import { cn } from '@/lib/utils'
 
 interface UserAvatarProps extends React.HTMLAttributes<HTMLDivElement> {
     image: string | null | undefined

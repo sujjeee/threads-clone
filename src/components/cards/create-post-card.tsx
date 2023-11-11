@@ -14,7 +14,7 @@ import useFileStore from '@/store/fileStore'
 import usePost from '@/store/post'
 import Trigger from '@/components/trigger'
 import PostPrivacyMenu from '@/components/menus/post-privacy-menu'
-import CreateThreadInput from '@/components/create-thread-input'
+import CreatePostInput from '@/components/create-post-input'
 import Link from 'next/link'
 import { Check } from 'lucide-react'
 import {
@@ -72,68 +72,8 @@ const CreatePostCard: React.FC<CreatePostCardProps> = ({ variant, replyThreadInf
                 text: '',
             });
 
-            await trpcUtils.post.getInfinitePost.cancel()
+            // TODO: Add new optimistic update, old one is not working
 
-            // TODO: This optimistic update not working need to update the code later
-            const previousPostData = trpcUtils.post.getInfinitePost.getInfiniteData()
-
-            trpcUtils.post.getInfinitePost.setInfiniteData(
-                {},
-                (old) => {
-                    if (!old) {
-                        return {
-                            pages: [],
-                            pageParams: []
-                        }
-                    }
-                    let newPages = [...old.pages]
-
-                    let latestPage = newPages[0]!
-
-                    latestPage.threads = [
-                        {
-                            id: crypto.randomUUID(),
-                            createdAt: new Date(),
-                            text: text,
-                            images: ['url'],
-                            author: {
-                                id: crypto.randomUUID(),
-                                username: user?.username!,
-                                createdAt: user?.createdAt!,
-                                fullname: user?.fullName!,
-                                image: user?.imageUrl!,
-                                isAdmin: false,
-                                link: '',
-                                bio: '',
-                                followers: [{
-                                    id: crypto.randomUUID(),
-                                    image: ''
-                                }]
-                            },
-                            parentThreadId: null,
-                            count: {
-                                likeCount: 0,
-                                replyCount: 0
-                            },
-                            likes: [],
-                            replies: [],
-                            reposts: [],
-                            quoteId: ''
-                        },
-                        ...latestPage.threads
-                    ]
-
-                    newPages[0] = latestPage
-
-                    return {
-                        ...old,
-                        pages: newPages
-                    }
-                }
-            )
-            return {
-                previousPostData: previousPostData?.pages.flatMap((page) => page.threads) ?? []
-            }
         },
         onError: (_, __, context) => {
             toast.error("PostCallbackError: Something went wrong!")
@@ -240,13 +180,13 @@ const CreatePostCard: React.FC<CreatePostCardProps> = ({ variant, replyThreadInf
                 <Card className="ring-offset-0 border-none ring-1 ring-[#393939] bg-background shadow-2xl dark:bg-[#181818] rounded-2xl ">
                     <div className='overflow-y-auto no-scrollbar p-6 max-h-[70vh] '>
                         {replyThreadInfo &&
-                            <CreateThreadInput
+                            <CreatePostInput
                                 isOpen={isOpen}
                                 onTextareaChange={handleFieldChange}
                                 replyThreadInfo={replyThreadInfo}
                             />
                         }
-                        <CreateThreadInput
+                        <CreatePostInput
                             isOpen={isOpen}
                             onTextareaChange={handleFieldChange}
                             quoteInfo={quoteInfo}

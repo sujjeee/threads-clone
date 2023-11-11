@@ -1,6 +1,6 @@
 import React from 'react'
 
-export type RepliesProps = {
+export type UserRepliesImagesProps = {
     author: {
         id: string;
         username: string;
@@ -8,7 +8,7 @@ export type RepliesProps = {
     }[];
 };
 
-const RepliesImageContainer: React.FC<RepliesProps> = ({ author }) => {
+const UserRepliesImages: React.FC<UserRepliesImagesProps> = ({ author }) => {
     return (
         <div>
             {author?.length === 1 && (
@@ -54,7 +54,7 @@ const RepliesImageContainer: React.FC<RepliesProps> = ({ author }) => {
     );
 };
 
-export default RepliesImageContainer;
+export default UserRepliesImages;
 
 
 

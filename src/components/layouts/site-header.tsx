@@ -2,18 +2,17 @@
 
 import React from 'react'
 import { Icons } from '@/components/icons'
-import Navs from '@/components/navs'
+import Navigation from '@/components/navigations'
 import useWindow from '@/hooks/use-window'
 import { cn } from '@/lib/utils'
 import Link from 'next/link'
-import NavMenu from '@/components/nav-menu'
+import NavigationMenu from '@/components/menus/navigation-menu'
 
 
 export default function SiteHeader() {
     const { isMobile } = useWindow()
     const [isScrolled, setIsScrolled] = React.useState(false)
 
-    // change background color on scroll
     React.useEffect(() => {
         const changeBgColor = () => {
             window.scrollY > 0 ? setIsScrolled(true) : setIsScrolled(false)
@@ -36,13 +35,13 @@ export default function SiteHeader() {
                         <Icons.logo className='h-[34px] w-[34px]' />
                     </Link>
                     <div className='hidden sm:flex justify-between items-center max-w-[480px] w-full '>
-                        <Navs />
+                        <Navigation />
                     </div>
                     {isMobile
                         ? <div className='absolute right-0 -translate-y-2/4 top-2/4 '>
-                            <NavMenu />
+                            <NavigationMenu />
                         </div>
-                        : <NavMenu />
+                        : <NavigationMenu />
                     }
                 </div>
             </nav>
