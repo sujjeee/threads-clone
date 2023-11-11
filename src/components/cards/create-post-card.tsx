@@ -23,15 +23,14 @@ import {
     DialogTrigger
 } from '@/components/ui/dialog'
 import {
+    ParentPostInfo,
     PostCardProps,
     TriggerVariant
 } from '@/types'
 
-export type ParentThreadInfo = Pick<PostCardProps, 'id' | 'text' | 'images' | 'author'>
-
 interface CreatePostCardProps {
     variant: TriggerVariant;
-    replyThreadInfo?: ParentThreadInfo;
+    replyThreadInfo?: ParentPostInfo;
     quoteInfo?: Pick<PostCardProps, 'id' | 'text' | 'author'>
 }
 

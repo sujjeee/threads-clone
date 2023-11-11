@@ -14,6 +14,8 @@ export type UserCardProps = ArrayElement<RouterOutput['user']['allUsers']['allUs
 
 export type UserProfileInfoProps = RouterOutput['user']['profileInfo']['userDetails'];
 
+export type ParentPostInfo = Pick<PostCardProps, 'id' | 'text' | 'images' | 'author'>;
+
 export type ParentPostsProps = {
     id: string;
     createdAt: string;

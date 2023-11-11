@@ -76,7 +76,7 @@ const DisplayQueryPosts: React.FC<DisplayQueryPostsProps> = ({ searchQuery }) =>
         getNextPageParam: (lastPage) => lastPage.nextCursor
     })
 
-    const allPosts = data?.pages.flatMap((page) => page.post)
+    const allPosts = data?.pages.flatMap((page) => page.posts)
 
     if (isLoading) return <Loading />
     if (isError) return <Error />

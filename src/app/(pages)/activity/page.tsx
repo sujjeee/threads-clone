@@ -43,7 +43,7 @@ export default function ActivityPage() {
                                             {formatTimeAgo(activity.createdAt)}
                                         </time>
                                     </div>
-                                    <Link href={`/@${activity.user.username}/post/${activity.threadId}`}>
+                                    <Link href={`/@${activity.user.username}/post/${activity.postId}`}>
                                         {activity.type !== "ADMIN"
                                             ? <p className="text-[15px] text-[#6A6A6A] tracking-wide leading-5">
                                                 {truncateText(activity.message, 100)}

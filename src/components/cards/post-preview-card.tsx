@@ -3,12 +3,12 @@
 import React from 'react'
 import { Card } from '@/components/ui/card'
 import Username from '@/components/user/user-username'
-import type { ParentThreadInfo } from '@/components/cards/create-post-card'
 import UserAvatar from '@/components/user/user-avatar'
 import { api } from '@/trpc/react'
 import { Icons } from '@/components/icons'
+import { ParentPostInfo } from '@/types'
 
-type PostPreviewCardProps = Partial<Pick<ParentThreadInfo, 'id' | 'text' | 'author'>>;
+type PostPreviewCardProps = Partial<Pick<ParentPostInfo, 'id' | 'text' | 'author'>>;
 
 const PostPreviewCard: React.FC<PostPreviewCardProps & { quoteId?: string }> = ({
     author,
@@ -33,7 +33,7 @@ const PostPreviewCard: React.FC<PostPreviewCardProps & { quoteId?: string }> = (
 
         if (!data) return <>Not found.</>;
 
-        return <RenderCard author={data?.threadInfo.user} text={data?.threadInfo.text} />;
+        return <RenderCard author={data?.postInfo.user} text={data?.postInfo.text} />;
     }
 
     // Use author and text directly without making an API call

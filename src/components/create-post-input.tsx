@@ -11,7 +11,7 @@ import UserAvatar from '@/components/user/user-avatar';
 import { useUser } from '@clerk/nextjs';
 import { Icons } from '@/components/icons';
 import { Button } from '@/components/ui/button';
-import type { ParentThreadInfo } from '@/components/cards/create-post-card';
+import type { ParentPostInfo } from '@/types';
 import PostPreview from '@/components/cards/post-preview-card';
 import {
     useDropzone,
@@ -20,9 +20,9 @@ import {
 
 interface CreatePostInputProps {
     isOpen: boolean
-    replyThreadInfo?: ParentThreadInfo
+    replyThreadInfo?: ParentPostInfo
     onTextareaChange: (textValue: string) => void;
-    quoteInfo?: Pick<ParentThreadInfo, 'id' | 'text' | 'author'>
+    quoteInfo?: Pick<ParentPostInfo, 'id' | 'text' | 'author'>
 }
 
 const CreatePostInput: React.FC<CreatePostInputProps> = ({
