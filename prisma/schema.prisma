@@ -45,7 +45,7 @@ model Post {
     images       String[]
     likes        Like[]
     parentPostId String?
-    parentThread Post?          @relation("rootPost", fields: [parentPostId], references: [id], onDelete: Cascade)
+    parentPost   Post?          @relation("rootPost", fields: [parentPostId], references: [id], onDelete: Cascade)
     replies      Post[]         @relation("rootPost")
     notification Notification[]
     reposts      Repost[]
