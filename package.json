@@ -40,7 +40,7 @@
     "date-fns": "^2.30.0",
     "encoding": "^0.1.13",
     "lucide-react": "^0.288.0",
-    "next": "13.5.4",
+    "next": "^14.0.2",
     "next-themes": "^0.2.1",
     "nsfw-filter": "^1.0.3",
     "react": "18.2.0",

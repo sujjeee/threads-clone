@@ -40,7 +40,7 @@ const NotificationUserAvatar: React.FC<NotificationUserAvatarProps> = ({
             className={cn(
               'absolute -bottom-0.5 -right-0.5 rounded-2xl border-2 border-background text-white',
               {
-                'bg-[#fe0169]': icon_name === 'like',
+                'bg-[#fe0169]': icon_name === 'heart',
                 'bg-[#6e3def]': icon_name === 'follow',
                 'bg-[#24c3ff]': icon_name === 'reply',
               }

@@ -41,6 +41,7 @@ export const userRouter = createTRPCRouter({
                             createdAt: true,
                             text: true,
                             images: true,
+                            quoteId: true,
                             likes: {
                                 select: {
                                     userId: true
@@ -90,6 +91,7 @@ export const userRouter = createTRPCRouter({
                     likes: thread.likes,
                     replies: thread.replies,
                     reposts: thread.reposts,
+                    quoteId: thread.quoteId
                 })),
 
                 userDetails: {

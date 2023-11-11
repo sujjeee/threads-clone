@@ -167,7 +167,7 @@ const CreateThreadInput: React.FC<CreateThreadInputProps> = ({
                                 <Button
                                     onClick={() => setPreviewURL('')}
                                     variant={"ghost"}
-                                    className="h-6 w-6 p-1 absolute top-2 right-2 z-50 rounded-full bg-black/80 transform active:scale-75 transition-transform cursor-pointer bg-background " >
+                                    className="h-6 w-6 p-1 absolute top-2 right-2 z-50 rounded-full transform active:scale-75 transition-transform cursor-pointer bg-background " >
                                     <X />
                                 </Button>
                             </div>

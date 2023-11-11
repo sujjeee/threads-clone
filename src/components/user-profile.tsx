@@ -42,11 +42,11 @@ const UserProfile: React.FC<UserProfileInfoProps> = ({
                         <span className="ml-0.5 rounded-2xl bg-[#1E1E1E] text-[#777777] text-xm px-1.5 py-1 text-[11px] font-medium">threads.net</span>
                     </div>
                 </div>
-                <Avatar className="h-[80px] w-[80px] overflow-visible outline outline-2 outline-[#505050] relative">
+                <Avatar className="h-[80px] w-[80px] overflow-visible outline outline-2 outline-border relative">
                     <AvatarImage src={image ?? ""} alt={fullname ?? ''} className="h-min w-full rounded-full object-cover " />
                     <AvatarFallback></AvatarFallback>
                     <div className='absolute bottom-0 -left-0.5'>
-                        <Icons.verified2 className='h-6 w-6' />
+                        <Icons.verified2 className='h-6 w-6 text-background' />
                     </div>
                 </Avatar>
             </div>

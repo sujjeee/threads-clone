@@ -20,7 +20,7 @@ export default function page() {
     return null;
   }
 
-  const { data, isLoading, isError, error } = api.user.profileInfo.useQuery({ username })
+  const { data, isLoading, isError } = api.user.profileInfo.useQuery({ username })
 
   if (isLoading) return <Loading />
   if (isError) return <NotFound />
