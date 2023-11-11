@@ -17,7 +17,7 @@ export default function page() {
     getNextPageParam: (lastPage) => lastPage.nextCursor
   })
 
-  const allThreads = data?.pages.flatMap((page) => page.threads)
+  const allPosts = data?.pages.flatMap((page) => page.posts)
 
   if (isLoading) return <Loading />
   if (isError) return <Error />
@@ -28,7 +28,7 @@ export default function page() {
         <CreatePostCard variant='home' />
       </div>
       <InfiniteScroll
-        dataLength={allThreads?.length ?? 0}
+        dataLength={allPosts?.length ?? 0}
         next={fetchNextPage}
         hasMore={hasNextPage ?? false}
         loader={
@@ -38,11 +38,11 @@ export default function page() {
         }
       >
         <div>
-          {allThreads?.map((post, index) => {
+          {allPosts?.map((post, index) => {
             return (
-              <div key={index} className={cn({ 'mb-[10vh]': index == allThreads.length - 1 })}>
+              <div key={index} className={cn({ 'mb-[10vh]': index == allPosts.length - 1 })}>
                 <PostCard {...post} />
-                {index !== allThreads.length - 1 && <Separator />}
+                {index !== allPosts.length - 1 && <Separator />}
               </div>
             );
           })}

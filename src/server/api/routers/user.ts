@@ -72,7 +72,7 @@ export const userRouter = createTRPCRouter({
 
             return {
 
-                post: userProfileInfo.posts.map((post) => ({
+                posts: userProfileInfo.posts.map((post) => ({
                     id: post.id,
                     createdAt: post.createdAt,
                     text: post.text,

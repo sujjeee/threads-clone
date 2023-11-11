@@ -33,10 +33,10 @@ const ProfilePage: React.FC<pageProps> = ({ }) => {
       {data && data.userDetails ? (
         <>
           <UserProfile {...data.userDetails} />
-          {data.threads.map((threads, index) => (
-            <div key={threads.id}>
-              <PostCard {...threads} />
-              {index !== data.threads.length - 1 && <Separator />}
+          {data.posts.map((post, index) => (
+            <div key={post.id}>
+              <PostCard {...post} />
+              {index !== data.posts.length - 1 && <Separator />}
             </div>
           ))}
         </>

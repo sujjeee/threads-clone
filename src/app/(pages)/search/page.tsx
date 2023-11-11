@@ -76,12 +76,12 @@ const DisplayQueryPosts: React.FC<DisplayQueryPostsProps> = ({ searchQuery }) =>
         getNextPageParam: (lastPage) => lastPage.nextCursor
     })
 
-    const allThreads = data?.pages.flatMap((page) => page.threads)
+    const allPosts = data?.pages.flatMap((page) => page.post)
 
     if (isLoading) return <Loading />
     if (isError) return <Error />
 
-    if (allThreads?.length === 0 || allThreads === undefined) {
+    if (allPosts?.length === 0 || allPosts === undefined) {
         return (
             <div className="h-[50vh] w-full justify-center items-center flex text-[#777777]">
                 <p>No results.</p>
@@ -92,7 +92,7 @@ const DisplayQueryPosts: React.FC<DisplayQueryPostsProps> = ({ searchQuery }) =>
     return (
         <div className='mt-2'>
             <InfiniteScroll
-                dataLength={allThreads ? allThreads.length : 0}
+                dataLength={allPosts ? allPosts.length : 0}
                 next={fetchNextPage}
                 hasMore={hasNextPage ?? false}
                 loader={
@@ -101,11 +101,11 @@ const DisplayQueryPosts: React.FC<DisplayQueryPostsProps> = ({ searchQuery }) =>
                     </div>
                 }
             >
-                {allThreads?.map((post, index) => {
+                {allPosts?.map((post, index) => {
                     return (
                         <>
                             <PostCard key={index} {...post} />
-                            {index !== allThreads.length - 1 && <Separator />}
+                            {index !== allPosts.length - 1 && <Separator />}
                         </>
                     )
                 })}

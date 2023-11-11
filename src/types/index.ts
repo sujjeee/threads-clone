@@ -4,7 +4,7 @@ import { inferRouterOutputs } from "@trpc/server";
 type ArrayElement<ArrayType extends readonly unknown[]> = ArrayType[number];
 type RouterOutput = inferRouterOutputs<AppRouter>;
 
-export type PostCardProps = ArrayElement<RouterOutput['post']['getInfinitePost']['post']>;
+export type PostCardProps = ArrayElement<RouterOutput['post']['getInfinitePost']['posts']>;
 
 export type AuthorInfoProps = PostCardProps['author'];
 
