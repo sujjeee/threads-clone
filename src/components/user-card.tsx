@@ -22,7 +22,7 @@ const UserCard: React.FC<UserCardProps> = ({
         <div className='flex flex-col w-full'>
             <div className='flex w-full mt-5'>
                 <Link href={`/@${username}`} >
-                    <Avatar className="h-10 w-10 relative overflow-visible cursor-pointer ">
+                    <Avatar className="h-10 w-10 relative overflow-visible cursor-pointer outline outline-1 outline-border ">
                         <AvatarImage src={image ?? ''} alt={fullname ?? ''} className='rounded-full object-cover' />
                         <AvatarFallback>{username.slice(0, 2).toUpperCase()}</AvatarFallback>
                     </Avatar>
@@ -50,9 +50,9 @@ const UserCard: React.FC<UserCardProps> = ({
                                         <Icons.verified className='w-3 h-3' />
                                     </div>
                                 </div>
-                                <p className="text-[15px]  text-[#6A6A6A] tracking-wide mt-1">
+                                <span className="text-[15px]  text-[#6A6A6A] tracking-wide mt-1">
                                     {fullname}
-                                </p>
+                                </span>
                             </div>
                             <span>12K followers</span>
                         </Link>

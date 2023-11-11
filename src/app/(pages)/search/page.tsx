@@ -26,7 +26,7 @@ export default function page() {
 
     return (
         <>
-            <div className='relative'>
+            <div className='relative mt-1'>
                 <SearchContainer />
             </div>
             <div className='pt-16'>

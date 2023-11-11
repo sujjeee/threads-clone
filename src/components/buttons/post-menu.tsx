@@ -8,7 +8,7 @@ import {
 } from "@/components/ui/dropdown-menu"
 import { MoreHorizontal } from 'lucide-react';
 import { useUser } from '@clerk/nextjs';
-import AreYouSure from '../are-you-sure';
+import AreYouSure from '@/components/are-you-sure';
 
 interface PostMenuProps {
     threadId: string
@@ -29,19 +29,19 @@ const PostMenu: React.FC<PostMenuProps> = ({ id, threadId }) => {
                 {!isLoggedUser
                     ? <DropdownMenuContent align="end" className='bg-background shadow-xl dark:bg-[#181818] rounded-2xl w-[190px] mt-1 p-0'>
                         <DropdownMenuItem
-                            className='focus:bg-transparent px-4 tracking-normal select-none font-semibold py-3 cursor-pointer text-[15px]  active:bg-primary rounded-none'
+                            className='focus:bg-transparent px-4 tracking-normal select-none font-semibold py-3 cursor-pointer text-[15px]  active:bg-primary-foreground rounded-none'
                         >
                             Mute
                         </DropdownMenuItem>
                         <DropdownMenuSeparator className=' h-[1.2px] my-0' />
                         <DropdownMenuItem
-                            className='focus:bg-transparent px-4 tracking-normal  select-none font-bold py-3 cursor-pointer text-[15px] text-red-700 focus:text-red-700 rounded-none active:bg-[#0a0a0a]'
+                            className='focus:bg-transparent px-4 tracking-normal  select-none font-bold py-3 cursor-pointer text-[15px] text-red-700 focus:text-red-700 rounded-none active:bg-primary-foreground'
                         >
                             Block
                         </DropdownMenuItem>
                         <DropdownMenuSeparator className=' h-[1.2px] my-0' />
                         <DropdownMenuItem
-                            className='focus:bg-transparent px-4 tracking-normal select-none font-semibold py-3 cursor-pointer text-[15px] rounded-none active:bg-[#0a0a0a]'
+                            className='focus:bg-transparent px-4 tracking-normal select-none font-semibold py-3 cursor-pointer text-[15px] rounded-none active:bg-primary-foreground'
                         >
                             Hide
                         </DropdownMenuItem>
