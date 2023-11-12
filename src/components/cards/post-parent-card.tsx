@@ -58,10 +58,13 @@ const PostParentCard: React.FC<PostCardProps> = ({
 
     const [likeCount, setLikeCount] = React.useState(count.likeCount)
 
-    const handleLikeClick = () => {
-        setLikeCount(likeCount + 1);
+    const handleLikeClick = (isLiked: boolean) => {
+        if (!isLiked) {
+            setLikeCount(likeCount + 1);
+        } else {
+            setLikeCount(likeCount - 1);
+        }
     };
-
 
     const { theme } = useTheme()
 

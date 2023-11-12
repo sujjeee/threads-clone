@@ -10,15 +10,14 @@ import { toast } from 'sonner'
 
 interface LikeButtonProps {
     likeInfo: Pick<PostCardProps, 'id' | 'likes' | 'count'>
-    onLike: () => void
+    onLike: (isLiked: boolean) => void;
 }
 
 const LikeButton: React.FC<LikeButtonProps> = ({ likeInfo, onLike }) => {
     const { user: loggedUser } = useUser()
 
     const { count, id, likes } = likeInfo
-
-    const isLikedByMe = likes.some((like: any) => like.userId || like.user.id === loggedUser?.id)
+    const isLikedByMe = likes.some((like) => like.userId === loggedUser?.id)
 
     const likeUpdate = React.useRef({
         isLikedByMe,
@@ -53,7 +52,7 @@ const LikeButton: React.FC<LikeButtonProps> = ({ likeInfo, onLike }) => {
             <button disabled={isLoading}>
                 <Icons.heart
                     onClick={() => {
-                        onLike()
+                        onLike(likeUpdate.current.isLikedByMe);
                         toggleLike({ id })
                     }}
                     fill={likeUpdate.current.isLikedByMe ? '#ff3040' : 'transparent'}

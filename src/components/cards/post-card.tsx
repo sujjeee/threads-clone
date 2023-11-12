@@ -48,7 +48,7 @@ const PostCard: React.FC<PostCardProps> = ({
         user?.userId || user?.userId === loggedUser?.id
     );
 
-    const getThreadReplies = replies?.map((reply) => ({
+    const getPostReplies = replies?.map((reply) => ({
         id: reply.author.id,
         username: reply.author.username,
         image: reply.author.image,
@@ -56,8 +56,12 @@ const PostCard: React.FC<PostCardProps> = ({
 
     const [likeCount, setLikeCount] = React.useState(count.likeCount)
 
-    const handleLikeClick = () => {
-        setLikeCount(likeCount + 1);
+    const handleLikeClick = (isLiked: boolean) => {
+        if (!isLiked) {
+            setLikeCount(likeCount + 1);
+        } else {
+            setLikeCount(likeCount - 1);
+        }
     };
 
     return (
@@ -157,7 +161,7 @@ const PostCard: React.FC<PostCardProps> = ({
                 <div className={cn("flex invisible justify-center items-center w-[36px] ", {
                     "visible": replyCount > 0
                 })}>
-                    <UserRepliesImages author={getThreadReplies} />
+                    <UserRepliesImages author={getPostReplies} />
                 </div>
 
                 <div className="flex items-center  text-[#777777] text-[15px] text-center px-2">

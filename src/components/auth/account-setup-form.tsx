@@ -216,7 +216,7 @@ export default function AccountSetupForm({ username }: { username: string }) {
                                     )}
                                 >
                                     <div className="flex flex-row items-center justify-between space-y-0 pb-2">
-                                        <h1 className="text-base text-slate-100 font-medium">
+                                        <h1 className="text-base dark:text-slate-100 text-black font-medium">
                                             Public profile
                                         </h1>
                                         <Globe className='w-5 h-5' />
@@ -239,7 +239,7 @@ export default function AccountSetupForm({ username }: { username: string }) {
                                     )}
                                 >
                                     <div className="flex flex-row items-center justify-between space-y-0 pb-2">
-                                        <h1 className="text-base text-slate-100  font-medium">
+                                        <h1 className="text-base dark:text-slate-100 text-black font-medium">
                                             Private profile
                                         </h1>
                                         <Lock className='w-5 h-5' />

@@ -61,7 +61,7 @@ export default function LoginForm() {
 
     return (
         <div>
-            <p className='text-accent-foreground font-bold select-none'>Log in with your Instagram account</p>
+            <p className='text-white font-bold select-none'>Log in with your Instagram account</p>
 
             <Form {...form}>
                 <form
@@ -79,8 +79,8 @@ export default function LoginForm() {
                                     <FormControl>
                                         <Input
                                             autoFocus
-                                            className={cn('h-14 rounded-xl bg-[#1e1e1e] text-[15px] placeholder:text-[#777777] font-medium tracking-normal outline-none ring-0  focus-visible:ring-offset-0 min-h-min border-none focus-visible:ring-1 focus-visible:ring-[#393939] px-4', {
-                                                "focus-visible:ring-destructive placeholder:text-destructive": error && error.message
+                                            className={cn('h-14 rounded-xl bg-[#1e1e1e] text-[15px] placeholder:text-[#777777] font-medium tracking-normal outline-none ring-0  focus-visible:ring-offset-0 min-h-min border-none focus-visible:ring-1 focus-visible:ring-[#393939] dark:focus-visible:ring-[#393939] px-4 text-white', {
+                                                "focus-visible:ring-[#ff3040] placeholder:text-[#ff3040]": error && error.message
                                             })}
                                             placeholder={error ? error.message : 'Username, phone or email'}
                                             type='text'
@@ -100,8 +100,8 @@ export default function LoginForm() {
                                 <FormItem>
                                     <FormControl>
                                         <Input
-                                            className={cn('h-14 rounded-xl bg-[#1e1e1e]  text-[15px] placeholder:text-[#777777] font-medium  tracking-normal outline-none ring-0  focus-visible:ring-offset-0 min-h-min border-none focus-visible:ring-1 focus-visible:ring-[#393939] px-4', {
-                                                "focus-visible:ring-destructive placeholder:text-destructive": error && error.message
+                                            className={cn('h-14 rounded-xl bg-[#1e1e1e]  text-[15px] placeholder:text-[#777777] font-medium  tracking-normal outline-none ring-0  focus-visible:ring-offset-0 min-h-min border-none focus-visible:ring-1 focus-visible:ring-[#393939] px-4 dark:focus-visible:ring-[#393939] text-white', {
+                                                "focus-visible:ring-[#ff3040] placeholder:text-[#ff3040]": error && error.message
                                             })}
                                             placeholder={error ? error.message : "Password"}
                                             type='password'
@@ -114,7 +114,7 @@ export default function LoginForm() {
                     <Button
                         type="submit"
                         disabled={isPending}
-                        className='h-14 rounded-xl my-1 font text-base font-semibold '>
+                        className='h-14 rounded-xl my-1 font text-base font-semibold bg-white hover:bg-white text-black'>
 
                         {isPending ? (
                             <Icons.loading

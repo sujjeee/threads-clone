@@ -67,18 +67,15 @@ const PostReplyCard: React.FC<PostReplyCardProps> = ({ postInfo, parentPosts }) 
         user?.userId || user?.userId === loggedUser?.id
     );
 
-    const getThreadReplies = replies?.map((reply) => ({
-        id: reply.author.id,
-        username: reply.author.username,
-        image: reply.author.image,
-    }));
-
     const [likeCount, setLikeCount] = React.useState(count.likeCount)
 
-    const handleLikeClick = () => {
-        setLikeCount(likeCount + 1);
+    const handleLikeClick = (isLiked: boolean) => {
+        if (!isLiked) {
+            setLikeCount(likeCount + 1);
+        } else {
+            setLikeCount(likeCount - 1);
+        }
     };
-
     return (
         <>
             <div className={cn('flex flex-col w-full pt-2 mb-8', {
@@ -187,7 +184,7 @@ const PostReplyCard: React.FC<PostReplyCardProps> = ({ postInfo, parentPosts }) 
                         </div>
                     </div>
 
-                    <div className="flex items-center  text-[#777777] text-[15px] text-center px-2">
+                    <div className="flex items-center  text-[#777777] text-[15px] text-center pb-3">
 
                         <Link
                             href={`/@${author.username}/post/${id}`}>
