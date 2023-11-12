@@ -154,7 +154,7 @@ const CreatePostInput: React.FC<CreatePostInputProps> = ({
                             maxLength={200}
                         />
                         {previewURL && (
-                            <div className='relative overflow-hidden rounded-[12px] border border-[#393939] w-fit'>
+                            <div className='relative overflow-hidden rounded-[12px] border border-border w-fit'>
                                 <img
                                     src={previewURL}
                                     alt=""

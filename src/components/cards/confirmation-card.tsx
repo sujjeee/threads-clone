@@ -10,21 +10,26 @@ import {
 } from "@/components/ui/alert-dialog"
 import { api } from '@/trpc/react';
 import { toast } from 'sonner';
+import { usePathname } from 'next/navigation';
 
 interface ConfirmationCardProps {
     id: string
 }
 
 const ConfirmationCard: React.FC<ConfirmationCardProps> = ({ id }) => {
+    const path = usePathname()
 
     const trpcUtils = api.useUtils();
 
     const { mutate: deletePost } = api.post.deletePost.useMutation({
-        onSuccess: async () => {
-            await trpcUtils.post.getInfinitePost.invalidate()
-        },
         onError: () => {
             toast.error("PostCallbackError: Something went wrong!")
+        },
+        onSettled: async () => {
+            if (path === '/') {
+                await trpcUtils.post.getInfinitePost.invalidate()
+            }
+            await trpcUtils.invalidate()
         },
     });
 

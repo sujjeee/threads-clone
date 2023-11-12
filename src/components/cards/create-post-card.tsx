@@ -4,11 +4,10 @@ import React from 'react'
 import { Icons } from '@/components/icons'
 import { Button } from '@/components/ui/button'
 import { Card } from '@/components/ui/card'
-import { useRouter } from 'next/navigation'
+import { usePathname, useRouter } from 'next/navigation'
 import { cn } from '@/lib/utils'
 import { api } from '@/trpc/react'
 import { toast } from 'sonner'
-import { useUser } from '@clerk/nextjs'
 import { useUploadThing } from '@/lib/uploadthing'
 import useFileStore from '@/store/fileStore'
 import usePost from '@/store/post'
@@ -36,10 +35,10 @@ interface CreatePostCardProps {
 
 const CreatePostCard: React.FC<CreatePostCardProps> = ({ variant, replyThreadInfo, quoteInfo }) => {
     const router = useRouter()
-    const { user } = useUser()
+    const path = usePathname()
     const { postPrivacy } = usePost();
 
-    const { selectedFile, isSelectedImageSafe, setSelectedFile } = useFileStore();
+    const { selectedFile, isSelectedImageSafe } = useFileStore();
 
     const [isOpen, setIsOpen] = React.useState(false)
 
@@ -91,7 +90,10 @@ const CreatePostCard: React.FC<CreatePostCardProps> = ({ variant, replyThreadInf
             }
         },
         onSettled: async () => {
-            await trpcUtils.post.getInfinitePost.invalidate()
+            if (path === '/') {
+                await trpcUtils.post.getInfinitePost.invalidate()
+            }
+            await trpcUtils.invalidate()
         },
         retry: false,
     });
@@ -150,8 +152,6 @@ const CreatePostCard: React.FC<CreatePostCardProps> = ({ variant, replyThreadInf
             error: 'Error',
         });
     }
-
-
 
     const handleFieldChange = (textValue: string) => {
         setThreadData({

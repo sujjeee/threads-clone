@@ -1,13 +1,14 @@
 "use client"
 
 import React from 'react'
-import Loading from '@/app/loading'
+import Loading from '@/app/(pages)/loading'
 import NotFound from '@/app/not-found'
 import PostReplyCard from '@/components/cards/post-reply-card'
 import PostCard from '@/components/cards/post-card'
 import { api } from '@/trpc/react'
 import { Separator } from '@/components/ui/separator'
 import { usePathname, useRouter } from 'next/navigation'
+import { cn } from '@/lib/utils'
 
 interface PostInfoPage { }
 
@@ -33,9 +34,9 @@ const PostInfoPage: React.FC<PostInfoPage> = ({ }) => {
         <>
             {data ? (
                 <>
-                    <PostReplyCard {...data} />
+                    <PostReplyCard {...data} key={data.postInfo.id} />
                     {data.postInfo.replies.map((post, index) => (
-                        <div key={index} className='mb-8'>
+                        <div key={index} className={cn({ 'mb-[10vh]': index == data.postInfo.replies.length - 1 })}>
                             <Separator />
                             <PostCard {...post} />
                         </div>

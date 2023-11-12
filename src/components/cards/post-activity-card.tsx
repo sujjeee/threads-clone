@@ -93,7 +93,7 @@ const DisplayInsight: React.FC<DisplayInsightProps> = ({ id }) => {
                             <span className='text-base font-semibold tracking-normal '>Likes</span>
                             <div className='flex gap-1 items-center'>
                                 <span className='text-[15px]'>
-                                    {post.thread._count.likes}
+                                    {post.post._count.likes}
                                 </span>
                                 <ChevronRight className='h-5 w-5  ' />
                             </div>
@@ -107,7 +107,7 @@ const DisplayInsight: React.FC<DisplayInsightProps> = ({ id }) => {
                             <span className='text-base font-semibold tracking-normal '>Replies</span>
                             <div className='flex gap-1 items-center'>
                                 <span className='text-[15px]'>
-                                    {post.thread._count.replies}
+                                    {post.post._count.replies}
                                 </span>
                                 <ChevronRight className='h-5 w-5  ' />
                             </div>

@@ -28,6 +28,7 @@ import {
     DialogTrigger,
 } from "@/components/ui/dialog"
 import { useTheme } from 'next-themes'
+import LikeButton from '../buttons/like-button'
 
 const PostParentCard: React.FC<PostCardProps> = ({
     id,
@@ -43,8 +44,11 @@ const PostParentCard: React.FC<PostCardProps> = ({
 
     const { user: loggedUser } = useUser()
 
-    // @ts-ignore
-    const isLikedByMe = likes.includes(loggedUser?.id);
+    const { replyCount } = count
+
+    const isRepostedByMe = reposts?.some((user) =>
+        user?.userId || user?.userId === loggedUser?.id
+    );
 
     const getThreadReplies = replies?.map((reply) => ({
         id: reply.author.id,
@@ -52,39 +56,12 @@ const PostParentCard: React.FC<PostCardProps> = ({
         image: reply.author.image,
     }));
 
-    const { likeCount, replyCount } = count
+    const [likeCount, setLikeCount] = React.useState(count.likeCount)
 
-    const likeUpdate = React.useRef({
-        isLikedByMe,
-        likeCount
-    });
+    const handleLikeClick = () => {
+        setLikeCount(likeCount + 1);
+    };
 
-    const isRepostedByMe = reposts?.some((user) =>
-        user?.userId || user?.userId === loggedUser?.id
-    );
-
-    const { mutate: toggleLike, isLoading } = api.like.toggleLike.useMutation({
-        onMutate: async () => {
-
-            const previousLikedByMe = likeUpdate.current.isLikedByMe;
-            const previousLikeCount = likeUpdate.current.likeCount;
-
-            likeUpdate.current.isLikedByMe = !likeUpdate.current.isLikedByMe;
-            likeUpdate.current.likeCount = likeUpdate.current.isLikedByMe ? likeUpdate.current.likeCount + 1 : likeUpdate.current.likeCount - 1;
-
-
-            return { previousLikedByMe, previousLikeCount };
-
-        },
-        onError: (error, variables, context) => {
-
-            likeUpdate.current.isLikedByMe = context?.previousLikedByMe!;
-            likeUpdate.current.likeCount = context?.previousLikeCount!;
-
-            toast.error("LikeCallBack: Something went wrong!")
-
-        },
-    });
 
     const { theme } = useTheme()
 
@@ -149,18 +126,14 @@ const PostParentCard: React.FC<PostCardProps> = ({
                             }
 
                             <div className="flex  font-bold -ml-2 mt-2 w-full">
-                                <div className='flex items-center justify-center  hover:bg-primary rounded-full p-2 w-fit h-fit active:scale-95'>
-                                    <button disabled={isLoading}>
-                                        <Icons.heart
-                                            onClick={() => {
-                                                toggleLike({ id })
-                                            }}
-                                            fill={likeUpdate.current.isLikedByMe ? '#ff3040' : 'none'}
-                                            className={cn('w-5 h-5 ', {
-                                                "text-[#ff3040]": likeUpdate.current.isLikedByMe
-                                            })} />
-                                    </button>
-                                </div>
+                                <LikeButton
+                                    likeInfo={{
+                                        id,
+                                        count,
+                                        likes
+                                    }}
+                                    onLike={handleLikeClick}
+                                />
                                 <CreatePostCard
                                     variant='reply'
                                     replyThreadInfo={{
@@ -187,7 +160,7 @@ const PostParentCard: React.FC<PostCardProps> = ({
 
 
             <div className={cn('flex items-center select-none pb-2', {
-                " gap-2 pb-4 ": replyCount > 0 || likeUpdate.current.likeCount > 0
+                " gap-2 pb-3.5 ": replyCount > 0 || likeCount > 0
             })}>
 
                 <div className={cn("flex invisible justify-center items-center w-[36px] ", {
@@ -201,24 +174,19 @@ const PostParentCard: React.FC<PostCardProps> = ({
                     <Link
                         href={`/@${author.username}/post/${id}`}>
                         {replyCount > 0 && (
-                            <p className='hover:underline '>
+                            <span className='hover:underline '>
                                 {replyCount} {replyCount === 1 ? 'reply' : 'replies'}
-                            </p>
+                            </span>
                         )}
                     </Link>
 
-                    {replyCount > 0 && likeUpdate.current.likeCount > 0 && <p className='mx-2'> · </p>}
+                    {replyCount > 0 && likeCount > 0 && <p className='mx-2'> · </p>}
 
-                    {/* {likeUpdate.current.likeCount > 0 && (
-                        <p className='hover:underline'>
-                            {likeUpdate.current.likeCount} {likeUpdate.current.likeCount === 1 ? 'like' : 'likes'}
-                        </p>
-                    )} */}
-                    {likeUpdate.current.likeCount > 0 && (
+                    {likeCount > 0 && (
                         <PostActivityCard
                             author={author}
                             id={id}
-                            likeCount={likeUpdate.current.likeCount}
+                            likeCount={likeCount}
                             text={text}
                         />
                     )}

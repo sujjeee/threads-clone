@@ -3,10 +3,7 @@
 import React from 'react'
 import Link from 'next/link'
 import { Plus } from 'lucide-react'
-import { toast } from 'sonner'
 import { useUser } from '@clerk/nextjs'
-import { Icons } from '@/components/icons'
-import { api } from '@/trpc/react'
 import CreatePostCard from '@/components/cards/create-post-card'
 import { PostReplyCardProps } from '@/types'
 import Username from '@/components/user/user-username'
@@ -29,8 +26,11 @@ import {
     DialogContent,
     DialogTrigger
 } from '@/components/ui/dialog'
+import LikeButton from '../buttons/like-button'
+import PostActivityCard from './post-activity-card'
 
 const PostReplyCard: React.FC<PostReplyCardProps> = ({ postInfo, parentPosts }) => {
+
     React.useEffect(() => {
         const scrollToPost = async () => {
             const postIdFromUrl = postInfo.id;
@@ -61,34 +61,23 @@ const PostReplyCard: React.FC<PostReplyCardProps> = ({ postInfo, parentPosts }) 
         reposts
     } = postInfo
 
-    const likeUpdate = React.useRef({
-        likedByMe: loggedUser && likes.some((like: any) => like.userId === loggedUser.id),
-        likeCount: count.likeCount
-    });
+    const { replyCount } = count
 
-    const isRepostedByMe = reposts.some((user) =>
+    const isRepostedByMe = reposts?.some((user) =>
         user?.userId || user?.userId === loggedUser?.id
     );
-    const { mutate: toggleLike } = api.like.toggleLike.useMutation({
 
-        onMutate: () => {
+    const getThreadReplies = replies?.map((reply) => ({
+        id: reply.author.id,
+        username: reply.author.username,
+        image: reply.author.image,
+    }));
 
-            const previousLikedByMe = likeUpdate.current.likedByMe;
-            const previousLikeCount = likeUpdate.current.likeCount;
+    const [likeCount, setLikeCount] = React.useState(count.likeCount)
 
-            likeUpdate.current.likedByMe = !likeUpdate.current.likedByMe;
-            likeUpdate.current.likeCount = likeUpdate.current.likedByMe ? likeUpdate.current.likeCount + 1 : likeUpdate.current.likeCount - 1;
-
-            return { previousLikedByMe, previousLikeCount };
-        },
-        onError: (error, variables, context) => {
-
-            likeUpdate.current.likedByMe = context?.previousLikedByMe!;
-            likeUpdate.current.likeCount = context?.previousLikeCount!;
-
-            toast.error("LikeCallBack: Something went wrong!")
-        }
-    });
+    const handleLikeClick = () => {
+        setLikeCount(likeCount + 1);
+    };
 
     return (
         <>
@@ -167,18 +156,14 @@ const PostReplyCard: React.FC<PostReplyCardProps> = ({ postInfo, parentPosts }) 
 
                             <div className="flex  font-bold -ml-2 mt-2 w-full ">
 
-                                <div className='flex items-center justify-center  hover:bg-primary  rounded-full p-2 w-fit h-fit'>
-                                    <Icons.heart
-                                        onClick={() => {
-                                            toggleLike({ id })
-                                        }}
-                                        fill={likeUpdate.current.likedByMe ? '#ff3040' : 'none'}
-                                        className={cn('w-5 h-5 ', {
-                                            "text-[#ff3040]": likeUpdate.current.likedByMe
-                                        }
-                                        )} />
-                                </div>
-
+                                <LikeButton
+                                    likeInfo={{
+                                        id,
+                                        count,
+                                        likes
+                                    }}
+                                    onLike={handleLikeClick}
+                                />
                                 <CreatePostCard
                                     variant='reply'
                                     replyThreadInfo={{
@@ -202,17 +187,28 @@ const PostReplyCard: React.FC<PostReplyCardProps> = ({ postInfo, parentPosts }) 
                         </div>
                     </div>
 
-                    <Link href={`/@${author.username}/post/${id}`} className={cn('flex items-center gap-2 text-[#777777] text-[15px] text-center ', {
-                        'mb-4': replies.length > 0 || likeUpdate.current.likeCount > 0
-                    })}>
-                        {replies.length > 0 && <p className='hover:underline mt-0.5'>
-                            {replies.length} replies</p>
-                        }
-                        {replies.length > 0 && likeUpdate.current.likeCount > 0 && <p> · </p>}
-                        {likeUpdate.current.likeCount > 0 &&
-                            <p className='hover:underline mt-0.5' >{likeUpdate.current.likeCount} likes</p>
-                        }
-                    </Link>
+                    <div className="flex items-center  text-[#777777] text-[15px] text-center px-2">
+
+                        <Link
+                            href={`/@${author.username}/post/${id}`}>
+                            {replyCount > 0 && (
+                                <span className='hover:underline '>
+                                    {replyCount} {replyCount === 1 ? 'reply' : 'replies'}
+                                </span>
+                            )}
+                        </Link>
+
+                        {replyCount > 0 && likeCount > 0 && <p className='mx-2'> · </p>}
+
+                        {likeCount > 0 && (
+                            <PostActivityCard
+                                author={author}
+                                id={id}
+                                likeCount={likeCount}
+                                text={text}
+                            />
+                        )}
+                    </div>
                 </div>
             </div >
         </>

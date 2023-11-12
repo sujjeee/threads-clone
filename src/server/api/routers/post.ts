@@ -375,9 +375,12 @@ export const postRouter = createTRPCRouter({
                   '[]'
                 )
               ) AS author,
-              (SELECT json_agg("userId")  
+              (SELECT json_agg(
+                json_build_object('userId', "userId")
+              )
               FROM "Like" 
-              WHERE "postId" = t.id) AS likes,
+              WHERE "postId" = t.id
+            ) AS likes,
               (SELECT jsonb_agg(
                 jsonb_build_object(
                   'author', jsonb_build_object(
@@ -425,9 +428,12 @@ export const postRouter = createTRPCRouter({
                   '[]'
                 )
               ) AS author,
-              (SELECT json_agg("userId")  
+              (SELECT json_agg(
+                json_build_object('userId', "userId")
+              )
               FROM "Like" 
-              WHERE "postId" = t.id) AS likes,
+              WHERE "postId" = t.id
+            ) AS likes,
               (SELECT jsonb_agg(
                 jsonb_build_object(
                   'author', jsonb_build_object(

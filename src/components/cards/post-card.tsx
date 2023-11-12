@@ -55,6 +55,7 @@ const PostCard: React.FC<PostCardProps> = ({
     }));
 
     const [likeCount, setLikeCount] = React.useState(count.likeCount)
+
     const handleLikeClick = () => {
         setLikeCount(likeCount + 1);
     };
@@ -105,7 +106,7 @@ const PostCard: React.FC<PostCardProps> = ({
                             </Link>
 
                             {images.length > 0 &&
-                                <div className='relative overflow-hidden rounded-[12px] border border-[#393939] w-fit mt-2.5 '>
+                                <div className='relative overflow-hidden rounded-[12px] border border-border w-fit mt-2.5 '>
                                     <img src={images[0]} alt="" className='object-contain max-h-[520px] max-w-full  rounded-[12px]' />
                                 </div>
                             }

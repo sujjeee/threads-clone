@@ -189,7 +189,7 @@ export default function AccountSetupForm({ username }: { username: string }) {
                                             )} />
                                     </div>
                                 </Card>
-                                <Button type="submit" className='w-full'>Continue &rarr;</Button>
+                                <Button type="submit" className='w-full rounded-xl bg-foreground hover:bg-foreground select-none text-white dark:text-black'>Continue &rarr;</Button>
                             </div>
                         </form>
                     </Form>
@@ -207,7 +207,7 @@ export default function AccountSetupForm({ username }: { username: string }) {
                                 <RadioGroupItem value="public" id="public" className="peer sr-only" />
                                 <Label
                                     htmlFor="public"
-                                    className="flex flex-col  rounded-xl border-2 border-muted  px-6 py-5 bg-transparent peer-data-[state=checked]:border-primary [&:has([data-state=checked])]:border-primary font-normal text-sm text-muted-foreground"
+                                    className="flex flex-col  rounded-xl border-2 border-muted  px-6 py-5 bg-transparent peer-data-[state=checked]:border-foreground [&:has([data-state=checked])]:border-foreground font-normal text-sm text-muted-foreground"
                                     onClick={() => (
                                         setUserAccountData({
                                             ...userAccountData,
@@ -230,7 +230,7 @@ export default function AccountSetupForm({ username }: { username: string }) {
                                 <RadioGroupItem value="private" id="private" className="peer sr-only" />
                                 <Label
                                     htmlFor="private"
-                                    className="flex flex-col  rounded-xl border-2 border-muted  px-6 py-5 bg-transparent peer-data-[state=checked]:border-primary [&:has([data-state=checked])]:border-primary font-normal text-sm text-muted-foreground"
+                                    className="flex flex-col  rounded-xl border-2 border-muted  px-6 py-5 bg-transparent peer-data-[state=checked]:border-foreground [&:has([data-state=checked])]:border-foreground font-normal text-sm text-muted-foreground"
                                     onClick={() => (
                                         setUserAccountData({
                                             ...userAccountData,
@@ -251,7 +251,7 @@ export default function AccountSetupForm({ username }: { username: string }) {
                             </div>
                         </RadioGroup>
                         <Button
-                            className='w-full mt-4'
+                            className='w-full mt-4 rounded-xl bg-foreground hover:bg-foreground select-none text-white dark:text-black'
                             onClick={handleAccountSetup}
                             disabled={isLoading}
                         >
