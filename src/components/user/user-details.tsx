@@ -15,6 +15,7 @@ import {
     AvatarImage
 } from '@/components/ui/avatar'
 import { api } from '@/trpc/react'
+import UserFollowers from '@/components/user/user-followers'
 
 const UserProfile: React.FC<UserProfileInfoProps> = ({
     id,
@@ -23,7 +24,8 @@ const UserProfile: React.FC<UserProfileInfoProps> = ({
     fullname,
     image,
     link,
-    username
+    username,
+    followers
 }) => {
     const path = usePathname()
     const router = useRouter()
@@ -65,10 +67,8 @@ const UserProfile: React.FC<UserProfileInfoProps> = ({
 
             <div className='flex justify-between items-center'>
                 <div className="hidden sm:flex -space-x-1 overflow-hidden w-full items-center ">
-                    <img className="inline-block h-4 w-4 rounded-full ring-2 ring-background " src="https://images.unsplash.com/photo-1491528323818-fdd1faba62cc?ixlib=rb-1.2.1&amp;ixid=eyJhcHBfaWQiOjEyMDd9&amp;auto=format&amp;fit=facearea&amp;facepad=2&amp;w=256&amp;h=256&amp;q=80" alt="" />
-                    <img className="inline-block h-4 w-4 rounded-full ring-2 ring-background" src="https://images.unsplash.com/photo-1550525811-e5869dd03032?ixlib=rb-1.2.1&amp;auto=format&amp;fit=facearea&amp;facepad=2&amp;w=256&amp;h=256&amp;q=80" alt="" />
                     <div className='flex gap-2'>
-                        <div className='pl-4 text-[#777777] text-[15px]'>8 followers</div>
+                        <UserFollowers followers={followers} showImage={true} />
                         {link &&
                             <>
                                 <p className='text-[#777777]'> · </p>

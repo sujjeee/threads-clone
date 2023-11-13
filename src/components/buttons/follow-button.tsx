@@ -1,18 +1,33 @@
+"use client"
+
 import React from 'react'
 import { Follow } from '@/components/ui/follow-button'
 import { api } from '@/trpc/react';
 import { toast } from 'sonner';
+import { usePathname } from 'next/navigation';
+import { AuthorInfoProps } from '@/types';
+import { useUser } from '@clerk/nextjs';
+import { cn } from '@/lib/utils';
 
-interface FollowButtonProps {
-    id: string
-    variant: string
+
+interface FollowButtonProps extends React.HTMLProps<HTMLDivElement> {
+    variant: string;
+    author: AuthorInfoProps;
 }
 
-const FollowButton: React.FC<FollowButtonProps> = ({ id, variant }) => {
+const FollowButton: React.FC<FollowButtonProps> = ({ variant, author, className }) => {
+
+    const path = usePathname()
+
+    const { user: loggedUser } = useUser()
+
+    const isFollowedByMe = author.followers.some((user) => user.id === loggedUser?.id)
 
     const followUpdate = React.useRef({
-        isFollowedByMe: false,
+        isFollowedByMe,
     });
+
+    const trpcUtils = api.useUtils();
 
     const { mutate: toggleFollow, isLoading } = api.user.toggleFollow.useMutation({
         onMutate: async () => {
@@ -24,7 +39,7 @@ const FollowButton: React.FC<FollowButtonProps> = ({ id, variant }) => {
             if (followUpdate.current.isFollowedByMe === true) {
                 toast('Followed')
             } else {
-                toast('UnFollowed')
+                toast('Unfollowed')
             }
 
             return { previousFollowedByMe };
@@ -36,6 +51,12 @@ const FollowButton: React.FC<FollowButtonProps> = ({ id, variant }) => {
             toast.error("FollowError: Something went wrong!")
 
         },
+        onSettled: async () => {
+            if (path === '/') {
+                await trpcUtils.post.getInfinitePost.invalidate()
+            }
+            await trpcUtils.invalidate()
+        },
     });
 
     const setVariant = variant === 'default' ? 'default' : 'outline'
@@ -43,10 +64,12 @@ const FollowButton: React.FC<FollowButtonProps> = ({ id, variant }) => {
         <Follow
             disabled={isLoading}
             onClick={() => {
-                toggleFollow({ id })
+                toggleFollow({ id: author.id })
             }}
             variant={!followUpdate.current.isFollowedByMe ? setVariant : 'outline'}
-            className='rounded-xl py-1.5 px-4 select-none'>
+            className={cn("rounded-xl py-1.5 px-4 select-none", className, {
+                "opacity-80": followUpdate.current.isFollowedByMe
+            })}>
             {followUpdate.current.isFollowedByMe ? 'Following' : 'Follow'}
         </Follow>
     )

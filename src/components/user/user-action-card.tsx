@@ -1,6 +1,5 @@
 import React from 'react'
 import Link from 'next/link'
-import { Button } from '@/components/ui/button'
 import { Separator } from '@/components/ui/separator'
 import { UserCardProps } from '@/types'
 import Username from '@/components/user/user-username'
@@ -10,6 +9,8 @@ import {
     AvatarFallback,
     AvatarImage
 } from '@/components/ui/avatar'
+import FollowButton from '@/components/buttons/follow-button'
+import UserFollowers from './user-followers'
 
 const UserActionCard: React.FC<UserCardProps> = ({
     id,
@@ -58,9 +59,21 @@ const UserActionCard: React.FC<UserCardProps> = ({
                                     {fullname}
                                 </span>
                             </div>
-                            <span>12K followers</span>
+                            <UserFollowers followers={followers} showImage={false} />
                         </Link>
-                        <Button variant={'outline'} size={'sm'} className='rounded-xl px-8'>Follow</Button>
+                        <FollowButton
+                            variant='default'
+                            author={{
+                                id,
+                                image,
+                                createdAt,
+                                username,
+                                fullname,
+                                isAdmin,
+                                link,
+                                bio,
+                                followers
+                            }} />
                     </div>
                     <Separator className="mt-4" />
                 </div>

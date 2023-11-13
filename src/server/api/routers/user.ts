@@ -168,9 +168,6 @@ export const userRouter = createTRPCRouter({
                 }
             });
 
-            console.log('isAlreadyFollowing', isAlreadyFollowing?.username, 'and', isAlreadyFollowing?.id)
-            console.log('input id', input.id)
-
             if (isAlreadyFollowing?.following.length === 0) {
 
                 const transactionResult = await ctx.db.$transaction(async (prisma) => {
@@ -190,8 +187,6 @@ export const userRouter = createTRPCRouter({
 
                         }
                     });
-
-                    console.log('followUser', followUser)
 
                     const createdNotification = await prisma.notification.create({
                         data: {

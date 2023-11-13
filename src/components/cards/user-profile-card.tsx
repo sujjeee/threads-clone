@@ -10,10 +10,12 @@ import {
     AvatarImage
 } from '@/components/ui/avatar'
 import FollowButton from '@/components/buttons/follow-button'
+import UserFollowers from '@/components/user/user-followers'
 
 type UserProfileCardProps = PostCardProps['author']
 
 const UserProfileCard: React.FC<UserProfileCardProps> = (props) => {
+
     const {
         bio,
         image,
@@ -57,44 +59,22 @@ const UserProfileCard: React.FC<UserProfileCardProps> = (props) => {
                 }}
                     className='text-[15px] max-h-[100px] whitespace-pre-line text-overflow-ellipsis' />
             }
-            <div className='flex  items-center'>
-                <div className="flex -space-x-1 overflow-hidden items-center ">
-                    {followers.map((follower, index) => (
-                        <>
-                            <img
-                                className="inline-block h-4 w-4 rounded-full ring-2 ring-[#181818]"
-                                src={image ?? ''}
-                                alt="Follower"
-                            />
-                            <img
-                                className="inline-block h-4 w-4 rounded-full ring-2 ring-[#181818]"
-                                src={image ?? ''}
-                                alt="Follower"
-                            />
-                        </>
-                    ))}
-                </div>
-                <div className='flex gap-2'>
+            <div className='flex  items-center gap-2'>
+                <UserFollowers followers={followers} showImage={true} />
 
-                    {followers.length > 0 &&
-                        <>
-                            <div className='pl-2 text-[#777777] text-[15px]'>{followers.length} {followers.length === 1 ? 'follower' : 'followers'}</div>
-                            <p className='text-[#777777]'> · </p>
-                        </>
-                    }
+                {followers.length > 0 && link && <span className='text-[#777777]'> · </span>}
 
-                    {link &&
-                        <>
-                            <Link href={link} className='text-[#777777] text-[15px] hover:underline cursor-pointer active:text-[#4d4d4d]'>
-                                {formatURL(link)}
-                            </Link>
+                {link &&
+                    <>
+                        <Link href={link} className='text-[#777777] text-[15px] hover:underline cursor-pointer active:text-[#4d4d4d]'>
+                            {formatURL(link)}
+                        </Link>
 
-                        </>
-                    }
+                    </>
+                }
 
-                </div>
             </div>
-            <FollowButton id={id} variant='outline' />
+            <FollowButton variant='default' author={props} />
         </div>
 
     )

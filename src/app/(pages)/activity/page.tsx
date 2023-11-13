@@ -10,6 +10,7 @@ import Username from '@/components/user/user-username'
 import { formatTimeAgo, truncateText } from '@/lib/utils'
 import UserNotificationAvtar from '@/components/user/user-notification-avatar'
 import Error from '@/app/error'
+import FollowButton from '@/components/buttons/follow-button'
 
 export default function ActivityPage() {
 
@@ -53,9 +54,10 @@ export default function ActivityPage() {
                                     </Link>
                                 </div>
                                 {activity.type === "FOLLOW" && (
-                                    <Button variant={'outline'} size={'sm'} className='rounded-xl px-8'>
-                                        Follow
-                                    </Button>
+                                    <FollowButton
+                                        className="text-[14px] px-6"
+                                        variant='outline'
+                                        author={activity.senderUser} />
                                 )}
                             </div>
                             <Separator className="mt-3" />
