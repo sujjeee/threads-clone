@@ -6,6 +6,9 @@ import { TRPCReactProvider } from "@/trpc/react";
 import { ThemeProvider } from "@/components/providers/theme-provider";
 import { Toaster } from "@/components/ui/toaster";
 import { ClerkProvider } from "@clerk/nextjs";
+import { Suspense } from "react";
+import FullscreenImageView from "@/components/fullscreen-image-view";
+import Loading from "@/app/(pages)/loading";
 
 const inter = Inter({
   subsets: ["latin"],
@@ -36,6 +39,9 @@ export default function RootLayout({
             >
               {children}
               <Toaster />
+              <Suspense fallback={<Loading />}>
+                <FullscreenImageView />
+              </Suspense>
             </ThemeProvider>
           </TRPCReactProvider>
         </body>

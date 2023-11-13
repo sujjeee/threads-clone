@@ -26,6 +26,7 @@ import {
     DialogContent,
     DialogTrigger,
 } from "@/components/ui/dialog"
+import { useImageStore } from '@/store/image'
 
 const PostCard: React.FC<PostCardProps> = ({
     id,
@@ -63,6 +64,8 @@ const PostCard: React.FC<PostCardProps> = ({
             setLikeCount(likeCount - 1);
         }
     };
+
+    const { setImageUrl } = useImageStore()
 
     return (
         <>
@@ -109,9 +112,15 @@ const PostCard: React.FC<PostCardProps> = ({
                                 <div dangerouslySetInnerHTML={{ __html: text.slice(1, -1).replace(/\\n/g, '\n') }} className="text-accent-foreground text-[15px] leading-5 mt-1 max-md:max-w-full whitespace-pre-line" />
                             </Link>
 
-                            {images.length > 0 &&
+                            {images && images.length > 0 &&
                                 <div className='relative overflow-hidden rounded-[12px] border border-border w-fit mt-2.5 '>
-                                    <img src={images[0]} alt="" className='object-contain max-h-[520px] max-w-full  rounded-[12px]' />
+                                    <img
+                                        src={images[0]}
+                                        alt=""
+                                        onClick={() => {
+                                            setImageUrl(images[0])
+                                        }}
+                                        className='object-contain max-h-[520px] max-w-full  rounded-[12px]' />
                                 </div>
                             }
 
