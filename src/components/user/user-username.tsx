@@ -2,7 +2,7 @@ import React from 'react'
 import Link from 'next/link'
 import { AuthorInfoProps } from '@/types'
 import { Icons } from '@/components/icons'
-import ProfileInfoCard from '@/components/cards/user-profile-card'
+import UserProfileCard from '@/components/cards/user-profile-card'
 import {
     HoverCard,
     HoverCardContent,
@@ -32,7 +32,7 @@ const UserUsername: React.FC<UserUsernameProps> = ({ author }) => {
                 align={"start"}
                 sideOffset={10}
                 className="w-[360px] p-0 z-[99999] rounded-2xl bg-transparent border-none">
-                <ProfileInfoCard {...author} />
+                <UserProfileCard {...author} />
             </HoverCardContent>
         </HoverCard>
     )

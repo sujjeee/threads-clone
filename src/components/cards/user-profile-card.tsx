@@ -9,17 +9,22 @@ import {
     AvatarFallback,
     AvatarImage
 } from '@/components/ui/avatar'
+import FollowButton from '@/components/buttons/follow-button'
 
 type UserProfileCardProps = PostCardProps['author']
 
-const UserProfileCard: React.FC<UserProfileCardProps> = ({
-    bio,
-    image,
-    username,
-    followers,
-    fullname,
-    link
-}) => {
+const UserProfileCard: React.FC<UserProfileCardProps> = (props) => {
+    const {
+        bio,
+        image,
+        username,
+        followers,
+        fullname,
+        link,
+        isAdmin,
+        id
+    } = props
+
     return (
         <div className="z-[10] flex  flex-col space-y-4 h-fit  rounded-2xl p-6 bg-background shadow-xl dark:bg-[#181818]">
             <Link href={`/@${username}`} className="flex w-full items-center ">
@@ -36,9 +41,12 @@ const UserProfileCard: React.FC<UserProfileCardProps> = ({
                 </div>
                 <Avatar className="h-[64px] w-[64px] overflow-visible outline outline-2 outline-border relative">
                     <AvatarImage src={image ?? ''} alt={fullname ?? ''} className="h-min w-full rounded-full object-cover " />
-                    <AvatarFallback></AvatarFallback>
+                    <AvatarFallback>{username.slice(0, 2).toUpperCase()}</AvatarFallback>
                     <div className='absolute bottom-0 -left-1'>
                         <Icons.verified2 className='h-5 w-5 text-background' />
+                        {isAdmin
+                            && <Icons.verified2 className='h-5 w-5 text-background' />
+                        }
                     </div>
                 </Avatar>
             </Link>
@@ -54,13 +62,11 @@ const UserProfileCard: React.FC<UserProfileCardProps> = ({
                     {followers.map((follower, index) => (
                         <>
                             <img
-                                // key={index}
                                 className="inline-block h-4 w-4 rounded-full ring-2 ring-[#181818]"
                                 src={image ?? ''}
                                 alt="Follower"
                             />
                             <img
-                                // key={index}
                                 className="inline-block h-4 w-4 rounded-full ring-2 ring-[#181818]"
                                 src={image ?? ''}
                                 alt="Follower"
@@ -88,9 +94,7 @@ const UserProfileCard: React.FC<UserProfileCardProps> = ({
 
                 </div>
             </div>
-            <Button className='w-full rounded-xl bg-foreground hover:bg-foreground select-none text-white dark:text-black'>
-                Follow
-            </Button>
+            <FollowButton id={id} variant='outline' />
         </div>
 
     )
