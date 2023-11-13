@@ -2,7 +2,6 @@
 
 import React from 'react'
 import Link from 'next/link'
-import { useUser } from '@clerk/nextjs'
 import { Button } from '@/components/ui/button'
 import { Separator } from '@/components/ui/separator'
 import { api } from '@/trpc/react'
@@ -10,47 +9,46 @@ import Loading from '@/app/(pages)/loading'
 import Username from '@/components/user/user-username'
 import { formatTimeAgo, truncateText } from '@/lib/utils'
 import UserNotificationAvtar from '@/components/user/user-notification-avatar'
+import Error from '@/app/error'
 
 export default function ActivityPage() {
 
-    const { user: loggedUser } = useUser()
-
-    if (!loggedUser) return <Loading />
-
-    const { data, isLoading } = api.notification.getNotification.useQuery({ id: loggedUser.id }, {
-        enabled: !!loggedUser
-    })
+    const { data, isLoading, isError } = api.notification.getNotification.useQuery()
 
     if (isLoading) return <Loading />
+    if (isError) return <Error />
 
+    const { notifications } = data
     return (
         <>
-            {data && data.length > 0 ? (
-                data.map((activity, index) => (
+            {data && data.notifications.length > 0 ? (
+                notifications.map((activity, index) => (
                     <div key={index} className='flex w-full mt-4 '>
                         <UserNotificationAvtar
-                            username={activity.user.username}
-                            image={activity.user.image ?? ''}
-                            fullname={activity.user.fullname ?? ''}
+                            username={activity.senderUser.username}
+                            image={activity.senderUser.image ?? ''}
+                            fullname={activity.senderUser.fullname ?? ''}
                             type={activity.type}
                         />
                         <div className='flex flex-col w-full ml-3'>
                             <div className='flex justify-between items-center w-full'>
-                                <div className="flex flex-col gap-1.5 ">
+                                <div className="flex flex-col gap-1 ">
                                     <div className='flex gap-1 items-center'>
-                                        <Username author={activity.user} />
+                                        <Username author={activity.senderUser} />
                                         <time className='text-muted-foreground ml-3 leading-none text-[15px]'>
                                             {formatTimeAgo(activity.createdAt)}
                                         </time>
                                     </div>
-                                    <Link href={`/@${activity.user.username}/post/${activity.postId}`}>
+                                    <Link href={`/@${activity.senderUser.username}`}>
                                         {activity.type !== "ADMIN"
-                                            ? <p className="text-[15px] text-[#6A6A6A] tracking-wide leading-5">
-                                                {truncateText(activity.message, 100)}
-                                            </p>
-                                            : <p className="text-[15px] text-accent-foreground tracking-wide leading-5">
+                                            ? <div className='text-[15px] text-[#6A6A6A] tracking-wide leading-0 whitespace-pre-line'>
+                                                <div dangerouslySetInnerHTML={{
+                                                    __html: truncateText(activity.message, 100).slice(1, -1).replace(/\\n/g, '\n')
+                                                }} />
+                                            </div>
+                                            : <span className="text-[15px] text-accent-foreground tracking-wide leading-5">
                                                 {activity.message}
-                                            </p>
+                                            </span>
                                         }
                                     </Link>
                                 </div>
@@ -60,7 +58,7 @@ export default function ActivityPage() {
                                     </Button>
                                 )}
                             </div>
-                            <Separator className="mt-4" />
+                            <Separator className="mt-3" />
                         </div>
                     </div>
                 ))

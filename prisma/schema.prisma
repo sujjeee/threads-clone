@@ -8,25 +8,26 @@ datasource db {
 }
 
 model User {
-    id           String         @id
-    createdAt    DateTime       @default(now()) @map(name: "created_at")
-    updatedAt    DateTime       @default(now()) @map(name: "updated_at")
-    username     String         @unique
-    fullname     String?
-    image        String?
-    bio          String?
-    link         String?
-    email        String         @unique
-    verified     Boolean?       @default(false)
-    privacy      Privacy        @default(PUBLIC)
-    followers    User[]         @relation(name: "followers")
-    following    User[]         @relation(name: "followers")
-    posts        Post[]
-    likedPosts   Like[]
-    isAdmin      Boolean?       @default(false) @map(name: "is_admin")
-    notification Notification[]
-    reposts      Repost[]
-    reports      Report[]
+    id                    String         @id
+    createdAt             DateTime       @default(now()) @map(name: "created_at")
+    updatedAt             DateTime       @default(now()) @map(name: "updated_at")
+    username              String         @unique
+    fullname              String?
+    image                 String?
+    bio                   String?
+    link                  String?
+    email                 String         @unique
+    verified              Boolean?       @default(false)
+    privacy               Privacy        @default(PUBLIC)
+    followers             User[]         @relation(name: "followers")
+    following             User[]         @relation(name: "followers")
+    posts                 Post[]
+    likedPosts            Like[]
+    isAdmin               Boolean?       @default(false) @map(name: "is_admin")
+    reposts               Repost[]
+    reports               Report[]
+    senderNotifications   Notification[] @relation("sender")
+    receiverNotifications Notification[] @relation("receiver")
 
     @@unique([createdAt, id])
 }
@@ -80,17 +81,22 @@ model Repost {
 }
 
 model Notification {
+    id        String           @id @default(cuid())
     createdAt DateTime         @default(now())
+    read      Boolean          @default(false)
     type      NotificationType
-    userId    String
-    user      User             @relation(fields: [userId], references: [id], onDelete: Cascade)
-    postId    String
-    post      Post             @relation(fields: [postId], references: [id], onDelete: Cascade)
     message   String
     isPublic  Boolean          @default(false)
 
-    @@id([userId, postId, type])
-    @@index([userId])
+    senderUserId   String
+    receiverUserId String?
+    senderUser     User    @relation("sender", fields: [senderUserId], references: [id], map: "senderUserUniqueConstraint")
+    receiverUser   User?   @relation("receiver", fields: [receiverUserId], references: [id], map: "receiverUserUniqueConstraint")
+
+    postId String?
+    post   Post?   @relation(fields: [postId], references: [id])
+
+    @@index([receiverUserId])
 }
 
 enum NotificationType {

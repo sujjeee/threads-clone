@@ -34,7 +34,8 @@ export const likeRouter = createTRPCRouter({
                         select: {
                             post: {
                                 select: {
-                                    text: true
+                                    text: true,
+                                    author: true
                                 }
                             }
                         }
@@ -43,7 +44,8 @@ export const likeRouter = createTRPCRouter({
                     const createdNotification = await prisma.notification.create({
                         data: {
                             type: 'LIKE',
-                            userId: data.userId,
+                            senderUserId: userId,
+                            receiverUserId: createdLike.post.author.id,
                             postId: data.postId,
                             message: createdLike.post.text
                         }
@@ -64,26 +66,33 @@ export const likeRouter = createTRPCRouter({
 
             } else {
                 const transactionResult = await ctx.db.$transaction(async (prisma) => {
-
                     const removeLike = await prisma.like.delete({
                         where: {
                             postId_userId: data
                         }
                     });
 
-                    const removeNotification = await prisma.notification.delete({
+                    const notification = await prisma.notification.findFirst({
                         where: {
-                            userId_postId_type: {
-                                userId: data.userId,
-                                postId: data.postId,
-                                type: 'LIKE'
-                            }
+                            senderUserId: userId,
+                            postId: data.postId,
+                            type: 'LIKE',
+                        },
+                        select: {
+                            id: true
                         }
                     });
 
+                    if (notification) {
+                        await prisma.notification.delete({
+                            where: {
+                                id: notification.id
+                            }
+                        });
+                    }
+
                     return {
-                        removeLike,
-                        removeNotification
+                        removeLike
                     };
                 });
 

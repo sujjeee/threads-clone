@@ -14,6 +14,7 @@ import {
     AvatarFallback,
     AvatarImage
 } from '@/components/ui/avatar'
+import { api } from '@/trpc/react'
 
 const UserProfile: React.FC<UserProfileInfoProps> = ({
     id,
@@ -22,7 +23,6 @@ const UserProfile: React.FC<UserProfileInfoProps> = ({
     fullname,
     image,
     link,
-    privacy,
     username
 }) => {
     const path = usePathname()
@@ -34,6 +34,9 @@ const UserProfile: React.FC<UserProfileInfoProps> = ({
         router.push(newPath);
         return null;
     }
+
+
+    const { mutate: toggleFollow, isLoading } = api.user.toggleFollow.useMutation({});
 
     return (
         <div className=" z-[10] mt-4 flex w-full flex-col space-y-4">
@@ -87,14 +90,15 @@ const UserProfile: React.FC<UserProfileInfoProps> = ({
                 <div className="grid gap-2 sm:grid-cols-2 pt-2">
                     <Button
                         size={'sm'}
-                        className="w-full border-[#333333] sm:w-auto rounded-xl  py-1 "
+                        onClick={() => toggleFollow({ id })}
+                        className="w-full border-[#333333] sm:w-auto rounded-xl  py-1 px-4 font-semibold bg-foreground hover:bg-foreground select-none text-white dark:text-black active:scale-95 tracking-normal text-[16px]"
                     >
                         Follow
                     </Button>
                     <Button
                         size={'sm'}
                         variant="outline"
-                        className="w-full border-[#333333] sm:w-auto rounded-xl cursor-not-allowed py-1"
+                        className="w-full border-[#333333] sm:w-auto rounded-xl cursor-not-allowed py-1 font-semibold tracking-normal text-[16px] active:scale-95 "
                     >
                         Mention
                     </Button>

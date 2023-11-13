@@ -1,52 +1,50 @@
-import { z } from "zod";
 import {
     createTRPCRouter,
-    publicProcedure
+    privateProcedure,
 } from "@/server/api/trpc";
-import { GET_USER } from "@/server/constant";
 import { TRPCError } from "@trpc/server";
 
 export const notificationRouter = createTRPCRouter({
 
-    getNotification: publicProcedure
-        .input(
-            z.object({
-                id: z.string()
-            })
-        )
-        .query(async ({ input, ctx }) => {
-            const notification = await ctx.db.notification.findMany({
+    getNotification: privateProcedure
+        .query(async ({ ctx }) => {
+            const { userId } = ctx
+
+            const getNotifications = await ctx.db.notification.findMany({
                 where: {
-                    OR: [
-                        {
-                            isPublic: true,
-                            NOT: {
-                                userId: input.id,
-                            },
-                        },
-                        {
-                            isPublic: false,
-                            userId: input.id,
-                        },
-                    ],
+                    isPublic: false,
+                    receiverUserId: userId
                 },
                 select: {
-                    user: {
-                        select: {
-                            ...GET_USER
+                    id: true,
+                    type: true,
+                    createdAt: true,
+                    read: true,
+                    message: true,
+                    senderUser: {
+                        include: {
+                            followers: true
                         }
                     },
-                    createdAt: true,
-                    message: true,
-                    type: true,
-                    postId: true
+                    post: true
                 }
             });
 
-            if (!notification) {
+            if (!getNotifications) {
                 throw new TRPCError({ code: 'NOT_FOUND' })
             }
 
-            return notification
+            // return notification
+            return {
+                notifications: getNotifications.map((notification) => ({
+                    id: notification.id,
+                    createdAt: notification.createdAt,
+                    type: notification.type,
+                    message: notification.message,
+                    read: notification.read,
+                    post: notification.post,
+                    senderUser: notification.senderUser
+                })),
+            }
         }),
 });

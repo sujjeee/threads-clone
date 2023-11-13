@@ -145,4 +145,124 @@ export const userRouter = createTRPCRouter({
             };
         }),
 
+    toggleFollow: privateProcedure
+        .input(z.object({
+            id: z.string()
+        }))
+        .mutation(async ({ input, ctx }) => {
+
+            const { userId } = ctx;
+
+            const isAlreadyFollowing = await ctx.db.user.findUnique({
+                where: {
+                    id: userId
+                },
+                select: {
+                    id: true,
+                    username: true,
+                    following: {
+                        where: {
+                            id: input.id
+                        }
+                    }
+                }
+            });
+
+            console.log('isAlreadyFollowing', isAlreadyFollowing?.username, 'and', isAlreadyFollowing?.id)
+            console.log('input id', input.id)
+
+            if (isAlreadyFollowing?.following.length === 0) {
+
+                const transactionResult = await ctx.db.$transaction(async (prisma) => {
+
+                    const followUser = await prisma.user.update({
+                        where: { id: userId },
+                        data: {
+                            following: {
+                                connect: {
+                                    id: input.id,
+                                }
+                            }
+                        },
+                        select: {
+                            id: true,
+                            username: true
+
+                        }
+                    });
+
+                    console.log('followUser', followUser)
+
+                    const createdNotification = await prisma.notification.create({
+                        data: {
+                            type: 'FOLLOW',
+                            senderUserId: userId,
+                            receiverUserId: input.id,
+                            message: `"Followed you"`
+                        },
+                        select: {
+                            id: true
+                        }
+                    });
+
+                    return {
+                        followUser,
+                        createdNotification
+                    };
+
+                });
+
+                if (!transactionResult) {
+                    throw new TRPCError({ code: 'NOT_IMPLEMENTED' })
+                }
+
+                return { followUser: true };
+
+            } else {
+                const transactionResult = await ctx.db.$transaction(async (prisma) => {
+
+                    const unfollowUser = await prisma.user.update({
+                        where: { id: userId },
+                        data: {
+                            following: {
+                                disconnect: {
+                                    id: input.id,
+                                }
+                            }
+                        },
+                    });
+
+                    const notification = await prisma.notification.findFirst({
+                        where: {
+                            senderUserId: userId,
+                            receiverUserId: input.id,
+                            type: 'FOLLOW',
+                        },
+                        select: {
+                            id: true
+                        }
+                    });
+
+                    if (notification) {
+                        await prisma.notification.delete({
+                            where: {
+                                id: notification.id
+                            }
+                        });
+                    }
+
+                    return {
+                        unfollowUser,
+                    };
+
+                });
+
+                if (!transactionResult) {
+                    throw new TRPCError({ code: 'NOT_IMPLEMENTED' })
+                }
+
+                return { unFollowUser: false };
+            }
+        }),
+
 });

@@ -540,7 +540,8 @@ export const postRouter = createTRPCRouter({
             select: {
               post: {
                 select: {
-                  text: true
+                  text: true,
+                  authorId: true
                 }
               }
             }
@@ -549,9 +550,10 @@ export const postRouter = createTRPCRouter({
           const createNotification = await prisma.notification.create({
             data: {
               type: 'REPOST',
-              userId: data.userId,
               postId: data.postId,
-              message: createdRepost.post.text
+              message: createdRepost.post.text,
+              senderUserId: userId,
+              receiverUserId: createdRepost.post.authorId
             }
           });
 
@@ -577,19 +579,27 @@ export const postRouter = createTRPCRouter({
             }
           });
 
-          const removeNotification = await prisma.notification.delete({
+          const notification = await prisma.notification.findFirst({
             where: {
-              userId_postId_type: {
-                userId: data.userId,
-                postId: data.postId,
-                type: 'REPOST'
-              }
+              senderUserId: userId,
+              postId: data.postId,
+              type: 'REPOST',
+            },
+            select: {
+              id: true
             }
           });
 
+          if (notification) {
+            await prisma.notification.delete({
+              where: {
+                id: notification.id
+              }
+            });
+          }
+
           return {
             removeRepost,
-            removeNotification
           }
 
         });
