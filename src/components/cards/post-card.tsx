@@ -16,7 +16,6 @@ import Username from '@/components/user/user-username'
 import PostActivityCard from '@/components/cards/post-activity-card'
 import PostQuoteCard from '@/components/cards/post-quote-card'
 import LikeButton from '@/components/buttons/like-button'
-import { useImageStore } from '@/store/image'
 import {
     Avatar,
     AvatarFallback,
@@ -27,6 +26,7 @@ import {
     DialogContent,
     DialogTrigger,
 } from "@/components/ui/dialog"
+import PostImageCard from './post-image-card'
 
 const PostCard: React.FC<PostCardProps> = ({
     id,
@@ -64,8 +64,6 @@ const PostCard: React.FC<PostCardProps> = ({
             setLikeCount(likeCount - 1);
         }
     };
-
-    const { setImageUrl } = useImageStore()
 
     return (
         <>
@@ -113,15 +111,7 @@ const PostCard: React.FC<PostCardProps> = ({
                             </Link>
 
                             {images && images.length > 0 &&
-                                <div className='relative overflow-hidden rounded-[12px] border border-border w-fit mt-2.5 '>
-                                    <img
-                                        src={images[0]}
-                                        alt=""
-                                        onClick={() => {
-                                            setImageUrl(images[0])
-                                        }}
-                                        className='object-contain max-h-[520px] max-w-full  rounded-[12px]' />
-                                </div>
+                                <PostImageCard image={images[0]} />
                             }
 
                             {quoteId &&
@@ -184,7 +174,7 @@ const PostCard: React.FC<PostCardProps> = ({
                         )}
                     </Link>
 
-                    {replyCount > 0 && likeCount > 0 && <p className='mx-2'> · </p>}
+                    {replyCount > 0 && likeCount > 0 && <span className='mx-2'> · </span>}
 
                     {likeCount > 0 && (
                         <PostActivityCard

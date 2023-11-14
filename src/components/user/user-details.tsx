@@ -60,7 +60,7 @@ const UserProfile: React.FC<UserProfileInfoProps> = ({
             </div>
 
             {bio &&
-                <p dangerouslySetInnerHTML={{
+                <span dangerouslySetInnerHTML={{
                     __html: bio?.slice(1, -1).replace(/\\n/g, '\n')
                 }} className='text-[15px] whitespace-pre-line' />
             }
@@ -71,7 +71,7 @@ const UserProfile: React.FC<UserProfileInfoProps> = ({
                         <UserFollowers followers={followers} showImage={true} />
                         {link &&
                             <>
-                                <p className='text-[#777777]'> · </p>
+                                <span className='text-[#777777]'> · </span>
                                 <Link href={link} className='text-[#777777] text-[15px] hover:underline cursor-pointer active:text-[#4d4d4d]'>
                                     {formatURL(link)}
                                 </Link>

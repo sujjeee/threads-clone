@@ -180,7 +180,7 @@ const PostParentCard: React.FC<PostCardProps> = ({
                         )}
                     </Link>
 
-                    {replyCount > 0 && likeCount > 0 && <p className='mx-2'> · </p>}
+                    {replyCount > 0 && likeCount > 0 && <span className='mx-2'> · </span>}
 
                     {likeCount > 0 && (
                         <PostActivityCard

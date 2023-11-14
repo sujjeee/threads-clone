@@ -143,9 +143,9 @@ const DisplayInsight: React.FC<DisplayInsightProps> = ({ id }) => {
                                     <Username
                                         author={post.user}
                                     />
-                                    <p className="text-[15px]  text-[#6A6A6A] tracking-wide mt-1">
+                                    <span className="text-[15px]  text-[#6A6A6A] tracking-wide mt-1">
                                         {post.user.fullname}
-                                    </p>
+                                    </span>
                                 </div>
                             </Link>
                             <Button

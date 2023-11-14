@@ -11,7 +11,7 @@ export default function NotFound() {
                     <h4 className="scroll-m-20 text-[16px] font-bold tracking-normal">
                         Sorry, this page isn&#39;t available
                     </h4>
-                    <p className="text-[15px] text-[#777777] max-w-[350px] w-full text-center">The link you followed may be broken, or the page may have been removed.</p>
+                    <span className="text-[15px] text-[#777777] max-w-[350px] w-full text-center">The link you followed may be broken, or the page may have been removed.</span>
                     <Button asChild
                         className='rounded-xl px-4 hover:bg-transparent active:scale-90'
                         variant={'outline'}

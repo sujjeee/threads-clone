@@ -61,7 +61,7 @@ export default function LoginForm() {
 
     return (
         <div>
-            <p className='text-white font-bold select-none'>Log in with your Instagram account</p>
+            <span className='text-white font-bold select-none'>Log in with your Instagram account</span>
 
             <Form {...form}>
                 <form

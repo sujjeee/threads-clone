@@ -130,9 +130,9 @@ export default function AccountSetupForm({ username }: { username: string }) {
                                 <h2 className="scroll-m-20 tracking-wide text-4xl font-bold">
                                     Profile
                                 </h2>
-                                <p className="leading-7 text-muted-foreground ">
+                                <span className="leading-7 text-muted-foreground ">
                                     Customize your Threads profile
-                                </p>
+                                </span>
                                 <Card className='w-full p-6 px-8 bg-transparent rounded-2xl my-4 sm:mt-10'>
                                     <div className="flex flex-col gap-4">
                                         <div className='flex justify-between items-center'>
@@ -198,9 +198,9 @@ export default function AccountSetupForm({ username }: { username: string }) {
                         <h2 className="scroll-m-20 tracking-wide text-4xl font-bold">
                             Privacy
                         </h2>
-                        <p className="leading-7 text-muted-foreground ">
+                        <span className="leading-7 text-muted-foreground ">
                             Your privacy can be different on Threads and Instagarm.
-                        </p>
+                        </span>
 
                         <RadioGroup defaultValue="public" className="flex flex-col gap-3 w-full mt-6 sm:mt-10">
                             <div>
@@ -221,9 +221,9 @@ export default function AccountSetupForm({ username }: { username: string }) {
                                         </h1>
                                         <Globe className='w-5 h-5' />
                                     </div>
-                                    <p className='max-w-[350px]'>
+                                    <span className='max-w-[350px]'>
                                         Anyone on or off Threads can see, share and interact with your content.
-                                    </p>
+                                    </span>
                                 </Label>
                             </div>
                             <div>
@@ -244,9 +244,9 @@ export default function AccountSetupForm({ username }: { username: string }) {
                                         </h1>
                                         <Lock className='w-5 h-5' />
                                     </div>
-                                    <p className='max-w-[350px]'>
+                                    <span className='max-w-[350px]'>
                                         Only your approved followers can see, share and interact with your content.
-                                    </p>
+                                    </span>
                                 </Label>
                             </div>
                         </RadioGroup>
