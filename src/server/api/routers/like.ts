@@ -5,7 +5,7 @@ import {
     publicProcedure
 } from "@/server/api/trpc";
 import { TRPCError } from "@trpc/server";
-import { GET_USER, GET_COUNT } from "@/server/constant";
+import { GET_USER } from "@/server/constant";
 
 export const likeRouter = createTRPCRouter({
 

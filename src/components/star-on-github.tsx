@@ -1,6 +1,5 @@
 import React from 'react'
-import { Icons } from './icons'
-import Link from 'next/link'
+import { Icons } from '@/components/icons'
 
 export default function StarOnGithub() {
     return (

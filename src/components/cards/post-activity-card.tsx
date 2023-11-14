@@ -137,7 +137,7 @@ const DisplayInsight: React.FC<DisplayInsightProps> = ({ id }) => {
             </div>
 
             {data?.likes.map((userData, index) => (
-                <div className='flex items-center w-full '>
+                <div key={index} className='flex items-center w-full '>
                     <button className='relative ml-4 mr-3'>
                         <div className='h-9 w-9 outline outline-1 outline-[#333333] rounded-full'>
                             <Avatar className="rounded-full w-full h-full">
