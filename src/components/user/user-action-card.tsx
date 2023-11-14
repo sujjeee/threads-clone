@@ -4,13 +4,13 @@ import { Separator } from '@/components/ui/separator'
 import { UserCardProps } from '@/types'
 import Username from '@/components/user/user-username'
 import { Icons } from '@/components/icons'
+import FollowButton from '@/components/buttons/follow-button'
+import UserFollowers from '@/components/user/user-followers'
 import {
     Avatar,
     AvatarFallback,
     AvatarImage
 } from '@/components/ui/avatar'
-import FollowButton from '@/components/buttons/follow-button'
-import UserFollowers from './user-followers'
 
 const UserActionCard: React.FC<UserCardProps> = ({
     id,

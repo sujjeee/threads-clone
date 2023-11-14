@@ -12,6 +12,8 @@ import PostParentCard from '@/components/cards/post-parent-card'
 import ProfileInfoCard from '@/components/cards/user-profile-card'
 import RepostButton from '@/components/buttons/repost-button'
 import ShareButton from '@/components/buttons/share-button'
+import LikeButton from '@/components/buttons/like-button'
+import PostActivityCard from '@/components/cards/post-activity-card'
 import {
     cn,
     formatTimeAgo
@@ -26,8 +28,6 @@ import {
     DialogContent,
     DialogTrigger
 } from '@/components/ui/dialog'
-import LikeButton from '../buttons/like-button'
-import PostActivityCard from './post-activity-card'
 
 const PostReplyCard: React.FC<PostReplyCardProps> = ({ postInfo, parentPosts }) => {
 

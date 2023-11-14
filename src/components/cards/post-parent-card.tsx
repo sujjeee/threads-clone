@@ -2,11 +2,8 @@
 
 import React from 'react'
 import Link from 'next/link'
-import { toast } from 'sonner'
 import { Plus } from 'lucide-react'
-import { Icons } from '@/components/icons'
 import { cn, formatTimeAgo } from '@/lib/utils'
-import { api } from '@/trpc/react'
 import { useUser } from '@clerk/nextjs'
 import { PostCardProps } from '@/types'
 import CreatePostCard from '@/components/cards/create-post-card'
@@ -17,6 +14,8 @@ import ShareButton from '@/components/buttons/share-button'
 import RepostButton from '@/components/buttons/repost-button'
 import Username from '@/components/user/user-username'
 import PostActivityCard from '@/components/cards/post-activity-card'
+import { useTheme } from 'next-themes'
+import LikeButton from '@/components/buttons/like-button'
 import {
     Avatar,
     AvatarFallback,
@@ -27,8 +26,6 @@ import {
     DialogContent,
     DialogTrigger,
 } from "@/components/ui/dialog"
-import { useTheme } from 'next-themes'
-import LikeButton from '../buttons/like-button'
 
 const PostParentCard: React.FC<PostCardProps> = ({
     id,

@@ -35,6 +35,8 @@ const CreatePostInput: React.FC<CreatePostInputProps> = ({
     const { setSelectedFile, setIsSelectedImageSafe } = useFileStore();
 
     const [inputValue, setInputValue] = React.useState('')
+    const [file, setFile] = React.useState<File[] | null>()
+
     const [isSafeImage, setIsSafeImage] = React.useState(false)
 
     const handleResizeTextareaChange = (event: React.ChangeEvent<HTMLTextAreaElement>) => {
@@ -47,25 +49,39 @@ const CreatePostInput: React.FC<CreatePostInputProps> = ({
 
     const maxSize = 4 * 1024 * 1024;
 
-    const onDrop = React.useCallback(
-        async (acceptedFiles: File[]) => {
-            const acceptedFile = acceptedFiles[0];
+    const onDrop = React.useCallback((acceptedFiles: File[]) => {
+        const acceptedFile = acceptedFiles[0];
 
-            if (!acceptedFile) {
-                alert('Selected image is too large!');
-                return;
+        if (!acceptedFile) {
+            alert('Selected image is too large!');
+            return;
+        }
+
+        const previewURL = URL.createObjectURL(acceptedFile)
+        setPreviewURL(previewURL)
+        setSelectedFile(acceptedFiles);
+
+        setFile(acceptedFiles)
+
+    }, [maxSize]);
+
+    React.useEffect(() => {
+        const checkImageSafety = async () => {
+            if (file && file.length > 0) {
+                const checkUploadedImage = file[0];
+
+                if (checkUploadedImage) {
+                    const isSafe = await NSFWFilter.isSafe(checkUploadedImage);
+                    setIsSafeImage(isSafe);
+                    setIsSelectedImageSafe(isSafe);
+                    setSelectedFile(file);
+                }
             }
+        };
 
-            const isSafe = await NSFWFilter.isSafe(acceptedFile);
-            setIsSafeImage(isSafe)
+        checkImageSafety();
+    }, [file]);
 
-            setIsSelectedImageSafe(isSafe)
-            setSelectedFile(acceptedFiles);
-
-            const previewURL = URL.createObjectURL(acceptedFile)
-            setPreviewURL(previewURL)
-        }, [maxSize]
-    );
 
     const accept: Accept = {
         "image/*": [],
@@ -165,7 +181,10 @@ const CreatePostInput: React.FC<CreatePostInputProps> = ({
                                     </div>
                                 }
                                 <Button
-                                    onClick={() => setPreviewURL('')}
+                                    onClick={() => {
+                                        setSelectedFile([])
+                                        setPreviewURL('')
+                                    }}
                                     variant={"ghost"}
                                     className="h-6 w-6 p-1 absolute top-2 right-2 z-50 rounded-full transform active:scale-75 transition-transform cursor-pointer bg-background " >
                                     <X />

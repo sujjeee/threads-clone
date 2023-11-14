@@ -38,7 +38,7 @@ const CreatePostCard: React.FC<CreatePostCardProps> = ({ variant, replyThreadInf
     const path = usePathname()
     const { postPrivacy } = usePost();
 
-    const { selectedFile, isSelectedImageSafe } = useFileStore();
+    const { selectedFile, setSelectedFile, isSelectedImageSafe } = useFileStore();
 
     const [isOpen, setIsOpen] = React.useState(false)
 
@@ -47,7 +47,6 @@ const CreatePostCard: React.FC<CreatePostCardProps> = ({ variant, replyThreadInf
     const [threadData, setThreadData] = React.useState({
         privacy: postPrivacy,
         text: "",
-        images: []
     })
 
     React.useEffect(() => {
@@ -161,6 +160,17 @@ const CreatePostCard: React.FC<CreatePostCardProps> = ({ variant, replyThreadInf
     };
 
     const createVarient = variant !== 'reply'
+
+    React.useEffect(() => {
+        if (!isOpen) {
+            setThreadData({
+                privacy: postPrivacy,
+                text: '',
+            });
+            setSelectedFile([])
+            console.log("reseted the daya")
+        }
+    }, [isOpen]);
 
     return (
         <Dialog open={isOpen} onOpenChange={setIsOpen}>
