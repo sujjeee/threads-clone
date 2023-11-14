@@ -17,7 +17,7 @@ const UserFollowers: React.FC<UserFollowersProps> = ({ followers, showImage, cla
                             key={index}
                             className="relative z-0 flex h-4 w-4 shrink-0 select-none items-center justify-center rounded-full ring-1 ring-border"
                         >
-                            {/* eslint-disable-next-line next/next/no-img-element */}
+
                             <img
                                 className="h-full w-full rounded-full object-cover object-center"
                                 src={authorData.image ?? ''}

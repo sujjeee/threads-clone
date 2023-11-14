@@ -17,7 +17,7 @@ const FullscreenImageView: React.FC = ({ }) => {
                 <X className='w-8 h-8' />
             </span>
             <div className="fixed left-[50%] top-[50%] z-[999] grid w-full translate-x-[-50%] translate-y-[-50%] max-w-[90vw]  max-h-[100vh] ">
-                {/* eslint-disable-next-line next/next/no-img-element */}
+
                 <img src={imageUrl} alt="post image" className='w-full h-full mx-auto object-cover' />
             </div>
         </div>

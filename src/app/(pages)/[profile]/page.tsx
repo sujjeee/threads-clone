@@ -1,6 +1,6 @@
 "use client"
 
-import { usePathname, useRouter } from 'next/navigation'
+import { useParams } from 'next/navigation'
 import React from 'react'
 import { api } from '@/trpc/react'
 import UserProfile from '@/components/user/user-details'
@@ -11,15 +11,9 @@ import NotFound from '@/app/not-found'
 
 const ProfilePage: React.FC = ({ }) => {
 
-  const path = usePathname()
-  const router = useRouter()
-  const username = path.substring(2);
-
-  if (path.length < 20 && !path.startsWith('/@')) {
-    const newPath = '/@' + path.replace(/^\//, '')
-    router.push(newPath);
-    return null;
-  }
+  const params = useParams()
+  const profile = params.profile as string
+  const username = decodeURIComponent(profile)
 
   const { data, isLoading, isError } = api.user.profileInfo.useQuery({ username })
 
@@ -28,10 +22,10 @@ const ProfilePage: React.FC = ({ }) => {
 
   return (
     <div>
-      {data && data?.userDetails ? (
+      {data?.userDetails ? (
         <>
-          <UserProfile {...data?.userDetails} />
-          {data && data.posts.length > 0 ? (
+          <UserProfile {...data.userDetails} />
+          {data.posts?.length > 0 ? (
             data.posts.map((post, index) => (
               <div key={post.id}>
                 <PostCard {...post} />

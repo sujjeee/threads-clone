@@ -7,21 +7,12 @@ import PostReplyCard from '@/components/cards/post-reply-card'
 import PostCard from '@/components/cards/post-card'
 import { api } from '@/trpc/react'
 import { Separator } from '@/components/ui/separator'
-import { usePathname, useRouter } from 'next/navigation'
+import { useParams } from 'next/navigation'
 import { cn } from '@/lib/utils'
 
 const PostInfoPage: React.FC = ({ }) => {
-    const path = usePathname()
-    const router = useRouter()
-
-    if (path.length < 20 && !path.startsWith('/@')) {
-        const newPath = '/@' + path.replace(/^\//, '')
-        router.push(newPath);
-        return null;
-    }
-
-    const segments = path.split('/');
-    const id = segments[segments.length - 1]! as string;
+    const params = useParams()
+    const id = params.id as string
 
     const { data, isLoading, isError } = api.post.getNestedPosts.useQuery({ id })
 

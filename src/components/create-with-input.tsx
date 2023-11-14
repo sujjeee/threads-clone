@@ -10,7 +10,7 @@ const CreateWithInput: React.FC = ({ }) => {
             <div className='flex w-full my-4'>
                 <div className='w-full flex'>
                     <div>
-                        {/* eslint-disable-next-line next/next/no-img-element */}
+
                         <img
                             src={user?.imageUrl}
                             width={36}

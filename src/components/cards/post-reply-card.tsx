@@ -83,7 +83,7 @@ const PostReplyCard: React.FC<PostReplyCardProps> = ({ postInfo, parentPosts }) 
                 "mb-0": replies.length > 0
             })}>
 
-                {parentPosts && parentPosts?.map((post, index) => (
+                {parentPosts?.map((post, index) => (
                     <>
                         <PostParentCard
                             key={index}

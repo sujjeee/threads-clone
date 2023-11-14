@@ -73,10 +73,14 @@ const CreatePostInput: React.FC<CreatePostInputProps> = ({
                 const checkUploadedImage = file[0];
 
                 if (checkUploadedImage) {
-                    const isSafe = await NSFWFilter.isSafe(checkUploadedImage);
-                    setIsSafeImage(isSafe);
-                    setIsSelectedImageSafe(isSafe);
-                    setSelectedFile(file);
+                    try {
+                        const isSafe = await NSFWFilter.isSafe(checkUploadedImage);
+                        setIsSafeImage(isSafe);
+                        setIsSelectedImageSafe(isSafe);
+                        setSelectedFile(file);
+                    } catch (error) {
+                        console.error('Error checking image safety:', error);
+                    }
                 }
             }
         };
@@ -84,6 +88,7 @@ const CreatePostInput: React.FC<CreatePostInputProps> = ({
         checkImageSafety();
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [file]);
+
 
 
     const accept: Accept = {
@@ -169,7 +174,7 @@ const CreatePostInput: React.FC<CreatePostInputProps> = ({
                         />
                         {previewURL && (
                             <div className='relative overflow-hidden rounded-[12px] border border-border w-fit'>
-                                {/* eslint-disable-next-line next/next/no-img-element */}
+
                                 <img
                                     src={previewURL}
                                     alt=""
