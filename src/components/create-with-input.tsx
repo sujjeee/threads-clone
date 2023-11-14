@@ -6,19 +6,16 @@ const CreateWithInput: React.FC = ({ }) => {
     const { user } = useUser()
 
     return (
-        <div className='flex flex-col w-full'>
+        <div className='flex flex-col w-full select-none'>
             <div className='flex w-full my-4'>
-                <div className='w-full flex'>
-                    <div>
-
-                        <img
-                            src={user?.imageUrl}
-                            width={36}
-                            height={36}
-                            alt="Account Avatar"
-                            className="rounded-full mr-4"
-                        />
-                    </div>
+                <div className='w-full flex select-none'>
+                    <img
+                        src={user?.imageUrl}
+                        width={36}
+                        height={36}
+                        alt="Account Avatar"
+                        className="rounded-full mr-4"
+                    />
                     <input
                         className=" resize-none bg-transparent w-full placeholder:text-[#777777] outline-none placeholder:text-[15px]"
                         placeholder="Start a thread..."

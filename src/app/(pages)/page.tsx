@@ -25,7 +25,7 @@ export default function page() {
 
   return (
     <>
-      <div className='w-full sm:flex hidden'>
+      <div className='w-full sm:flex hidden '>
         <CreatePostCard variant='home' />
       </div>
       <InfiniteScroll
@@ -49,9 +49,8 @@ export default function page() {
           })}
         </div>
       </InfiniteScroll>
-
-      <div className='absolute button-0 left-0'>
-        {/* <StarOnGithub /> */}
+      <div className='fixed bottom-10 left-[8%] rounded-full py-6 px-8'>
+        <StarOnGithub />
       </div>
     </>
   )
