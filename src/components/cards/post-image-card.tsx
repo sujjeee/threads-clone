@@ -32,7 +32,7 @@ const PostImageCard: React.FC<PostImageCardProps> = ({ image }) => {
                 onClick={() => {
                     setImageUrl(image)
                 }}
-                className='object-contain max-h-[520px] max-w-full  rounded-[12px]' />
+                className='object-contain max-h-[520px] w-fit  rounded-[12px]' />
         </div>
     )
 }

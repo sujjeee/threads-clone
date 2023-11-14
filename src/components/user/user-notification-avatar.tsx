@@ -42,7 +42,7 @@ const UserNotificationAvtar: React.FC<UserNotificationAvtarProps> = ({
               'absolute -bottom-1 -right-1 rounded-2xl border-2 border-background text-white', {
               'bg-[#fe0169]': icon_name === 'like',
               'bg-[#6e3def]': icon_name === 'follow',
-              'bg-[#24c3ff]': icon_name === 'reply',
+              'bg-[#24c3ff]': icon_name === 'repost',
             })}
           >
             {type !== 'ADMIN' && <Icon className='h-[20px] w-[20px] p-1' fill='white' />}

@@ -27,6 +27,7 @@ import {
     DialogTrigger,
 } from "@/components/ui/dialog"
 import PostImageCard from '@/components/cards/post-image-card'
+import PostQuoteCard from '@/components/cards/post-quote-card'
 
 const PostParentCard: React.FC<PostCardProps> = ({
     id,
@@ -37,7 +38,8 @@ const PostParentCard: React.FC<PostCardProps> = ({
     author,
     count,
     images,
-    reposts
+    reposts,
+    quoteId
 }) => {
 
     const { user: loggedUser } = useUser()
@@ -75,8 +77,13 @@ const PostParentCard: React.FC<PostCardProps> = ({
                             <button className='relative '>
                                 <div className='h-9 w-9 outline outline-1 outline-border rounded-full ml-[1px]'>
                                     <Avatar className="rounded-full w-full h-full ">
-                                        <AvatarImage src={author.image ?? ''} alt={author.username} className='object-cover' />
-                                        <AvatarFallback>{author.username?.slice(0, 2).toUpperCase()}</AvatarFallback>
+                                        <AvatarImage
+                                            src={author.image ?? ''}
+                                            alt={author.username}
+                                            className='object-cover' />
+                                        <AvatarFallback>
+                                            {author.username?.slice(0, 2).toUpperCase()}
+                                        </AvatarFallback>
                                     </Avatar>
                                 </div>
                                 <div className='bg-foreground absolute -bottom-0.5 -right-0.5  rounded-2xl border-2 border-background text-background hover:scale-105 active:scale-95'>
@@ -122,6 +129,10 @@ const PostParentCard: React.FC<PostCardProps> = ({
 
                             {images && images.length > 0 &&
                                 <PostImageCard image={images[0]} />
+                            }
+
+                            {quoteId &&
+                                <PostQuoteCard quoteId={quoteId} />
                             }
 
                             <div className="flex  font-bold -ml-2 mt-2 w-full">

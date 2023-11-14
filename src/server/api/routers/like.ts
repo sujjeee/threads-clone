@@ -104,7 +104,7 @@ export const likeRouter = createTRPCRouter({
             }
         }),
 
-    likeInfo: publicProcedure
+    postLikeInfo: publicProcedure
         .input(
             z.object({
                 id: z.string()
@@ -112,21 +112,25 @@ export const likeRouter = createTRPCRouter({
         )
         .query(async ({ input, ctx }) => {
 
-            const userProfileInfo = await ctx.db.like.findMany({
+            const userProfileInfo = await ctx.db.post.findUnique({
                 where: {
-                    postId: input.id
+                    id: input.id
                 },
                 select: {
-                    post: {
+                    likes: {
                         select: {
-                            ...GET_COUNT
+                            user: {
+                                select: {
+                                    ...GET_USER
+                                }
+                            }
                         }
                     },
-                    user: {
+                    reposts: {
                         select: {
-                            ...GET_USER
+                            userId: true
                         }
-                    }
+                    },
                 }
             });
 

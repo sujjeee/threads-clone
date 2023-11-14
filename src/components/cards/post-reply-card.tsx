@@ -29,6 +29,7 @@ import {
     DialogTrigger
 } from '@/components/ui/dialog'
 import PostImageCard from '@/components/cards/post-image-card'
+import PostQuoteCard from '@/components/cards/post-quote-card'
 
 const PostReplyCard: React.FC<PostReplyCardProps> = ({ postInfo, parentPosts }) => {
 
@@ -59,7 +60,8 @@ const PostReplyCard: React.FC<PostReplyCardProps> = ({ postInfo, parentPosts }) 
         createdAt,
         text,
         images,
-        reposts
+        reposts,
+        quoteId
     } = postInfo
 
     const { replyCount } = count
@@ -148,6 +150,10 @@ const PostReplyCard: React.FC<PostReplyCardProps> = ({ postInfo, parentPosts }) 
 
                             {images && images.length > 0 &&
                                 <PostImageCard image={images[0]} />
+                            }
+
+                            {quoteId &&
+                                <PostQuoteCard quoteId={quoteId} />
                             }
 
                             <div className="flex  font-bold -ml-2 mt-2 w-full ">

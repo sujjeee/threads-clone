@@ -11,9 +11,11 @@ import Link from 'next/link'
 
 type PostQuoteCardProps = Partial<Pick<ParentPostInfo, 'id' | 'text' | 'author'>>;
 
-const PostQuoteCard: React.FC<PostQuoteCardProps & { quoteId?: string, isLink?: boolean }> = ({
+const PostQuoteCard: React.FC<PostQuoteCardProps & { quoteId?: string }> = ({
+    author,
+    text,
     quoteId,
-    isLink
+
 }) => {
     if (quoteId) {
         const { data, isLoading } = api.post.getQuotedPost.useQuery(
@@ -33,17 +35,13 @@ const PostQuoteCard: React.FC<PostQuoteCardProps & { quoteId?: string, isLink?: 
 
         if (!data) return <>Not found.</>;
 
-        const RenderedCard = (
-            <RenderCard author={data?.postInfo.user} text={data?.postInfo.text} />
+        return (
+            <Link href={`/@${data.postInfo.user.username}/post/${data.postInfo.id}`} className='w-full'>
+                <RenderCard author={data?.postInfo.user} text={data?.postInfo.text} />
+            </Link>
         );
-
-        if (!isLink) {
-            return RenderedCard;
-        } else {
-            return <Link href={`@${data.postInfo.user.username}/post/${data.postInfo.id}`} className='w-full'>{RenderedCard}
-            </Link>;
-        }
     }
+    return <RenderCard author={author} text={text} />;
 
 }
 

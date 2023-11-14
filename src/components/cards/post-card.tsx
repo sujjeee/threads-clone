@@ -74,8 +74,13 @@ const PostCard: React.FC<PostCardProps> = ({
                             <button className='relative '>
                                 <div className='h-9 w-9 outline outline-1 outline-border rounded-full ml-[1px]'>
                                     <Avatar className="rounded-full w-full h-full ">
-                                        <AvatarImage src={author.image ?? ''} alt={author.username} className='object-cover' />
-                                        <AvatarFallback>{author.username?.slice(0, 2).toUpperCase()}</AvatarFallback>
+                                        <AvatarImage
+                                            src={author.image ?? ''}
+                                            alt={author.username}
+                                            className='object-cover' />
+                                        <AvatarFallback>
+                                            {author.username?.slice(0, 2).toUpperCase()}
+                                        </AvatarFallback>
                                     </Avatar>
                                 </div>
                                 <div className='bg-foreground absolute -bottom-0.5 -right-0.5  rounded-2xl border-2 border-background text-background hover:scale-105 active:scale-95'>
@@ -115,7 +120,7 @@ const PostCard: React.FC<PostCardProps> = ({
                             }
 
                             {quoteId &&
-                                <PostQuoteCard quoteId={quoteId} isLink={true} />
+                                <PostQuoteCard quoteId={quoteId} />
                             }
 
                             <div className="flex  font-bold -ml-2 mt-2 w-full">
