@@ -3,8 +3,8 @@
 import React from 'react'
 import { Instagram } from 'lucide-react'
 import Link from 'next/link'
-import { usePathname } from 'next/navigation'
-import { formatURL } from '@/lib/utils'
+import { useParams, usePathname } from 'next/navigation'
+import { cn, formatURL } from '@/lib/utils'
 import { Icons } from '@/components/icons'
 import type { UserProfileInfoProps } from '@/types'
 import { Button } from '@/components/ui/button'
@@ -31,13 +31,27 @@ const UserProfile: React.FC<UserProfileInfoProps> = (props) => {
     const path = usePathname()
     const { user } = useUser()
 
+    const params = useParams()
+    const profile = params.profile as string
+    const usernamePath = decodeURIComponent(profile).substring(1)
+    const basePath = `@${usernamePath}`
+
+    const segments = path.split('/');
+    const lastSegment = segments[segments.length - 1];
+    console.log('testing stuffd', lastSegment)
+    console.log('testing baseurl', basePath)
+
     return (
         <div className=" z-[10] mt-4 flex w-full flex-col space-y-4">
             <div className="flex w-fullitems-center">
                 <div className="flex w-full flex-col p-3 pl-0 gap-1">
-                    <h1 className="text-2xl font-bold tracking-normal">{fullname}</h1>
+                    <h1 className="text-2xl font-bold tracking-normal">
+                        {fullname}
+                    </h1>
                     <div className="flex gap-1">
-                        <h4 className="text-[15px]">{username}</h4>
+                        <h4 className="text-[15px]">
+                            {username}
+                        </h4>
                         <span className="ml-0.5 rounded-2xl bg-[#1E1E1E] text-[#777777] text-xm px-1.5 py-1 text-[11px] font-medium">threads.net</span>
                     </div>
                 </div>
@@ -94,24 +108,31 @@ const UserProfile: React.FC<UserProfileInfoProps> = (props) => {
                     </Button>
                 </div>
             }
-            <div className="w-full  flex">
-                <button className="w-full h-12 py-2 font-semibold border-b border-b-white text-center">
-                    Threads
-                </button>
+            <div className="w-full flex border-b border-border">
                 <Link
-                    href={`${path}/replies`}
-                    className="flex items-center justify-center w-full h-12  font-medium  duration-200 hover:border-neutral-700 hover:text-neutral-500 text-center text-neutral-600"
+                    href={`/${basePath}`} className={cn("flex items-center justify-center w-full h-12  font-medium  duration-200  text-center text-neutral-600", {
+                        "border-b-2 border-foreground text-foreground": lastSegment === basePath
+                    })}>
+                    Threads
+                </Link>
+                <Link
+                    href={`/${basePath}/replies`}
+                    className={cn('flex items-center justify-center w-full h-12  font-medium  duration-200 text-center text-neutral-600', {
+                        "border-b-2 border-foreground text-foreground": lastSegment === 'replies'
+                    })}
                 >
                     Replies
                 </Link>
                 <Link
-                    href={`${path}/repost`}
-                    className="flex items-center justify-center w-full h-12 py-2 font-medium  duration-200 hover:border-neutral-700 hover:text-neutral-500 text-center text-neutral-600"
+                    href={`/${basePath}/reposts`}
+                    className={cn('flex items-center justify-center w-full h-12  font-medium  duration-200  text-center text-neutral-600', {
+                        "border-b-2 border-foreground text-foreground": lastSegment === 'reposts'
+                    })}
                 >
                     Reposts
                 </Link>
             </div>
-        </div>
+        </div >
     )
 }
 

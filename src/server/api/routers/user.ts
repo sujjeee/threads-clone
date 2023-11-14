@@ -5,11 +5,11 @@ import {
     publicProcedure
 } from "@/server/api/trpc";
 import { TRPCError } from "@trpc/server";
-import { GET_USER, GET_COUNT, GET_LIKES } from "@/server/constant";
+import { GET_USER, GET_COUNT, GET_LIKES, GET_REPLIES, GET_REPOSTS } from "@/server/constant";
 
 export const userRouter = createTRPCRouter({
 
-    profileInfo: publicProcedure
+    Info: publicProcedure
         .input(
             z.object({
                 username: z.string()
@@ -34,35 +34,6 @@ export const userRouter = createTRPCRouter({
                 },
                 include: {
                     followers: true,
-                    posts: {
-                        select: {
-                            id: true,
-                            createdAt: true,
-                            text: true,
-                            images: true,
-                            quoteId: true,
-                            ...GET_LIKES,
-                            parentPostId: true,
-                            replies: {
-                                select: {
-                                    author: {
-                                        select: {
-                                            id: true,
-                                            username: true,
-                                            image: true,
-                                        }
-                                    }
-                                }
-                            },
-                            author: {
-                                select: {
-                                    ...GET_USER,
-                                }
-                            },
-                            ...GET_COUNT,
-                            reposts: true
-                        },
-                    }
                 }
             });
 
@@ -71,24 +42,6 @@ export const userRouter = createTRPCRouter({
             }
 
             return {
-
-                posts: userProfileInfo.posts.map((post) => ({
-                    id: post.id,
-                    createdAt: post.createdAt,
-                    text: post.text,
-                    images: post.images,
-                    parentPostId: post.parentPostId,
-                    author: post.author,
-                    count: {
-                        likeCount: post._count.likes,
-                        replyCount: post._count.replies,
-                    },
-                    likes: post.likes,
-                    replies: post.replies,
-                    reposts: post.reposts,
-                    quoteId: post.quoteId
-                })),
-
                 userDetails: {
                     id: userProfileInfo.id,
                     image: userProfileInfo.image,
@@ -101,8 +54,221 @@ export const userRouter = createTRPCRouter({
                     isAdmin: userProfileInfo.isAdmin,
                     followers: userProfileInfo.followers
                 }
-
             };
+
+        }),
+
+    postInfo: publicProcedure
+        .input(
+            z.object({
+                username: z.string()
+            })
+        )
+        .query(async ({ input, ctx }) => {
+
+            const isUser = await ctx.db.user.findUnique({
+                where: {
+                    username: input.username,
+                    verified: true
+                },
+            });
+
+            if (!isUser) {
+                throw new TRPCError({ code: 'NOT_FOUND' })
+            }
+
+            const userProfileInfo = await ctx.db.post.findMany({
+                where: {
+                    author: {
+                        username: input.username
+                    },
+                    parentPostId: null
+                },
+                select: {
+                    id: true,
+                    createdAt: true,
+                    text: true,
+                    images: true,
+                    parentPostId: true,
+                    quoteId: true,
+                    author: {
+                        select: {
+                            ...GET_USER,
+                        }
+                    },
+                    ...GET_LIKES,
+                    ...GET_REPLIES,
+                    ...GET_COUNT,
+                    ...GET_REPOSTS
+                },
+            });
+
+            if (!userProfileInfo) {
+                throw new TRPCError({ code: 'NOT_FOUND' });
+            }
+
+            const posts = userProfileInfo.map((post) => ({
+                id: post.id,
+                createdAt: post.createdAt,
+                text: post.text,
+                images: post.images,
+                parentPostId: post.parentPostId,
+                author: post.author,
+                count: {
+                    likeCount: post._count.likes,
+                    replyCount: post._count.replies,
+                },
+                likes: post.likes,
+                replies: post.replies,
+                reposts: post.reposts,
+                quoteId: post.quoteId
+            }))
+
+            return posts
+        }),
+
+    repliesInfo: publicProcedure
+        .input(
+            z.object({
+                username: z.string()
+            })
+        )
+        .query(async ({ input, ctx }) => {
+
+            const isUser = await ctx.db.user.findUnique({
+                where: {
+                    username: input.username,
+                    verified: true
+                },
+            });
+
+            if (!isUser) {
+                throw new TRPCError({ code: 'NOT_FOUND' })
+            }
+
+            const userProfileInfo = await ctx.db.post.findMany({
+                where: {
+                    author: {
+                        username: input.username
+                    },
+                    parentPostId: {
+                        not: null
+                    }
+                },
+                select: {
+                    id: true,
+                    createdAt: true,
+                    text: true,
+                    images: true,
+                    parentPostId: true,
+                    quoteId: true,
+                    author: {
+                        select: {
+                            ...GET_USER,
+                        }
+                    },
+                    ...GET_LIKES,
+                    ...GET_REPLIES,
+                    ...GET_COUNT,
+                    ...GET_REPOSTS
+                },
+            });
+
+            if (!userProfileInfo) {
+                throw new TRPCError({ code: 'NOT_FOUND' });
+            }
+
+            const replies = userProfileInfo.map((post) => ({
+                id: post.id,
+                createdAt: post.createdAt,
+                text: post.text,
+                images: post.images,
+                parentPostId: post.parentPostId,
+                author: post.author,
+                count: {
+                    likeCount: post._count.likes,
+                    replyCount: post._count.replies,
+                },
+                likes: post.likes,
+                replies: post.replies,
+                reposts: post.reposts,
+                quoteId: post.quoteId
+            }))
+
+            return replies
+
+        }),
+
+    repostsInfo: publicProcedure
+        .input(
+            z.object({
+                username: z.string()
+            })
+        )
+        .query(async ({ input, ctx }) => {
+
+            const isUser = await ctx.db.user.findUnique({
+                where: {
+                    username: input.username,
+                    verified: true
+                },
+            });
+
+            if (!isUser) {
+                throw new TRPCError({ code: 'NOT_FOUND' })
+            }
+
+            const userProfileInfo = await ctx.db.repost.findMany({
+                where: {
+                    user: {
+                        username: input.username
+                    }
+                },
+                select: {
+                    post: {
+                        select: {
+                            id: true,
+                            createdAt: true,
+                            text: true,
+                            images: true,
+                            parentPostId: true,
+                            quoteId: true,
+                            author: {
+                                select: {
+                                    ...GET_USER,
+                                }
+                            },
+                            ...GET_LIKES,
+                            ...GET_REPLIES,
+                            ...GET_COUNT,
+                            ...GET_REPOSTS
+                        }
+                    }
+                },
+            });
+
+            if (!userProfileInfo) {
+                throw new TRPCError({ code: 'NOT_FOUND' });
+            }
+
+            const reposts = userProfileInfo.map((postObject) => ({
+                id: postObject.post.id,
+                createdAt: postObject.post.createdAt,
+                text: postObject.post.text,
+                images: postObject.post.images,
+                parentPostId: postObject.post.parentPostId,
+                author: postObject.post.author,
+                count: {
+                    likeCount: postObject.post._count.likes,
+                    replyCount: postObject.post._count.replies,
+                },
+                likes: postObject.post.likes,
+                replies: postObject.post.replies,
+                reposts: postObject.post.reposts,
+                quoteId: postObject.post.quoteId,
+            }));
+
+            return reposts
 
         }),
 
