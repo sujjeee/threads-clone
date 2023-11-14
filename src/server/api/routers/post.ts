@@ -724,23 +724,52 @@ export const postRouter = createTRPCRouter({
     )
     .mutation(async ({ input, ctx }) => {
       const { userId } = ctx
-      const PostInfo = await ctx.db.post.delete({
-        where: {
-          id: input.id,
-          authorId: userId
-        },
-        select: {
-          id: true
-        }
-      });
+      const transactionResult = await ctx.db.$transaction(async (prisma) => {
+        const PostInfo = await prisma.post.delete({
+          where: {
+            id: input.id,
+            authorId: userId
+          },
+          select: {
+            id: true
+          }
+        });
 
-      if (!PostInfo) {
-        throw new TRPCError({ code: 'NOT_FOUND' })
+        if (!PostInfo) {
+          throw new TRPCError({ code: 'NOT_FOUND' })
+        }
+
+        await prisma.post.updateMany({
+          where: {
+            quoteId: input.id,
+          },
+          data: {
+            quoteId: null,
+          }
+        })
+
+        return { success: true }
+      })
+
+      if (!transactionResult) {
+        throw new TRPCError({ code: 'NOT_IMPLEMENTED' })
       }
 
       return { success: true }
     }),
 });
+
+
+
+// await ctx.prisma.post.updateMany({
+//   where: {
+//     quoteId: input.id,
+//   },
+//   data: {
+//     quoteId: null, // Update the quoteId to null or an empty string as needed
+// });
+
+// return { success: true }
 
 
 

@@ -42,12 +42,11 @@ const UserProfileCard: React.FC<UserProfileCardProps> = (props) => {
                 <Avatar className="h-[64px] w-[64px] overflow-visible outline outline-2 outline-border relative">
                     <AvatarImage src={image ?? ''} alt={fullname ?? ''} className="h-min w-full rounded-full object-cover " />
                     <AvatarFallback>{username.slice(0, 2).toUpperCase()}</AvatarFallback>
-                    <div className='absolute bottom-0 -left-1'>
-                        <Icons.verified2 className='h-5 w-5 text-background' />
-                        {isAdmin
-                            && <Icons.verified2 className='h-5 w-5 text-background' />
-                        }
-                    </div>
+                    {isAdmin &&
+                        <div className='absolute bottom-0 -left-1'>
+                            <Icons.verified2 className='h-5 w-5 text-background' />
+                        </div>
+                    }
                 </Avatar>
             </Link>
 
@@ -57,18 +56,15 @@ const UserProfileCard: React.FC<UserProfileCardProps> = (props) => {
                 }}
                     className='text-[15px] max-h-[100px] whitespace-pre-line text-overflow-ellipsis' />
             }
-            <div className='flex  items-center gap-2'>
+            <div className='flex items-center'>
                 <UserFollowers followers={followers} showImage={true} />
 
-                {followers.length > 0 && link && <span className='text-[#777777]'> · </span>}
+                {followers.length > 0 && link && <span className='mx-2 text-[#777777]'> · </span>}
 
                 {link &&
-                    <>
-                        <Link href={link} className='text-[#777777] text-[15px] hover:underline cursor-pointer active:text-[#4d4d4d]'>
-                            {formatURL(link)}
-                        </Link>
-
-                    </>
+                    <Link href={link} className='text-[#777777] text-[15px] hover:underline cursor-pointer active:text-[#4d4d4d]'>
+                        {formatURL(link)}
+                    </Link>
                 }
 
             </div>

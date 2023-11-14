@@ -24,7 +24,8 @@ const UserProfile: React.FC<UserProfileInfoProps> = ({
     image,
     link,
     username,
-    followers
+    followers,
+    isAdmin
 }) => {
     const path = usePathname()
     const router = useRouter()
@@ -52,9 +53,11 @@ const UserProfile: React.FC<UserProfileInfoProps> = ({
                 <Avatar className="h-[80px] w-[80px] overflow-visible outline outline-2 outline-border relative">
                     <AvatarImage src={image ?? ""} alt={fullname ?? ''} className="h-min w-full rounded-full object-cover " />
                     <AvatarFallback></AvatarFallback>
-                    <div className='absolute bottom-0 -left-0.5'>
-                        <Icons.verified2 className='h-6 w-6 text-background' />
-                    </div>
+                    {isAdmin &&
+                        <div className='absolute bottom-0 -left-0.5'>
+                            <Icons.verified2 className='h-6 w-6 text-background' />
+                        </div>
+                    }
                 </Avatar>
             </div>
 
@@ -66,15 +69,15 @@ const UserProfile: React.FC<UserProfileInfoProps> = ({
 
             <div className='flex justify-between items-center'>
                 <div className="hidden sm:flex -space-x-1 overflow-hidden w-full items-center ">
-                    <div className='flex gap-2'>
+                    <div className='flex items-center'>
                         <UserFollowers followers={followers} showImage={true} />
+
+                        {followers.length > 0 && link && <span className='mx-2 text-[#777777]'> · </span>}
+
                         {link &&
-                            <>
-                                <span className='text-[#777777]'> · </span>
-                                <Link href={link} className='text-[#777777] text-[15px] hover:underline cursor-pointer active:text-[#4d4d4d]'>
-                                    {formatURL(link)}
-                                </Link>
-                            </>
+                            <Link href={link} className='text-[#777777] text-[15px] hover:underline cursor-pointer active:text-[#4d4d4d]'>
+                                {formatURL(link)}
+                            </Link>
                         }
                     </div>
                 </div>

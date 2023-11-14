@@ -18,12 +18,14 @@ interface RepostButtonProps {
     text: string
     author: AuthorInfoProps
     isRepostedByMe: boolean
+    createdAt: Date
 }
 
 const RepostButton: React.FC<RepostButtonProps> = ({
     id,
     text,
     author,
+    createdAt,
     isRepostedByMe
 }) => {
 
@@ -92,7 +94,8 @@ const RepostButton: React.FC<RepostButtonProps> = ({
                         quoteInfo={{
                             text,
                             id,
-                            author
+                            author,
+                            createdAt
                         }} />
                 </div>
             </DropdownMenuContent>

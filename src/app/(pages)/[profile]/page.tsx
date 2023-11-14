@@ -13,7 +13,7 @@ const ProfilePage: React.FC = ({ }) => {
 
   const params = useParams()
   const profile = params.profile as string
-  const username = decodeURIComponent(profile)
+  const username = decodeURIComponent(profile).substring(1)
 
   const { data, isLoading, isError } = api.user.profileInfo.useQuery({ username })
 

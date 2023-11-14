@@ -30,7 +30,7 @@ import type {
 interface CreatePostCardProps {
     variant: TriggerVariant;
     replyThreadInfo?: ParentPostInfo;
-    quoteInfo?: Pick<PostCardProps, 'id' | 'text' | 'author'>
+    quoteInfo?: Pick<PostCardProps, 'id' | 'text' | 'author'> & { createdAt: Date }
 }
 
 const CreatePostCard: React.FC<CreatePostCardProps> = ({ variant, replyThreadInfo, quoteInfo }) => {

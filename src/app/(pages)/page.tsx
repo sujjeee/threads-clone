@@ -10,6 +10,7 @@ import Error from '@/app/error'
 import InfiniteScroll from 'react-infinite-scroll-component'
 import { Separator } from '@/components/ui/separator'
 import { cn } from '@/lib/utils'
+import StarOnGithub from '@/components/star-on-github'
 
 export default function page() {
 
@@ -48,6 +49,10 @@ export default function page() {
           })}
         </div>
       </InfiniteScroll>
+
+      <div className='absolute button-0 left-0'>
+        {/* <StarOnGithub /> */}
+      </div>
     </>
   )
 }

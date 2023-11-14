@@ -153,7 +153,7 @@ const PostReplyCard: React.FC<PostReplyCardProps> = ({ postInfo, parentPosts }) 
                             }
 
                             {quoteId &&
-                                <PostQuoteCard quoteId={quoteId} />
+                                <PostQuoteCard quoteId={quoteId} createdAt={createdAt} />
                             }
 
                             <div className="flex  font-bold -ml-2 mt-2 w-full ">
@@ -179,6 +179,7 @@ const PostReplyCard: React.FC<PostReplyCardProps> = ({ postInfo, parentPosts }) 
                                     id={id}
                                     text={text}
                                     author={author}
+                                    createdAt={createdAt}
                                     isRepostedByMe={isRepostedByMe}
                                 />
                                 <ShareButton
