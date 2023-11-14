@@ -10,21 +10,20 @@ import type { ParentPostInfo } from '@/types'
 import Link from 'next/link'
 import { formatTimeAgo } from '@/lib/utils'
 
-type PostQuoteCardProps = Partial<Pick<ParentPostInfo, 'id' | 'text' | 'author'>> & { createdAt: Date };
+type PostQuoteCardProps = Partial<Pick<ParentPostInfo, 'id' | 'text' | 'author'>> & { createdAt?: Date };
 
 const PostQuoteCard: React.FC<PostQuoteCardProps & { quoteId?: string }> = ({
     author,
     text,
     quoteId,
-    createdAt
+    createdAt,
 }) => {
     if (quoteId) {
         const { data, isLoading } = api.post.getQuotedPost.useQuery(
-            { id: quoteId },
-            {
-                enabled: !!quoteId,
-                staleTime: Infinity,
-            }
+            { id: quoteId }, {
+            enabled: !!quoteId,
+            staleTime: Infinity,
+        },
         );
         if (isLoading) {
             return (
@@ -38,7 +37,7 @@ const PostQuoteCard: React.FC<PostQuoteCardProps & { quoteId?: string }> = ({
 
         return (
             <Link href={`/@${data.postInfo.user.username}/post/${data.postInfo.id}`} className='w-full'>
-                <RenderCard author={data?.postInfo.user} text={data?.postInfo.text} createdAt={createdAt} />
+                <RenderCard author={data?.postInfo.user} text={data?.postInfo.text} createdAt={data.postInfo.createdAt} />
             </Link>
         );
     }
@@ -66,7 +65,7 @@ const RenderCard: React.FC<PostQuoteCardProps> = ({
                     <Username author={author!} />
                 </div>
                 <time className="text-[15px] text-[#777777] cursor-default">
-                    {formatTimeAgo(createdAt)}
+                    {createdAt && formatTimeAgo(createdAt)}
                 </time>
             </div>
             {text &&

@@ -18,7 +18,7 @@ interface RepostButtonProps {
     text: string
     author: AuthorInfoProps
     isRepostedByMe: boolean
-    createdAt: Date
+    createdAt?: Date
 }
 
 const RepostButton: React.FC<RepostButtonProps> = ({

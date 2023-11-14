@@ -120,7 +120,7 @@ const PostCard: React.FC<PostCardProps> = ({
                             }
 
                             {quoteId &&
-                                <PostQuoteCard quoteId={quoteId} createdAt={createdAt} />
+                                <PostQuoteCard quoteId={quoteId} />
                             }
 
                             <div className="flex  font-bold -ml-2 mt-2 w-full">
