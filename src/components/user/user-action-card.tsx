@@ -59,7 +59,6 @@ const UserActionCard: React.FC<UserCardProps> = ({
                                     {fullname}
                                 </span>
                             </div>
-                            <UserFollowers followers={followers} showImage={false} />
                         </Link>
                         <FollowButton
                             variant='default'
@@ -75,6 +74,7 @@ const UserActionCard: React.FC<UserCardProps> = ({
                                 followers
                             }} />
                     </div>
+                    <UserFollowers followers={followers} showImage={false} className='text-white pl-0 mt-1 text-[16px]' />
                     <Separator className="mt-4" />
                 </div>
             </div>

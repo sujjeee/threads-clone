@@ -33,12 +33,18 @@ const ProfilePage: React.FC<pageProps> = ({ }) => {
       {data && data.userDetails ? (
         <>
           <UserProfile {...data.userDetails} />
-          {data.posts.map((post, index) => (
-            <div key={post.id}>
-              <PostCard {...post} />
-              {index !== data.posts.length - 1 && <Separator />}
+          {data && data.posts.length > 0 ? (
+            data.posts.map((post, index) => (
+              <div key={post.id}>
+                <PostCard {...post} />
+                {index !== data.posts.length - 1 && <Separator />}
+              </div>
+            ))
+          ) : (
+            <div className="h-[50vh] w-full justify-center items-center flex text-[#777777]">
+              <p>No threads yet.</p>
             </div>
-          ))}
+          )}
         </>
       ) : (
         <NotFound />

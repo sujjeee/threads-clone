@@ -10,7 +10,7 @@ import { useUser } from '@clerk/nextjs';
 import { cn } from '@/lib/utils';
 
 
-interface FollowButtonProps extends React.HTMLProps<HTMLDivElement> {
+interface FollowButtonProps extends React.HTMLAttributes<HTMLDivElement> {
     variant: string;
     author: AuthorInfoProps;
 }
@@ -21,6 +21,7 @@ const FollowButton: React.FC<FollowButtonProps> = ({ variant, author, className 
 
     const { user: loggedUser } = useUser()
 
+    const isSameUser = author.id === loggedUser?.id
     const isFollowedByMe = author.followers.some((user) => user.id === loggedUser?.id)
 
     const followUpdate = React.useRef({
@@ -62,7 +63,7 @@ const FollowButton: React.FC<FollowButtonProps> = ({ variant, author, className 
     const setVariant = variant === 'default' ? 'default' : 'outline'
     return (
         <Follow
-            disabled={isLoading}
+            disabled={isLoading || isSameUser}
             onClick={() => {
                 toggleFollow({ id: author.id })
             }}

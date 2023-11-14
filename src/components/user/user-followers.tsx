@@ -1,13 +1,15 @@
+import { cn } from '@/lib/utils';
 import { PostCardProps } from '@/types'
 import React from 'react'
 
-interface UserFollowersProps extends Pick<PostCardProps['author'], 'followers'> {
-    showImage: boolean
+interface UserFollowersProps extends React.HTMLAttributes<HTMLDivElement> {
+    showImage: boolean;
+    followers: PostCardProps['author']['followers'];
 }
 
-const UserFollowers: React.FC<UserFollowersProps> = ({ followers, showImage }) => {
+const UserFollowers: React.FC<UserFollowersProps> = ({ followers, showImage, className }) => {
     return (
-        <div className='flex items-center'>
+        <div className='flex items-center '>
             {showImage &&
                 <div className="z-0 flex items-center -space-x-2">
                     {followers.slice(0, 2).map((authorData, index) => (
@@ -26,7 +28,9 @@ const UserFollowers: React.FC<UserFollowersProps> = ({ followers, showImage }) =
             }
             {followers.length > 0 &&
                 <>
-                    <div className='pl-2 text-[#777777] text-[15px]'>{followers.length} {followers.length === 1 ? 'follower' : 'followers'}</div>
+                    <div className={cn('pl-2 text-[#777777]  text-[15px]', className)}>
+                        {followers.length} {followers.length === 1 ? 'follower' : 'followers'}
+                    </div>
                 </>
             }
         </div>
