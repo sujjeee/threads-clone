@@ -38,7 +38,7 @@ export default function SiteHeader() {
                         <Navigation />
                     </div>
                     {isMobile
-                        ? <div className='absolute right-0 -translate-y-2/4 top-2/4 '>
+                        ? <div className='absolute right-0 -translate-y-2/4 top-2/4 z-[999]'>
                             <NavigationMenu />
                         </div>
                         : <NavigationMenu />

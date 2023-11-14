@@ -179,13 +179,15 @@ const CreatePostInput: React.FC<CreatePostInputProps> = ({
                                     src={previewURL}
                                     alt=""
                                     className='object-contain max-h-[520px] max-w-full rounded-[12px]' />
-                                {!isSafeImage &&
+                                {/* TODO: Do this check on server side !*/}
+                                {/* {!isSafeImage &&
                                     <div className='absolute top-0 left-0 w-full h-full backdrop-blur-xl flex justify-center items-center'>
                                         <EyeOff className='h-8 w-8 text-[#3b3b3b]' />
                                     </div>
-                                }
+                                } */}
                                 <Button
                                     onClick={() => {
+                                        setIsSafeImage(true)
                                         setSelectedFile([])
                                         setPreviewURL('')
                                     }}
