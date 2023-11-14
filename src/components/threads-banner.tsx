@@ -16,11 +16,13 @@ export default function ThreadsBanner() {
                 :
                 <nav className='flex w-full justify-between items-center z-50 pointer-events-none select-none'>
                     <Image
-                        width={500}
-                        height={500}
+                        width={1000}
+                        height={1000}
                         src="/bg.webp"
-                        alt="bg"
-                        className='w-full object-cover h-[500px] '
+                        alt="Background"
+                        className="w-full h-[500px] object-cover"
+                        unoptimized
+                        priority
                     />
                 </nav>
             }

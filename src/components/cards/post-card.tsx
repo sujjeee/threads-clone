@@ -16,6 +16,7 @@ import Username from '@/components/user/user-username'
 import PostActivityCard from '@/components/cards/post-activity-card'
 import PostQuoteCard from '@/components/cards/post-quote-card'
 import LikeButton from '@/components/buttons/like-button'
+import PostImageCard from '@/components/cards/post-image-card'
 import {
     Avatar,
     AvatarFallback,
@@ -26,7 +27,6 @@ import {
     DialogContent,
     DialogTrigger,
 } from "@/components/ui/dialog"
-import PostImageCard from './post-image-card'
 
 const PostCard: React.FC<PostCardProps> = ({
     id,

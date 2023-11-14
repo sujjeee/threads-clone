@@ -85,7 +85,7 @@ const CreatePostInput: React.FC<CreatePostInputProps> = ({
             }
         };
 
-        checkImageSafety();
+        void checkImageSafety();
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [file]);
 

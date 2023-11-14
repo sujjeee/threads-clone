@@ -14,7 +14,6 @@ import {
     FormControl,
     FormField,
     FormItem,
-    useFormField,
 } from "@/components/ui/form"
 import { Icons } from '@/components/icons'
 import { toast } from 'sonner'
@@ -72,15 +71,15 @@ export default function LoginForm() {
                     <FormField
                         control={form.control}
                         name="identifier"
-                        render={({ field }) => {
-                            const { error } = useFormField()
+                        render={({ field, formState }) => {
+                            const error = formState.errors.identifier
                             return (
                                 <FormItem>
                                     <FormControl>
                                         <Input
                                             autoFocus
                                             className={cn('h-14 rounded-xl bg-[#1e1e1e] text-[15px] placeholder:text-[#777777] font-medium tracking-normal outline-none ring-0  focus-visible:ring-offset-0 min-h-min border-none focus-visible:ring-1 focus-visible:ring-[#393939] dark:focus-visible:ring-[#393939] px-4 text-white', {
-                                                "focus-visible:ring-[#ff3040] placeholder:text-[#ff3040]": error && error.message
+                                                "focus-visible:ring-red-700 placeholder:text-red-700 dark:focus-visible:ring-red-700": error
                                             })}
                                             placeholder={error ? error.message : 'Username, phone or email'}
                                             type='text'
@@ -94,14 +93,14 @@ export default function LoginForm() {
                     <FormField
                         control={form.control}
                         name="password"
-                        render={({ field }) => {
-                            const { error } = useFormField()
+                        render={({ field, formState }) => {
+                            const error = formState.errors.password
                             return (
                                 <FormItem>
                                     <FormControl>
                                         <Input
                                             className={cn('h-14 rounded-xl bg-[#1e1e1e]  text-[15px] placeholder:text-[#777777] font-medium  tracking-normal outline-none ring-0  focus-visible:ring-offset-0 min-h-min border-none focus-visible:ring-1 focus-visible:ring-[#393939] px-4 dark:focus-visible:ring-[#393939] text-white', {
-                                                "focus-visible:ring-[#ff3040] placeholder:text-[#ff3040]": error && error.message
+                                                "focus-visible:ring-red-700 placeholder:text-red-700 dark:focus-visible:ring-red-700": error
                                             })}
                                             placeholder={error ? error.message : "Password"}
                                             type='password'
