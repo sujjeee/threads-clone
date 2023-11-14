@@ -16,6 +16,7 @@ import Username from '@/components/user/user-username'
 import PostActivityCard from '@/components/cards/post-activity-card'
 import PostPreview from '@/components/cards/post-preview-card'
 import LikeButton from '@/components/buttons/like-button'
+import { useImageStore } from '@/store/image'
 import {
     Avatar,
     AvatarFallback,
@@ -26,7 +27,6 @@ import {
     DialogContent,
     DialogTrigger,
 } from "@/components/ui/dialog"
-import { useImageStore } from '@/store/image'
 
 const PostCard: React.FC<PostCardProps> = ({
     id,

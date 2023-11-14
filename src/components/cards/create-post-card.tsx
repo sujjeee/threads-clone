@@ -168,7 +168,6 @@ const CreatePostCard: React.FC<CreatePostCardProps> = ({ variant, replyThreadInf
                 text: '',
             });
             setSelectedFile([])
-            console.log("reseted the daya")
         }
     }, [isOpen]);
 
