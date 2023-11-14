@@ -11,7 +11,7 @@ import { cn } from '@/lib/utils';
 import { api } from '@/trpc/react';
 import { toast } from 'sonner';
 import CreatePostCard from '@/components/cards/create-post-card';
-import { AuthorInfoProps } from '@/types';
+import type { AuthorInfoProps } from '@/types';
 
 interface RepostButtonProps {
     id: string
@@ -32,7 +32,7 @@ const RepostButton: React.FC<RepostButtonProps> = ({
     });
 
     const { mutate: toggleRepost, isLoading } = api.post.toggleRepost.useMutation({
-        onMutate: async () => {
+        onMutate: () => {
 
             const previousRepostByMe = repostUpdate.current.isRepostedByMe;
 
@@ -48,10 +48,8 @@ const RepostButton: React.FC<RepostButtonProps> = ({
 
         },
         onError: (error, variables, context) => {
-
-            repostUpdate.current.isRepostedByMe = context?.previousRepostByMe!;
-            toast.error("RepostError: Something went wrong!")
-
+            repostUpdate.current.isRepostedByMe = context?.previousRepostByMe ?? repostUpdate.current.isRepostedByMe;
+            toast.error("RepostError: Something went wrong!");
         },
     });
 

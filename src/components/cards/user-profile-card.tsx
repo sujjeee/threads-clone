@@ -2,8 +2,7 @@ import React from 'react'
 import Link from 'next/link'
 import { formatURL } from '@/lib/utils'
 import { Icons } from '@/components/icons'
-import { Button } from '@/components/ui/button'
-import { PostCardProps } from '@/types'
+import type { PostCardProps } from '@/types'
 import {
     Avatar,
     AvatarFallback,
@@ -24,7 +23,6 @@ const UserProfileCard: React.FC<UserProfileCardProps> = (props) => {
         fullname,
         link,
         isAdmin,
-        id
     } = props
 
     return (

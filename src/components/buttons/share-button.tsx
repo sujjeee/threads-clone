@@ -15,11 +15,11 @@ interface ShareButtonProps {
 
 const ShareButton: React.FC<ShareButtonProps> = ({ id, author }) => {
 
-    const copyLinkToClipboard = () => {
+    const copyLinkToClipboard = async () => {
         const url = window.location.origin;
         const link = `${url}/@${author}/post/${id}`;
 
-        navigator.clipboard.writeText(link)
+        await navigator.clipboard.writeText(link);
     }
 
     return (

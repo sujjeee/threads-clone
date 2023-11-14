@@ -6,14 +6,12 @@ import Username from '@/components/user/user-username'
 import UserAvatar from '@/components/user/user-avatar'
 import { api } from '@/trpc/react'
 import { Icons } from '@/components/icons'
-import { ParentPostInfo } from '@/types'
+import type { ParentPostInfo } from '@/types'
 import Link from 'next/link'
 
 type PostQuoteCardProps = Partial<Pick<ParentPostInfo, 'id' | 'text' | 'author'>>;
 
 const PostQuoteCard: React.FC<PostQuoteCardProps & { quoteId?: string, isLink?: boolean }> = ({
-    author,
-    text,
     quoteId,
     isLink
 }) => {

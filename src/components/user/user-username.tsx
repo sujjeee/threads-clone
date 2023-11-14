@@ -1,6 +1,6 @@
 import React from 'react'
 import Link from 'next/link'
-import { AuthorInfoProps } from '@/types'
+import type { AuthorInfoProps } from '@/types'
 import { Icons } from '@/components/icons'
 import UserProfileCard from '@/components/cards/user-profile-card'
 import {

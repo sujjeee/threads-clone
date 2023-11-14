@@ -1,6 +1,6 @@
 import React from 'react'
 import Link from 'next/link'
-import { NotificationType } from '@prisma/client'
+import type { NotificationType } from '@prisma/client'
 import { Icons } from '@/components/icons'
 import { cn } from '@/lib/utils'
 import {

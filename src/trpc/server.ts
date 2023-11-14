@@ -1,6 +1,5 @@
 import {
   createTRPCProxyClient,
-  loggerLink,
   unstable_httpBatchStreamLink,
 } from "@trpc/client";
 import { headers } from "next/headers";

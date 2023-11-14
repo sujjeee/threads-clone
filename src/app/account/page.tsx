@@ -22,7 +22,7 @@ export default async function AccountPage() {
 
     if (isVerified) redirect('/')
 
-    const username = await generateUsername(user!) ?? '';
+    const username = await generateUsername(user) ?? '';
 
     return (
         <div className='mx-auto flex flex-col gap-6 justify-center w-full max-w-lg items-center h-[95vh]'>

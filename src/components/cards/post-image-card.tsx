@@ -12,8 +12,6 @@ interface PostImageCardProps {
 
 const PostImageCard: React.FC<PostImageCardProps> = ({ image }) => {
 
-    if (!image) return
-
     const { setImageUrl } = useImageStore()
 
 
@@ -27,7 +25,7 @@ const PostImageCard: React.FC<PostImageCardProps> = ({ image }) => {
     return (
         <div className='relative overflow-hidden rounded-[12px] border border-border w-fit mt-2.5 '>
             <Image
-                src={image}
+                src={image ?? ''}
                 width={500}
                 height={500}
                 alt="Will add alt-text soon!"

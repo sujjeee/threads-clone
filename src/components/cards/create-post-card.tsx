@@ -21,7 +21,7 @@ import {
     DialogContent,
     DialogTrigger
 } from '@/components/ui/dialog'
-import {
+import type {
     ParentPostInfo,
     PostCardProps,
     TriggerVariant
@@ -61,7 +61,7 @@ const CreatePostCard: React.FC<CreatePostCardProps> = ({ variant, replyThreadInf
     const backupText = React.useRef('')
 
     const { isLoading, mutateAsync: createThread } = api.post.createPost.useMutation({
-        onMutate: async ({ text }) => {
+        onMutate: ({ text }) => {
             backupText.current = text
 
             setThreadData({
@@ -72,7 +72,7 @@ const CreatePostCard: React.FC<CreatePostCardProps> = ({ variant, replyThreadInf
             // TODO: Add new optimistic update, old one is not working
 
         },
-        onError: (_, __, context) => {
+        onError: () => {
             toast.error("PostCallbackError: Something went wrong!")
         },
         onSettled: async () => {
@@ -118,7 +118,7 @@ const CreatePostCard: React.FC<CreatePostCardProps> = ({ variant, replyThreadInf
         return promise
     }
 
-    async function handleCreateThread() {
+    function handleCreateThread() {
 
         setIsOpen(false)
 
@@ -169,6 +169,7 @@ const CreatePostCard: React.FC<CreatePostCardProps> = ({ variant, replyThreadInf
             });
             setSelectedFile([])
         }
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [isOpen]);
 
     return (

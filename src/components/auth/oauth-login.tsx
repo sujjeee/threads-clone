@@ -2,18 +2,13 @@
 
 import React from 'react'
 import {
-    isClerkAPIResponseError,
     useSignIn
 } from "@clerk/nextjs"
 import { Button } from "@/components/ui/button"
 import { Icons } from '@/components/icons'
-import { toast } from 'sonner'
 import { catchClerkError } from '@/lib/utils'
 
-
-interface OAuthloginProps { }
-
-const OAuthLogin: React.FC<OAuthloginProps> = ({ }) => {
+const OAuthLogin: React.FC = ({ }) => {
     const [isLoading, setIsLoading] = React.useState<boolean | null>(null)
     const { signIn, isLoaded: signInLoaded } = useSignIn()
 

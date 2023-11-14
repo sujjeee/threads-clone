@@ -4,7 +4,7 @@ import React from 'react'
 import { Icons } from '@/components/icons'
 import { cn } from '@/lib/utils'
 import { useUser } from '@clerk/nextjs'
-import { PostCardProps } from '@/types'
+import type { PostCardProps } from '@/types'
 import { api } from '@/trpc/react'
 import { toast } from 'sonner'
 
@@ -25,7 +25,7 @@ const LikeButton: React.FC<LikeButtonProps> = ({ likeInfo, onLike }) => {
     });
 
     const { mutate: toggleLike, isLoading } = api.like.toggleLike.useMutation({
-        onMutate: async () => {
+        onMutate: () => {
 
             const previousLikedByMe = likeUpdate.current.isLikedByMe;
             const previousLikeCount = likeUpdate.current.likeCount;
@@ -38,12 +38,10 @@ const LikeButton: React.FC<LikeButtonProps> = ({ likeInfo, onLike }) => {
 
         },
         onError: (error, variables, context) => {
+            likeUpdate.current.isLikedByMe = context?.previousLikedByMe ?? likeUpdate.current.isLikedByMe;
+            likeUpdate.current.likeCount = context?.previousLikeCount ?? likeUpdate.current.likeCount;
 
-            likeUpdate.current.isLikedByMe = context?.previousLikedByMe!;
-            likeUpdate.current.likeCount = context?.previousLikeCount!;
-
-            toast.error("Something went wrong!")
-
+            toast.error("Something went wrong!");
         },
     });
 

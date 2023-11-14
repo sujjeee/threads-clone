@@ -52,7 +52,7 @@ export default function SearchContainer() {
                                 }}
                                 className='flex justify-between items-center w-full py-5 mr-6 cursor-pointer'>
                                 <div className='text-base font-semibold tracking-normal '>
-                                    Search for <span>"{searchValue}"</span>
+                                    Search for <span>&quot;{searchValue}&quot;</span>
                                 </div>
                                 <ChevronRight className='h-5 w-5  ' />
                             </div>
@@ -89,8 +89,8 @@ const DisplaySearchedResults: React.FC<DisplaySearchedResultsProps> = ({ debounc
 
     return (
         <>
-            {data?.map((user) => (
-                <div className='flex items-center w-full '>
+            {data?.map((user, index) => (
+                <div key={index} className='flex items-center w-full '>
                     <button className='mx-5 '>
                         <div className='h-9 w-9 outline outline-1  outline-border rounded-full'>
                             <Avatar className="rounded-full w-full h-full">

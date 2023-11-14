@@ -1,11 +1,8 @@
 import { useUser } from '@clerk/nextjs'
 import React from 'react'
-import { Button } from '@/components/ui/button'
 import { Separator } from '@/components/ui/separator'
 
-interface CreateWithInputProps { }
-
-const CreateWithInput: React.FC<CreateWithInputProps> = ({ }) => {
+const CreateWithInput: React.FC = ({ }) => {
     const { user } = useUser()
 
     return (
@@ -13,6 +10,7 @@ const CreateWithInput: React.FC<CreateWithInputProps> = ({ }) => {
             <div className='flex w-full my-4'>
                 <div className='w-full flex'>
                     <div>
+                        {/* eslint-disable-next-line next/next/no-img-element */}
                         <img
                             src={user?.imageUrl}
                             width={36}

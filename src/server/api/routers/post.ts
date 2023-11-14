@@ -15,7 +15,7 @@ import {
   GET_REPLIES,
   GET_LIKES
 } from "@/server/constant";
-import { ParentPostsProps } from "@/types";
+import type { ParentPostsProps } from "@/types";
 
 export const postRouter = createTRPCRouter({
 

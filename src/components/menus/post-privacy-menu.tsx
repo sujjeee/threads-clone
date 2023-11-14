@@ -8,9 +8,7 @@ import {
 } from "@/components/ui/dropdown-menu"
 import usePost from '@/store/post';
 
-interface PostPrivacyMenuProps { }
-
-const PostPrivacyMenu: React.FC<PostPrivacyMenuProps> = ({ }) => {
+const PostPrivacyMenu: React.FC = ({ }) => {
 
     const { postPrivacy, setPostPrivacy } = usePost();
 
@@ -22,6 +20,7 @@ const PostPrivacyMenu: React.FC<PostPrivacyMenuProps> = ({ }) => {
 
     const privacyDisplayText = React.useMemo(() => {
         return privacyText[postPrivacy];
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [postPrivacy])
 
     return (

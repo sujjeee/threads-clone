@@ -6,7 +6,7 @@ import { Icons } from '@/components/icons'
 import { ChevronRight } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { api } from '@/trpc/react'
-import { AuthorInfoProps } from '@/types'
+import type { AuthorInfoProps } from '@/types'
 import Username from '@/components/user/user-username'
 import Link from 'next/link'
 import {

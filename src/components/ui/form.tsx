@@ -1,18 +1,20 @@
 import * as React from "react"
-import * as LabelPrimitive from "@radix-ui/react-label"
+import type * as LabelPrimitive from "@radix-ui/react-label"
 import { Slot } from "@radix-ui/react-slot"
 import {
   Controller,
-  ControllerProps,
-  FieldPath,
-  FieldValues,
   FormProvider,
   useFormContext,
 } from "react-hook-form"
 
+import type {
+  FieldPath,
+  FieldValues,
+  ControllerProps,
+} from "react-hook-form"
+
 import { cn } from "@/lib/utils"
 import { Label } from "@/components/ui/label"
-import { toast } from "sonner"
 
 const Form = FormProvider
 
@@ -89,7 +91,7 @@ const FormLabel = React.forwardRef<
   React.ElementRef<typeof LabelPrimitive.Root>,
   React.ComponentPropsWithoutRef<typeof LabelPrimitive.Root>
 >(({ className, ...props }, ref) => {
-  const { error, formItemId, isDirty } = useFormField()
+  const { error, formItemId } = useFormField()
 
   return (
     <Label

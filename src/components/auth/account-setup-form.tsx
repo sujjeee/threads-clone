@@ -22,7 +22,8 @@ import { Icons } from '@/components/icons'
 import { useRouter } from 'next/navigation'
 import { toast } from 'sonner'
 import { ResizeTextarea } from '@/components/ui/resize-textarea'
-import { User, Privacy } from '@prisma/client'
+import { Privacy } from '@prisma/client'
+import type { User } from '@prisma/client'
 import { useUser } from '@clerk/nextjs'
 import { z } from 'zod'
 import { useForm } from 'react-hook-form'
@@ -30,11 +31,9 @@ import { zodResolver } from '@hookform/resolvers/zod'
 import {
     Form,
     FormControl,
-    FormDescription,
     FormField,
     FormItem,
     FormLabel,
-    FormMessage,
 } from "@/components/ui/form"
 
 type UserSetupProps = Pick<User, 'bio' | 'link' | 'privacy' | 'username'>;
@@ -44,7 +43,6 @@ export default function AccountSetupForm({ username }: { username: string }) {
     const router = useRouter()
 
     const [showPrivacyPage, setShowPrivacyPage] = React.useState(false);
-    const [correctUserData, setCorrectUserData] = React.useState(false);
 
     const [userAccountData, setUserAccountData] = React.useState<UserSetupProps>({
         bio: "",
@@ -62,7 +60,7 @@ export default function AccountSetupForm({ username }: { username: string }) {
     };
 
     const { mutate: accountSetup, isLoading } = api.auth.accountSetup.useMutation({
-        onSuccess: async ({ success, username }) => {
+        onSuccess: ({ success, username }) => {
             if (success) {
                 router.push(origin ? `${origin}` : '/')
             }
@@ -99,7 +97,7 @@ export default function AccountSetupForm({ username }: { username: string }) {
         },
     })
 
-    async function handleAccountSetup() {
+    function handleAccountSetup() {
         accountSetup({
             bio: JSON.stringify(userAccountData.bio!, null, 2),
             link: userAccountData.link!,
@@ -107,7 +105,7 @@ export default function AccountSetupForm({ username }: { username: string }) {
         })
     }
 
-    async function handleSecurity(data: z.infer<typeof FormSchema>) {
+    function handleSecurity(data: z.infer<typeof FormSchema>) {
         setUserAccountData({
             ...userAccountData,
             'link': data.url,

@@ -3,6 +3,7 @@
 import useWindow from '@/hooks/use-window'
 import React from 'react'
 import { Icons } from '@/components/icons'
+import Image from 'next/image'
 
 export default function ThreadsBanner() {
     const { isMobile } = useWindow()
@@ -14,7 +15,9 @@ export default function ThreadsBanner() {
                 </div>
                 :
                 <nav className='flex w-full justify-between items-center z-50 pointer-events-none select-none'>
-                    <img
+                    <Image
+                        width={500}
+                        height={500}
                         src="/bg.webp"
                         alt="bg"
                         className='w-full object-cover h-[500px] '

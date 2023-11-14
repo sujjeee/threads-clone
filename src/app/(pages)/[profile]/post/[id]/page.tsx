@@ -10,9 +10,7 @@ import { Separator } from '@/components/ui/separator'
 import { usePathname, useRouter } from 'next/navigation'
 import { cn } from '@/lib/utils'
 
-interface PostInfoPage { }
-
-const PostInfoPage: React.FC<PostInfoPage> = ({ }) => {
+const PostInfoPage: React.FC = ({ }) => {
     const path = usePathname()
     const router = useRouter()
 
@@ -23,7 +21,7 @@ const PostInfoPage: React.FC<PostInfoPage> = ({ }) => {
     }
 
     const segments = path.split('/');
-    const id = segments[segments.length - 1] as string
+    const id = segments[segments.length - 1]! as string;
 
     const { data, isLoading, isError } = api.post.getNestedPosts.useQuery({ id })
 

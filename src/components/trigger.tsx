@@ -1,6 +1,6 @@
 "use client"
 
-import { TriggerProps } from "@/types";
+import type { TriggerProps } from "@/types";
 import CreateWithInput from "@/components/create-with-input";
 import CreateButton from "@/components/buttons/create-button";
 import ReplyButton from "@/components/buttons/reply-button";

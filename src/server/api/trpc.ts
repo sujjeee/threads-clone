@@ -88,9 +88,11 @@ export const middleware = t.middleware
 
 const isAuth = middleware(async (opts) => {
   const user = await currentUser()
-  if (!user || !user.id) {
+
+  if (!user?.id) {
     throw new TRPCError({ code: 'UNAUTHORIZED' })
   }
+
   return opts.next({
     ctx: {
       userId: user.id,

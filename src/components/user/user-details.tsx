@@ -6,7 +6,7 @@ import Link from 'next/link'
 import { usePathname, useRouter } from 'next/navigation'
 import { formatURL } from '@/lib/utils'
 import { Icons } from '@/components/icons'
-import { UserProfileInfoProps } from '@/types'
+import type { UserProfileInfoProps } from '@/types'
 import { Button } from '@/components/ui/button'
 import { useUser } from '@clerk/nextjs'
 import {
@@ -20,7 +20,6 @@ import UserFollowers from '@/components/user/user-followers'
 const UserProfile: React.FC<UserProfileInfoProps> = ({
     id,
     bio,
-    createdAt,
     fullname,
     image,
     link,
@@ -38,7 +37,7 @@ const UserProfile: React.FC<UserProfileInfoProps> = ({
     }
 
 
-    const { mutate: toggleFollow, isLoading } = api.user.toggleFollow.useMutation({});
+    const { mutate: toggleFollow } = api.user.toggleFollow.useMutation({});
 
     return (
         <div className=" z-[10] mt-4 flex w-full flex-col space-y-4">

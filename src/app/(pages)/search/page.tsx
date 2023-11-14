@@ -12,9 +12,9 @@ import PostCard from '@/components/cards/post-card'
 import { redirect, useSearchParams } from 'next/navigation'
 import { Separator } from '@/components/ui/separator'
 
-interface pageProps { }
 
-const SearchPage: React.FC<pageProps> = ({ }) => {
+
+const SearchPage: React.FC = ({ }) => {
     const searchParams = useSearchParams()
     const search = searchParams.get('q')
 

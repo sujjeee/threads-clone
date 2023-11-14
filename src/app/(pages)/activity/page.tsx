@@ -2,7 +2,6 @@
 
 import React from 'react'
 import Link from 'next/link'
-import { Button } from '@/components/ui/button'
 import { Separator } from '@/components/ui/separator'
 import { api } from '@/trpc/react'
 import Loading from '@/app/(pages)/loading'

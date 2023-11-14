@@ -1,7 +1,7 @@
 import React from 'react'
 import Link from 'next/link'
 import { Separator } from '@/components/ui/separator'
-import { UserCardProps } from '@/types'
+import type { UserCardProps } from '@/types'
 import Username from '@/components/user/user-username'
 import { Icons } from '@/components/icons'
 import FollowButton from '@/components/buttons/follow-button'

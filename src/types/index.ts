@@ -1,5 +1,5 @@
-import { AppRouter } from "@/server/api/root";
-import { inferRouterOutputs } from "@trpc/server";
+import type { AppRouter } from "@/server/api/root";
+import type { inferRouterOutputs } from "@trpc/server";
 
 type ArrayElement<ArrayType extends readonly unknown[]> = ArrayType[number];
 type RouterOutput = inferRouterOutputs<AppRouter>;

@@ -9,9 +9,7 @@ import PostCard from '@/components/cards/post-card'
 import { Separator } from '@/components/ui/separator'
 import NotFound from '@/app/not-found'
 
-interface pageProps { }
-
-const ProfilePage: React.FC<pageProps> = ({ }) => {
+const ProfilePage: React.FC = ({ }) => {
 
   const path = usePathname()
   const router = useRouter()
@@ -30,9 +28,9 @@ const ProfilePage: React.FC<pageProps> = ({ }) => {
 
   return (
     <div>
-      {data && data.userDetails ? (
+      {data && data?.userDetails ? (
         <>
-          <UserProfile {...data.userDetails} />
+          <UserProfile {...data?.userDetails} />
           {data && data.posts.length > 0 ? (
             data.posts.map((post, index) => (
               <div key={post.id}>

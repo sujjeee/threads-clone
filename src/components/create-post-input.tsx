@@ -17,6 +17,7 @@ import {
     useDropzone,
     type Accept,
 } from "react-dropzone";
+import PostImageCard from '@/components/cards/post-image-card';
 
 interface CreatePostInputProps {
     isOpen: boolean
@@ -63,6 +64,7 @@ const CreatePostInput: React.FC<CreatePostInputProps> = ({
 
         setFile(acceptedFiles)
 
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [maxSize]);
 
     React.useEffect(() => {
@@ -80,6 +82,7 @@ const CreatePostInput: React.FC<CreatePostInputProps> = ({
         };
 
         checkImageSafety();
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [file]);
 
 
@@ -151,13 +154,8 @@ const CreatePostInput: React.FC<CreatePostInputProps> = ({
                                 __html: replyThreadInfo.text.slice(1, -1).replace(/\\n/g, '\n')
                             }} />
                         </div>
-                        {replyThreadInfo?.images?.length > 0 &&
-                            <div className='relative overflow-hidden rounded-[12px] border border-[#393939] w-fit'>
-                                <img
-                                    src={replyThreadInfo.images[0]}
-                                    alt={`${replyThreadInfo.author.fullname}'s post image`}
-                                    className='object-contain max-h-[520px] max-w-full rounded-[12px]' />
-                            </div>
+                        {replyThreadInfo?.images && replyThreadInfo?.images?.length > 0 &&
+                            <PostImageCard image={replyThreadInfo.images[0]} />
                         }
                     </>
                 ) : (
@@ -171,6 +169,7 @@ const CreatePostInput: React.FC<CreatePostInputProps> = ({
                         />
                         {previewURL && (
                             <div className='relative overflow-hidden rounded-[12px] border border-border w-fit'>
+                                {/* eslint-disable-next-line next/next/no-img-element */}
                                 <img
                                     src={previewURL}
                                     alt=""

@@ -5,7 +5,7 @@ import { Follow } from '@/components/ui/follow-button'
 import { api } from '@/trpc/react';
 import { toast } from 'sonner';
 import { usePathname } from 'next/navigation';
-import { AuthorInfoProps } from '@/types';
+import type { AuthorInfoProps } from '@/types';
 import { useUser } from '@clerk/nextjs';
 import { cn } from '@/lib/utils';
 
@@ -31,7 +31,7 @@ const FollowButton: React.FC<FollowButtonProps> = ({ variant, author, className 
     const trpcUtils = api.useUtils();
 
     const { mutate: toggleFollow, isLoading } = api.user.toggleFollow.useMutation({
-        onMutate: async () => {
+        onMutate: () => {
 
             const previousFollowedByMe = followUpdate.current.isFollowedByMe;
 
@@ -47,10 +47,8 @@ const FollowButton: React.FC<FollowButtonProps> = ({ variant, author, className 
 
         },
         onError: (error, variables, context) => {
-
-            followUpdate.current.isFollowedByMe = context?.previousFollowedByMe!;
-            toast.error("FollowError: Something went wrong!")
-
+            followUpdate.current.isFollowedByMe = context?.previousFollowedByMe ?? followUpdate.current.isFollowedByMe;
+            toast.error("FollowError: Something went wrong!");
         },
         onSettled: async () => {
             if (path === '/') {

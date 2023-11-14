@@ -5,7 +5,7 @@ import Link from 'next/link'
 import { Plus } from 'lucide-react'
 import { useUser } from '@clerk/nextjs'
 import CreatePostCard from '@/components/cards/create-post-card'
-import { PostReplyCardProps } from '@/types'
+import type { PostReplyCardProps } from '@/types'
 import Username from '@/components/user/user-username'
 import PostActionMenu from '@/components/menus/post-action-menu'
 import PostParentCard from '@/components/cards/post-parent-card'
@@ -28,11 +28,12 @@ import {
     DialogContent,
     DialogTrigger
 } from '@/components/ui/dialog'
+import PostImageCard from '@/components/cards/post-image-card'
 
 const PostReplyCard: React.FC<PostReplyCardProps> = ({ postInfo, parentPosts }) => {
 
     React.useEffect(() => {
-        const scrollToPost = async () => {
+        const scrollToPost = () => {
             const postIdFromUrl = postInfo.id;
             if (postIdFromUrl) {
                 const postElement = document.getElementById(postIdFromUrl);
@@ -82,7 +83,7 @@ const PostReplyCard: React.FC<PostReplyCardProps> = ({ postInfo, parentPosts }) 
                 "mb-0": replies.length > 0
             })}>
 
-                {parentPosts && parentPosts.map((post, index) => (
+                {parentPosts && parentPosts?.map((post, index) => (
                     <>
                         <PostParentCard
                             key={index}
@@ -145,10 +146,8 @@ const PostReplyCard: React.FC<PostReplyCardProps> = ({ postInfo, parentPosts }) 
                                 className="text-accent-foreground text-[15px] leading-5 mt-1 max-md:max-w-full whitespace-pre-line"
                             />
 
-                            {images.length > 0 &&
-                                <div className='relative overflow-hidden rounded-[12px] border border-[#393939] w-fit mt-2.5 '>
-                                    <img src={images[0]} alt="" className='object-contain max-h-[520px] max-w-full  rounded-[12px]' />
-                                </div>
+                            {images && images.length > 0 &&
+                                <PostImageCard image={images[0]} />
                             }
 
                             <div className="flex  font-bold -ml-2 mt-2 w-full ">

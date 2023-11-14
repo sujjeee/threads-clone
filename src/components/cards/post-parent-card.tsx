@@ -5,7 +5,7 @@ import Link from 'next/link'
 import { Plus } from 'lucide-react'
 import { cn, formatTimeAgo } from '@/lib/utils'
 import { useUser } from '@clerk/nextjs'
-import { PostCardProps } from '@/types'
+import type { PostCardProps } from '@/types'
 import CreatePostCard from '@/components/cards/create-post-card'
 import UserRepliesImages from '@/components/user/user-replies-images'
 import ProfileInfoCard from '@/components/cards/user-profile-card'
@@ -26,6 +26,7 @@ import {
     DialogContent,
     DialogTrigger,
 } from "@/components/ui/dialog"
+import PostImageCard from '@/components/cards/post-image-card'
 
 const PostParentCard: React.FC<PostCardProps> = ({
     id,
@@ -119,10 +120,8 @@ const PostParentCard: React.FC<PostCardProps> = ({
                                 <div dangerouslySetInnerHTML={{ __html: text.slice(1, -1).replace(/\\n/g, '\n') }} className="text-accent-foreground text-[15px] leading-5 mt-1 max-md:max-w-full whitespace-pre-line" />
                             </Link>
 
-                            {images?.length > 0 &&
-                                <div className='relative overflow-hidden rounded-[12px] border border-[#393939] w-fit mt-2.5 '>
-                                    <img src={images[0]} alt="" className='object-contain max-h-[520px] max-w-full  rounded-[12px]' />
-                                </div>
+                            {images && images.length > 0 &&
+                                <PostImageCard image={images[0]} />
                             }
 
                             <div className="flex  font-bold -ml-2 mt-2 w-full">
