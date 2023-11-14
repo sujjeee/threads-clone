@@ -2,7 +2,6 @@
 
 import React from 'react'
 import { api } from '@/trpc/react'
-import Loading from '@/app/(pages)/loading'
 import PostCard from '@/components/cards/post-card'
 import { Separator } from '@/components/ui/separator'
 import NotFound from '@/app/not-found'
@@ -15,6 +14,7 @@ import {
 import { Icons } from '@/components/icons'
 
 const ProfilePage: React.FC = ({ }) => {
+  const params = useParams()
   const path = usePathname()
   const router = useRouter()
 
@@ -24,7 +24,6 @@ const ProfilePage: React.FC = ({ }) => {
     return null;
   }
 
-  const params = useParams()
   const profile = params.profile as string
   const username = decodeURIComponent(profile).substring(1)
 

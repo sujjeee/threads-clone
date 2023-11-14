@@ -12,7 +12,7 @@ export type PostReplyCardProps = RouterOutput['post']['getNestedPosts'];
 
 export type UserCardProps = ArrayElement<RouterOutput['user']['allUsers']['allUsers']>;
 
-export type UserProfileInfoProps = RouterOutput['user']['profileInfo']['userDetails'];
+export type UserProfileInfoProps = RouterOutput['user']['Info']['userDetails'];
 
 export type ParentPostInfo = Pick<PostCardProps, 'id' | 'text' | 'images' | 'author'>;
 

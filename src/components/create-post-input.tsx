@@ -3,7 +3,7 @@
 import React from 'react'
 import NSFWFilter from 'nsfw-filter';
 import useFileStore from '@/store/fileStore';
-import { EyeOff, X } from 'lucide-react'
+import { X } from 'lucide-react'
 import Username from '@/components/user/user-username';
 import { ResizeTextarea } from '@/components/ui/resize-textarea'
 import { cn } from '@/lib/utils';
@@ -38,7 +38,7 @@ const CreatePostInput: React.FC<CreatePostInputProps> = ({
     const [inputValue, setInputValue] = React.useState('')
     const [file, setFile] = React.useState<File[] | null>()
 
-    const [isSafeImage, setIsSafeImage] = React.useState(false)
+    // const [isSafeImage, setIsSafeImage] = React.useState(false)
 
     const handleResizeTextareaChange = (event: React.ChangeEvent<HTMLTextAreaElement>) => {
         const newValue = event.target.value;
@@ -75,7 +75,7 @@ const CreatePostInput: React.FC<CreatePostInputProps> = ({
                 if (checkUploadedImage) {
                     try {
                         const isSafe = await NSFWFilter.isSafe(checkUploadedImage);
-                        setIsSafeImage(isSafe);
+                        // setIsSafeImage(isSafe);
                         setIsSelectedImageSafe(isSafe);
                         setSelectedFile(file);
                     } catch (error) {
@@ -187,7 +187,7 @@ const CreatePostInput: React.FC<CreatePostInputProps> = ({
                                 } */}
                                 <Button
                                     onClick={() => {
-                                        setIsSafeImage(true)
+                                        // setIsSafeImage(true)
                                         setSelectedFile([])
                                         setPreviewURL('')
                                     }}

@@ -2,7 +2,7 @@
 
 import { api } from "@/trpc/react"
 import { useParams, usePathname } from "next/navigation"
-import Loading from "../loading"
+import Loading from "@/app/(pages)/loading"
 import NotFound from "@/app/not-found"
 import UserProfile from "@/components/user/user-details"
 
@@ -10,7 +10,7 @@ interface PagesLayoutProps {
     children: React.ReactNode
 }
 
-export default async function ProfileLayout({ children }: PagesLayoutProps) {
+export default function ProfileLayout({ children }: PagesLayoutProps) {
 
     const path = usePathname()
 
