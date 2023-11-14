@@ -7,13 +7,15 @@ import UserAvatar from '@/components/user/user-avatar'
 import { api } from '@/trpc/react'
 import { Icons } from '@/components/icons'
 import { ParentPostInfo } from '@/types'
+import Link from 'next/link'
 
-type PostPreviewCardProps = Partial<Pick<ParentPostInfo, 'id' | 'text' | 'author'>>;
+type PostQuoteCardProps = Partial<Pick<ParentPostInfo, 'id' | 'text' | 'author'>>;
 
-const PostPreviewCard: React.FC<PostPreviewCardProps & { quoteId?: string }> = ({
+const PostQuoteCard: React.FC<PostQuoteCardProps & { quoteId?: string, isLink?: boolean }> = ({
     author,
     text,
-    quoteId
+    quoteId,
+    isLink
 }) => {
     if (quoteId) {
         const { data, isLoading } = api.post.getQuotedPost.useQuery(
@@ -33,22 +35,27 @@ const PostPreviewCard: React.FC<PostPreviewCardProps & { quoteId?: string }> = (
 
         if (!data) return <>Not found.</>;
 
-        return <RenderCard author={data?.postInfo.user} text={data?.postInfo.text} />;
-    }
+        const RenderedCard = (
+            <RenderCard author={data?.postInfo.user} text={data?.postInfo.text} />
+        );
 
-    // Use author and text directly without making an API call
-    return <RenderCard author={author} text={text} />;
+        if (!isLink) {
+            return RenderedCard;
+        } else {
+            return <Link href={`@${data.postInfo.user.username}/post/${data.postInfo.id}`} className='w-full'>{RenderedCard}</Link>;
+        }
+    }
 
 }
 
-export default PostPreviewCard
+export default PostQuoteCard
 
-const RenderCard: React.FC<PostPreviewCardProps> = ({
+const RenderCard: React.FC<PostQuoteCardProps> = ({
     author,
     text,
 }) => {
     return (
-        <Card className='overflow-hidden p-4 mt-3 rounded-lg space-y-1.5 bg-transparent border-border w-full'>
+        <Card className='overflow-hidden p-4 mt-3 rounded-xl space-y-1.5 bg-transparent border-border w-full'>
             <div className='flex items-center gap-2'>
                 <UserAvatar
                     fullname={author?.fullname}
@@ -68,4 +75,3 @@ const RenderCard: React.FC<PostPreviewCardProps> = ({
         </Card>
     )
 }
-

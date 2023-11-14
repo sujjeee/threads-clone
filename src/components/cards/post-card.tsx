@@ -14,7 +14,7 @@ import ShareButton from '@/components/buttons/share-button'
 import RepostButton from '@/components/buttons/repost-button'
 import Username from '@/components/user/user-username'
 import PostActivityCard from '@/components/cards/post-activity-card'
-import PostPreview from '@/components/cards/post-preview-card'
+import PostQuoteCard from '@/components/cards/post-quote-card'
 import LikeButton from '@/components/buttons/like-button'
 import { useImageStore } from '@/store/image'
 import {
@@ -125,7 +125,7 @@ const PostCard: React.FC<PostCardProps> = ({
                             }
 
                             {quoteId &&
-                                <PostPreview quoteId={quoteId} />
+                                <PostQuoteCard quoteId={quoteId} isLink={true} />
                             }
 
                             <div className="flex  font-bold -ml-2 mt-2 w-full">

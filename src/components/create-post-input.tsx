@@ -12,7 +12,7 @@ import { useUser } from '@clerk/nextjs';
 import { Icons } from '@/components/icons';
 import { Button } from '@/components/ui/button';
 import type { ParentPostInfo } from '@/types';
-import PostPreview from '@/components/cards/post-preview-card';
+import PostQuoteCard from '@/components/cards/post-quote-card';
 import {
     useDropzone,
     type Accept,
@@ -206,7 +206,7 @@ const CreatePostInput: React.FC<CreatePostInputProps> = ({
                 }
 
                 {quoteInfo &&
-                    <PostPreview {...quoteInfo} />
+                    <PostQuoteCard {...quoteInfo} />
                 }
             </div>
         </div>
