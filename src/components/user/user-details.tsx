@@ -3,7 +3,7 @@
 import React from 'react'
 import { Instagram } from 'lucide-react'
 import Link from 'next/link'
-import { usePathname, useRouter } from 'next/navigation'
+import { usePathname } from 'next/navigation'
 import { formatURL } from '@/lib/utils'
 import { Icons } from '@/components/icons'
 import type { UserProfileInfoProps } from '@/types'
@@ -14,31 +14,22 @@ import {
     AvatarFallback,
     AvatarImage
 } from '@/components/ui/avatar'
-import { api } from '@/trpc/react'
 import UserFollowers from '@/components/user/user-followers'
+import FollowButton from '@/components/buttons/follow-button'
 
-const UserProfile: React.FC<UserProfileInfoProps> = ({
-    id,
-    bio,
-    fullname,
-    image,
-    link,
-    username,
-    followers,
-    isAdmin
-}) => {
+const UserProfile: React.FC<UserProfileInfoProps> = (props) => {
+    const {
+        id,
+        bio,
+        fullname,
+        image,
+        link,
+        username,
+        followers,
+        isAdmin
+    } = props
     const path = usePathname()
-    const router = useRouter()
     const { user } = useUser()
-
-    if (!path.startsWith('/@')) {
-        const newPath = '/@' + path.replace(/^\//, '')
-        router.push(newPath);
-        return null;
-    }
-
-
-    const { mutate: toggleFollow } = api.user.toggleFollow.useMutation({});
 
     return (
         <div className=" z-[10] mt-4 flex w-full flex-col space-y-4">
@@ -90,13 +81,10 @@ const UserProfile: React.FC<UserProfileInfoProps> = ({
             </div>
             {user?.id != id &&
                 <div className="grid gap-2 sm:grid-cols-2 pt-2">
-                    <Button
-                        size={'sm'}
-                        onClick={() => toggleFollow({ id })}
-                        className="w-full border-[#333333] sm:w-auto rounded-xl  py-1 px-4 font-semibold bg-foreground hover:bg-foreground select-none text-white dark:text-black active:scale-95 tracking-normal text-[16px]"
-                    >
-                        Follow
-                    </Button>
+                    <FollowButton
+                        className="text-[14px] px-6"
+                        variant='default'
+                        author={props} />
                     <Button
                         size={'sm'}
                         variant="outline"

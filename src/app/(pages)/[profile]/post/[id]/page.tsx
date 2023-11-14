@@ -11,6 +11,7 @@ import { useParams } from 'next/navigation'
 import { cn } from '@/lib/utils'
 
 const PostInfoPage: React.FC = ({ }) => {
+
     const params = useParams()
     const id = params.id as string
 
