@@ -20,6 +20,7 @@ const ProfilePage: React.FC = ({ }) => {
 
   if (path.length < 20 && !path.startsWith('/@')) {
     const newPath = '/@' + path.replace(/^\//, '')
+    console.log('newPath', newPath)
     router.push(newPath);
     return null;
   }
@@ -36,6 +37,7 @@ const ProfilePage: React.FC = ({ }) => {
       </div>
     )
   }
+
   if (isError) return <NotFound />
 
   return (
