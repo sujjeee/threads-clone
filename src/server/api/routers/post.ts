@@ -67,7 +67,7 @@ export const postRouter = createTRPCRouter({
         })
 
         if (input.postAuthor && userId !== input.postAuthor) {
-          const quote = await prisma.notification.create({
+          await prisma.notification.create({
             data: {
               type: 'QUOTE',
               senderUserId: userId,

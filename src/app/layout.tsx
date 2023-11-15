@@ -10,7 +10,7 @@ import { Suspense } from "react";
 import FullscreenImageView from "@/components/fullscreen-image-view";
 import Loading from "@/app/(pages)/loading";
 import { siteConfig } from "@/config/site";
-import { Metadata, Viewport } from "next";
+import type { Metadata, Viewport } from "next";
 
 const inter = Inter({
   subsets: ["latin"],
