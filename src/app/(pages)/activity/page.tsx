@@ -19,10 +19,12 @@ export default function ActivityPage() {
     if (isError) return <Error />
 
     const { notifications } = data
+    const reversedNotifications = [...notifications].reverse();
+
     return (
         <>
             {data && data.notifications.length > 0 ? (
-                notifications.map((activity, index) => (
+                reversedNotifications.map((activity, index) => (
                     <div key={index} className='flex w-full mt-4 '>
                         <UserNotificationAvtar
                             username={activity.senderUser.username}

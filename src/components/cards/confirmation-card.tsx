@@ -11,6 +11,8 @@ import {
 import { api } from '@/trpc/react';
 import { toast } from 'sonner';
 import { usePathname } from 'next/navigation';
+import { Icons } from '@/components/icons';
+import { Check } from 'lucide-react';
 
 interface ConfirmationCardProps {
     id: string
@@ -21,9 +23,9 @@ const ConfirmationCard: React.FC<ConfirmationCardProps> = ({ id }) => {
 
     const trpcUtils = api.useUtils();
 
-    const { mutate: deletePost } = api.post.deletePost.useMutation({
+    const { mutateAsync: deletePost } = api.post.deletePost.useMutation({
         onError: () => {
-            toast.error("PostCallbackError: Something went wrong!")
+            toast.error("DeleteError: Something went wrong!")
         },
         onSettled: async () => {
             if (path === '/') {
@@ -32,6 +34,34 @@ const ConfirmationCard: React.FC<ConfirmationCardProps> = ({ id }) => {
             await trpcUtils.invalidate()
         },
     });
+
+    function handleDeletePost() {
+
+        const promise = deletePost({ id })
+
+        toast.promise(promise, {
+            loading: (
+                <div className='w-[270px] justify-start items-center flex p-0 gap-1.5'>
+                    <div>
+                        <Icons.loading className='w-8 h-8 ' />
+                    </div>
+                    Deleting...
+                </div>
+            ),
+            success: () => {
+                return (
+                    <div className='w-[270px] justify-between items-center flex p-0 '>
+                        <div className='flex justify-center items-center gap-1.5'>
+                            <Check className='w-5 h-5 ' />
+                            Deleted
+                        </div>
+                    </div>
+                )
+            },
+            error: 'Error',
+        });
+    }
+
 
     return (
         <AlertDialog>
@@ -47,7 +77,7 @@ const ConfirmationCard: React.FC<ConfirmationCardProps> = ({ id }) => {
                         Cancel
                     </AlertDialogClose>
                     <AlertDialogDelete
-                        onClick={() => deletePost({ id })}
+                        onClick={handleDeletePost}
                         className='w-full flex justify-center text-red-600 items-center py-4 border-border font-semibold mt-0 focus:bg-transparent px-4 tracking-normal select-none cursor-pointer text-[15px]  active:bg-primary-foreground   rounded-none'>
                         Delete
                     </AlertDialogDelete>
