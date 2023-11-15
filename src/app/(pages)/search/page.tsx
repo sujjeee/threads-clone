@@ -11,6 +11,7 @@ import SearchContainer from '@/components/search-container'
 import PostCard from '@/components/cards/post-card'
 import { redirect, useSearchParams } from 'next/navigation'
 import { Separator } from '@/components/ui/separator'
+import { cn } from '@/lib/utils'
 
 
 
@@ -40,7 +41,7 @@ const SearchPage: React.FC = ({ }) => {
                                 next={fetchNextPage}
                                 hasMore={hasNextPage ?? false}
                                 loader={
-                                    <div className="h-[100px] w-full justify-center items-center flex ">
+                                    <div className="h-[100px] w-full justify-center items-center flex  mb-[10vh] sm:mb-0">
                                         <Icons.loading className='h-11 w-11' />
                                     </div>
                                 }
@@ -84,7 +85,7 @@ const DisplayQueryPosts: React.FC<DisplayQueryPostsProps> = ({ searchQuery }) =>
     if (allPosts?.length === 0 || allPosts === undefined) {
         return (
             <div className="h-[50vh] w-full justify-center items-center flex text-[#777777]">
-                <p>No results.</p>
+                <p>No users.</p>
             </div>
         )
     }
@@ -96,17 +97,17 @@ const DisplayQueryPosts: React.FC<DisplayQueryPostsProps> = ({ searchQuery }) =>
                 next={fetchNextPage}
                 hasMore={hasNextPage ?? false}
                 loader={
-                    <div className="h-[100px] w-full justify-center items-center flex ">
+                    <div className="h-[100px] w-full justify-center items-center flex  mb-[10vh] sm:mb-0">
                         <Icons.loading className='h-11 w-11' />
                     </div>
                 }
             >
                 {allPosts?.map((post, index) => {
                     return (
-                        <>
+                        <div key={index} className={cn({ 'mb-[10vh]': index == allPosts.length - 1 })}>
                             <PostCard key={index} {...post} />
                             {index !== allPosts.length - 1 && <Separator />}
-                        </>
+                        </div>
                     )
                 })}
             </InfiniteScroll>

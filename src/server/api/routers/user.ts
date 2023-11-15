@@ -20,7 +20,6 @@ export const userRouter = createTRPCRouter({
             const isUser = await ctx.db.user.findUnique({
                 where: {
                     username: input.username,
-                    verified: true
                 },
             });
 
@@ -69,7 +68,6 @@ export const userRouter = createTRPCRouter({
             const isUser = await ctx.db.user.findUnique({
                 where: {
                     username: input.username,
-                    verified: true
                 },
             });
 
@@ -138,7 +136,6 @@ export const userRouter = createTRPCRouter({
             const isUser = await ctx.db.user.findUnique({
                 where: {
                     username: input.username,
-                    verified: true
                 },
             });
 
@@ -210,7 +207,6 @@ export const userRouter = createTRPCRouter({
             const isUser = await ctx.db.user.findUnique({
                 where: {
                     username: input.username,
-                    verified: true
                 },
             });
 

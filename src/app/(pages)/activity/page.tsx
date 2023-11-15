@@ -6,7 +6,7 @@ import { Separator } from '@/components/ui/separator'
 import { api } from '@/trpc/react'
 import Loading from '@/app/(pages)/loading'
 import Username from '@/components/user/user-username'
-import { formatTimeAgo, truncateText } from '@/lib/utils'
+import { cn, formatTimeAgo, truncateText } from '@/lib/utils'
 import UserNotificationAvtar from '@/components/user/user-notification-avatar'
 import Error from '@/app/error'
 import FollowButton from '@/components/buttons/follow-button'
@@ -25,7 +25,7 @@ export default function ActivityPage() {
         <>
             {data && data.notifications.length > 0 ? (
                 reversedNotifications.map((activity, index) => (
-                    <div key={index} className='flex w-full mt-4 '>
+                    <div key={index} className={cn("flex w-full mt-4", { 'mb-[15vh]': index == reversedNotifications.length - 1 })}>
                         <UserNotificationAvtar
                             username={activity.senderUser.username}
                             image={activity.senderUser.image ?? ''}
