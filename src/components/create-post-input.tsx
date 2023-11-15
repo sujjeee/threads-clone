@@ -60,8 +60,8 @@ const CreatePostInput: React.FC<CreatePostInputProps> = ({
 
         const previewURL = URL.createObjectURL(acceptedFile)
         setPreviewURL(previewURL)
-        setSelectedFile(acceptedFiles);
 
+        setSelectedFile(acceptedFiles);
         setFile(acceptedFiles)
 
         // eslint-disable-next-line react-hooks/exhaustive-deps

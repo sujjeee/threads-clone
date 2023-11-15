@@ -52,7 +52,7 @@ const UserProfile: React.FC<UserProfileInfoProps> = (props) => {
                         <h4 className="text-[15px]">
                             {username}
                         </h4>
-                        <span className="ml-0.5 rounded-2xl bg-[#1E1E1E] text-[#777777] text-xm px-1.5 py-1 text-[11px] font-medium">threads.net</span>
+                        <span className="ml-0.5 rounded-2xl bg-primary text-[#777777] text-xm px-1.5 py-1 text-[11px] font-medium">threads.net</span>
                     </div>
                 </div>
                 <Avatar className="h-[80px] w-[80px] overflow-visible outline outline-2 outline-border relative">

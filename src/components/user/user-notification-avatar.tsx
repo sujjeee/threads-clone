@@ -27,9 +27,20 @@ const UserNotificationAvtar: React.FC<UserNotificationAvtarProps> = ({
     return enumValue.toLowerCase();
   }
 
-  const icon_name = enumToLower(type) as keyof typeof Icons
+  const getIcon = (typeName: string) => {
+    switch (typeName) {
+      case 'QUOTE':
+        return Icons.quote2;
+      case 'REPLY':
+        return Icons.reply2;
+      case 'REPOST':
+        return Icons.repost2;
+      default:
+        return Icons[enumToLower(typeName) as keyof typeof Icons];
+    }
+  };
 
-  const Icon = Icons[icon_name]
+  const IconComponent = getIcon(type);
 
   return (
     <Link href={`/@${username}`} >
@@ -45,14 +56,16 @@ const UserNotificationAvtar: React.FC<UserNotificationAvtarProps> = ({
           <div
             className={cn(
               'absolute -bottom-1 -right-1 rounded-2xl border-2 border-background text-white', {
-              'bg-[#fe0169]': icon_name === 'like',
-              'bg-[#6e3def]': icon_name === 'follow',
-              'bg-[#24c3ff]': icon_name === 'reply',
-              'bg-[#c329bf]': icon_name === 'repost',
-              'bg-[#fe7900]': icon_name === 'quote',
+              'bg-[#fe0169]': type === 'LIKE',
+              'bg-[#6e3def]': type === 'FOLLOW',
+              'bg-[#24c3ff]': type === 'REPLY',
+              'bg-[#c329bf]': type === 'REPOST',
+              'bg-[#fe7900]': type === 'QUOTE',
             })}
           >
-            {type !== 'ADMIN' && <Icon className='h-[20px] w-[20px] p-1' fill='white' />}
+            {type !== 'ADMIN' && IconComponent && (
+              <IconComponent className='h-[20px] w-[20px]' fill='white' />
+            )}
           </div>
         </Avatar>
       </div>
