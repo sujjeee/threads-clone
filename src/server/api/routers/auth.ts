@@ -54,16 +54,14 @@ export const authRouter = createTRPCRouter({
 
                     await clerkClient.users.updateUser(userId, params);
 
-                    // TODO: use in prod.
-                    // await prisma.notification.create({
-                    //     data: {
-                    //         type: 'ADMIN',
-                    //         isPublic: true,
-                    //         userId: 'user_2TWK6vz4I7TtQ7JVmBAZlu',
-                    //         threadId: '2TWK6vz4I7TtQ7JVmBAZlDZY7lu',
-                    //         message: `Hey ${created_user.fullname}! Welcome to Threads. I hope you like this project. If so, please make sure to give it a star on GitHub and share your views on Twitter. Thanks.`
-                    //     }
-                    // });
+                    await prisma.notification.create({
+                        data: {
+                            isPublic: true,
+                            type: 'ADMIN',
+                            senderUserId: 'user_2YA5HbNYPXWdSbeJJBPW3Za5OzM',
+                            message: `Hey ${created_user.fullname}! Welcome to Threads. I hope you like this project. If so, please make sure to give it a star on GitHub and share your views on Twitter. Thanks.`
+                        }
+                    });
                 });
             }
 
