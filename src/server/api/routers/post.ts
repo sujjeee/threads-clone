@@ -27,7 +27,8 @@ export const postRouter = createTRPCRouter({
         }),
         imageUrl: z.string().optional(),
         privacy: z.nativeEnum(PostPrivacy).default('ANYONE'),
-        quoteId: z.string().optional()
+        quoteId: z.string().optional(),
+        postAuthor: z.string().optional()
       })
     )
     .mutation(async ({ ctx, input }) => {
@@ -49,22 +50,46 @@ export const postRouter = createTRPCRouter({
       const filter = new Filter()
       const filteredText = filter.clean(input.text)
 
-      const newpost = await ctx.db.post.create({
-        data: {
-          text: filteredText,
-          authorId: userId,
-          images: input.imageUrl ? [input.imageUrl] : [],
-          privacy: input.privacy,
-          quoteId: input.quoteId
-        },
-        select: {
-          id: true,
-          author: true
+      const transactionResult = await ctx.db.$transaction(async (prisma) => {
+
+        const newpost = await ctx.db.post.create({
+          data: {
+            text: filteredText,
+            authorId: userId,
+            images: input.imageUrl ? [input.imageUrl] : [],
+            privacy: input.privacy,
+            quoteId: input.quoteId
+          },
+          select: {
+            id: true,
+            author: true
+          }
+        })
+
+        if (input.postAuthor && userId !== input.postAuthor) {
+          const quote = await prisma.notification.create({
+            data: {
+              type: 'QUOTE',
+              senderUserId: userId,
+              receiverUserId: input.postAuthor,
+              postId: newpost.id,
+              message: input.text
+            }
+          });
         }
-      })
+
+        return {
+          newpost,
+        };
+
+      });
+
+      if (!transactionResult) {
+        throw new TRPCError({ code: 'NOT_IMPLEMENTED' })
+      }
 
       return {
-        createPost: newpost,
+        createPost: transactionResult.newpost,
         success: true
       }
 
@@ -239,6 +264,7 @@ export const postRouter = createTRPCRouter({
   replyToPost: privateProcedure
     .input(
       z.object({
+        postAuthor: z.string(),
         postId: z.string(),
         text: z.string().min(3, {
           message: "Text must be at least 3 character",
@@ -263,31 +289,60 @@ export const postRouter = createTRPCRouter({
         throw new TRPCError({ code: 'NOT_FOUND' })
       }
 
-      const repliedPostPost = await ctx.db.post.create({
-        data: {
-          text: input.text,
-          images: input.imageUrl ? [input.imageUrl] : [],
-          privacy: input.privacy,
-          author: {
-            connect: {
-              id: userId,
+      const filter = new Filter()
+      const filteredText = filter.clean(input.text)
+
+      const transactionResult = await ctx.db.$transaction(async (prisma) => {
+
+        const repliedPost = await prisma.post.create({
+          data: {
+            text: filteredText,
+            images: input.imageUrl ? [input.imageUrl] : [],
+            privacy: input.privacy,
+            author: {
+              connect: {
+                id: userId,
+              },
+            },
+            parentPost: {
+              connect: {
+                id: input.postId
+              }
             },
           },
-          parentPost: {
-            connect: {
-              id: input.postId
+          select: {
+            id: true,
+            author: true
+          }
+        })
+
+        if (userId !== input.postAuthor) {
+          await prisma.notification.create({
+            data: {
+              type: 'REPLY',
+              senderUserId: userId,
+              receiverUserId: input.postAuthor,
+              postId: input.postId,
+              message: input.text
             }
-          },
-        },
-        select: {
-          id: true,
-          author: true
+          });
         }
-      })
+
+        return {
+          repliedPost,
+        };
+
+      });
+
+      if (!transactionResult) {
+        throw new TRPCError({ code: 'NOT_IMPLEMENTED' })
+      }
+
       return {
-        createPost: repliedPostPost,
+        createPost: transactionResult.repliedPost,
         success: true
       }
+
     }),
 
   getNestedPosts: publicProcedure
@@ -611,52 +666,6 @@ export const postRouter = createTRPCRouter({
         return { createdRepost: false };
 
       }
-    }),
-
-  createQuotePost: privateProcedure
-    .input(
-      z.object({
-        id: z.string(),
-        text: z.string().min(3, {
-          message: "Text must be at least 3 character",
-        }),
-        imageUrl: z.string().optional()
-      })
-    )
-    .mutation(async ({ ctx, input }) => {
-      const { user, userId } = ctx;
-      const email = getUserEmail(user)
-      const dbUser = await ctx.db.user.findUnique({
-        where: {
-          email: email
-        },
-        select: {
-          verified: true
-        }
-      })
-
-      if (!dbUser) {
-        throw new TRPCError({ code: 'NOT_FOUND' })
-      }
-
-      const filter = new Filter()
-      const filteredText = filter.clean(input.text)
-
-      const createdNewPost = await ctx.db.post.create({
-        data: {
-          quoteId: input.id,
-          text: filteredText,
-          authorId: userId,
-          images: input.imageUrl ? [input.imageUrl] : [],
-        }
-      })
-
-      if (!createdNewPost) {
-        throw new TRPCError({ code: 'NOT_IMPLEMENTED' })
-      }
-
-      return { createdNewPost, success: true }
-
     }),
 
   getQuotedPost: publicProcedure

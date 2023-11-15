@@ -107,12 +107,14 @@ const CreatePostCard: React.FC<CreatePostCardProps> = ({ variant, replyThreadInf
                 postId: replyThreadInfo.id,
                 imageUrl: imgRes ? imgRes[0]?.url : undefined,
                 privacy: threadData.privacy,
+                postAuthor: replyThreadInfo.author.id
             })
             : createThread({
                 text: JSON.stringify(threadData.text, null, 2),
                 imageUrl: imgRes ? imgRes[0]?.url : undefined,
                 privacy: threadData.privacy,
                 quoteId: quoteInfo?.id,
+                postAuthor: quoteInfo?.author.id
             });
 
         return promise
