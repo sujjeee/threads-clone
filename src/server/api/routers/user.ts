@@ -82,6 +82,9 @@ export const userRouter = createTRPCRouter({
                     },
                     parentPostId: null
                 },
+                orderBy: {
+                    createdAt: 'desc',
+                },
                 select: {
                     id: true,
                     createdAt: true,
@@ -151,6 +154,9 @@ export const userRouter = createTRPCRouter({
                     parentPostId: {
                         not: null
                     }
+                },
+                orderBy: {
+                    createdAt: 'desc',
                 },
                 select: {
                     id: true,

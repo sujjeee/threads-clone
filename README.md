@@ -1,28 +1,59 @@
-# Create T3 App
+# [Threads clone](https://threads.codebustar.com)
 
-This is a [T3 Stack](https://create.t3.gg/) project bootstrapped with `create-t3-app`.
+This is an open source **threads-clone** build with ***`create-t3-app`*** and  everything new in Next.js 13 and 14.
 
-## What's next? How do I make an app with this?
+| ![Image1](./public/screenshots/feed-page.png) | ![Image4](./public/screenshots/search-page.png)|
+|:--:|:--:|
+| ![Image3](./public/screenshots/reply-card.png) | ![Image4](./public/screenshots/notification-page.png)|  
+| ![Image5](./public/screenshots/post-info-page.png) | ![Image6](./public/screenshots/profile-page.png)|
 
-We try to keep this project as simple as possible, so you can start with just the scaffolding we set up for you, and add additional things later when they become necessary.
 
-If you are not familiar with the different technologies used in this project, please refer to the respective docs. If you still are in the wind, please join our [Discord](https://t3.gg/discord) and ask for help.
+## Tech Stack
 
-- [Next.js](https://nextjs.org)
-- [NextAuth.js](https://next-auth.js.org)
-- [Prisma](https://prisma.io)
-- [Tailwind CSS](https://tailwindcss.com)
-- [tRPC](https://trpc.io)
+- **Framework:** [Next.js](https://nextjs.org)
+- **Styling:** [Tailwind CSS](https://tailwindcss.com)
+- **User Management:** [Clerk](https://clerk.com)
+- **ORM:** [Prisma ORM](https://www.prisma.io/)
+- **UI Components:** [shadcn/ui](https://ui.shadcn.com)
+- **File Uploads:** [uploadthing](https://uploadthing.com)
+- **Typesafe APIs:** [tRPC](https://trpc.io)
 
-## Learn More
+## Key Features
 
-To learn more about the [T3 Stack](https://create.t3.gg/), take a look at the following resources:
+- Authentication with **Clerk**
+- File uploads with **uploadthing**
+- Advance **Prisma ORM** concepts
+- Database on **Neon**
+- Validation with **Zod**
 
-- [Documentation](https://create.t3.gg/)
-- [Learn the T3 Stack](https://create.t3.gg/en/faq#what-learning-resources-are-currently-available) — Check out these awesome tutorials
+## Running Locally
 
-You can check out the [create-t3-app GitHub repository](https://github.com/t3-oss/create-t3-app) — your feedback and contributions are welcome!
+1. Clone the repository
 
-## How do I deploy this?
+   ```bash
+   git clone https://github.com/sujjeee/threads-clone.git
+   ```
 
-Follow our deployment guides for [Vercel](https://create.t3.gg/en/deployment/vercel), [Netlify](https://create.t3.gg/en/deployment/netlify) and [Docker](https://create.t3.gg/en/deployment/docker) for more information.
+2. Install dependencies using pnpm
+
+   ```bash
+   pnpm install
+   ```
+
+3. Copy the `.env.example` to `.env` and update the variables.
+
+   ```bash
+   cp .env.example .env
+   ```
+
+4. Start the development server
+
+   ```bash
+   pnpm run dev
+   ```
+
+5. Push the database schema
+
+   ```bash
+   pnpm run db:push
+   ```

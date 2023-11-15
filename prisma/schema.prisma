@@ -71,10 +71,11 @@ model Like {
 }
 
 model Repost {
-    post   Post   @relation(fields: [postId], references: [id], onDelete: Cascade)
-    postId String
-    user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
-    userId String
+    createdAt DateTime @default(now())
+    post      Post     @relation(fields: [postId], references: [id], onDelete: Cascade)
+    postId    String
+    user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+    userId    String
 
     @@id([postId, userId])
     @@index([userId])
