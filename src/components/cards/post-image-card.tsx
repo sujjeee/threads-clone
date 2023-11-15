@@ -23,7 +23,7 @@ const PostImageCard: React.FC<PostImageCardProps> = ({ image }) => {
     // const { base64 } = await getPlaiceholder(buffer)
 
     return (
-        <div className='relative overflow-hidden rounded-[12px] border border-border w-fit mt-2.5 '>
+        <div className='relative overflow-hidden rounded-[12px] border border-border w-fit mt-2.5 cursor-pointer'>
             <Image
                 src={image ?? ''}
                 width={500}
