@@ -3,8 +3,6 @@
 import React from 'react'
 import { useImageStore } from '@/store/image'
 import Image from 'next/image'
-// import { getPlaiceholder } from 'plaiceholder'
-
 
 interface PostImageCardProps {
     image: string | undefined
@@ -13,7 +11,6 @@ interface PostImageCardProps {
 const PostImageCard: React.FC<PostImageCardProps> = ({ image }) => {
 
     const { setImageUrl } = useImageStore()
-
 
     // TODO: need to fix this 
     // const buffer = await fetch(image).then(async (res) => {
@@ -25,6 +22,7 @@ const PostImageCard: React.FC<PostImageCardProps> = ({ image }) => {
     return (
         <div className='relative overflow-hidden rounded-[12px] border border-border w-fit mt-2.5 cursor-pointer'>
             <Image
+                loading="lazy"
                 src={image ?? ''}
                 width={500}
                 height={500}
@@ -38,3 +36,4 @@ const PostImageCard: React.FC<PostImageCardProps> = ({ image }) => {
 }
 
 export default PostImageCard
+

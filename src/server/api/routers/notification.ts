@@ -12,11 +12,24 @@ export const notificationRouter = createTRPCRouter({
 
             const getNotifications = await ctx.db.notification.findMany({
                 where: {
-                    isPublic: false,
-                    receiverUserId: userId,
-                    senderUserId: {
-                        not: userId
-                    }
+                    OR: [
+                        {
+                            isPublic: true,
+                            type: 'ADMIN',
+                        },
+                        {
+                            isPublic: false,
+                            type: 'ADMIN',
+                            receiverUserId: userId
+                        },
+                        {
+                            isPublic: false,
+                            receiverUserId: userId,
+                            senderUserId: {
+                                not: userId
+                            }
+                        }
+                    ]
                 },
                 select: {
                     id: true,

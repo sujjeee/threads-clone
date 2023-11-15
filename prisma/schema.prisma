@@ -90,8 +90,8 @@ model Notification {
 
     senderUserId   String
     receiverUserId String?
-    senderUser     User    @relation("sender", fields: [senderUserId], references: [id], map: "senderUserUniqueConstraint")
-    receiverUser   User?   @relation("receiver", fields: [receiverUserId], references: [id], map: "receiverUserUniqueConstraint")
+    senderUser     User    @relation("sender", fields: [senderUserId], references: [id], onDelete: Cascade)
+    receiverUser   User?   @relation("receiver", fields: [receiverUserId], references: [id], onDelete: Cascade)
 
     postId String?
     post   Post?   @relation(fields: [postId], references: [id])

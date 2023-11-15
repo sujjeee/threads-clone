@@ -8,6 +8,7 @@ import {
     createTRPCRouter,
     privateProcedure
 } from "@/server/api/trpc";
+import { env } from "@/env.mjs";
 
 export const authRouter = createTRPCRouter({
     accountSetup: privateProcedure
@@ -56,9 +57,10 @@ export const authRouter = createTRPCRouter({
 
                     await prisma.notification.create({
                         data: {
-                            isPublic: true,
+                            isPublic: false,
                             type: 'ADMIN',
-                            senderUserId: 'user_2YA5HbNYPXWdSbeJJBPW3Za5OzM',
+                            senderUserId: env.ADMIN_USER_ID,
+                            receiverUserId: created_user.id,
                             message: `Hey ${created_user.fullname}! Welcome to Threads. I hope you like this project. If so, please make sure to give it a star on GitHub and share your views on Twitter. Thanks.`
                         }
                     });
