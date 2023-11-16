@@ -18,10 +18,10 @@ const inter = Inter({
 });
 
 export const metadata: Metadata = {
-  metadataBase: new URL('https://threadss-clone.vercel.app'),
+  metadataBase: new URL('https://threads.codebustar.com'),
   title: {
     default: siteConfig.name,
-    template: `%s - ${siteConfig.name}`,
+    template: `%s • ${siteConfig.name}`,
   },
   description: siteConfig.description,
   keywords: [

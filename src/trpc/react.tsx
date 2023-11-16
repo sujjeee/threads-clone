@@ -8,7 +8,9 @@ import { useState } from "react";
 import { type AppRouter } from "@/server/api/root";
 import { getUrl, transformer } from "./shared";
 
-export const api = createTRPCReact<AppRouter>();
+export const api = createTRPCReact<AppRouter>({
+  abortOnUnmount: true,
+})
 
 export function TRPCReactProvider(props: {
   children: React.ReactNode;

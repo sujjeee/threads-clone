@@ -2,6 +2,7 @@
 
 import { useImageStore } from '@/store/image'
 import { X } from 'lucide-react'
+import Image from 'next/image'
 import React from 'react'
 
 const FullscreenImageView: React.FC = ({ }) => {
@@ -17,9 +18,11 @@ const FullscreenImageView: React.FC = ({ }) => {
                 <X className='w-8 h-8' />
             </span>
             <div className="fixed left-[50%] top-[50%] z-[999] grid w-full translate-x-[-50%] translate-y-[-50%] max-w-[90vw]  max-h-[100vh] ">
-                <img
+                <Image
+                    width={500}
+                    height={500}
                     src={imageUrl}
-                    alt="post image"
+                    alt="Image with full screen view"
                     className='w-fit h-full mx-auto object-cover' />
             </div>
         </div>

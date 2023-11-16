@@ -74,7 +74,8 @@ const DisplayQueryPosts: React.FC<DisplayQueryPostsProps> = ({ searchQuery }) =>
     if (searchQuery === '') redirect('/search')
 
     const { data, isLoading, isError, hasNextPage, fetchNextPage } = api.post.getInfinitePost.useInfiniteQuery({ searchQuery }, {
-        getNextPageParam: (lastPage) => lastPage.nextCursor
+        getNextPageParam: (lastPage) => lastPage.nextCursor,
+        staleTime: Infinity
     })
 
     const allPosts = data?.pages.flatMap((page) => page.posts)
