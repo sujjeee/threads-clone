@@ -20,7 +20,8 @@ const SearchPage: React.FC = ({ }) => {
     const search = searchParams.get('q')
 
     const { data, isLoading, isError, hasNextPage, fetchNextPage } = api.user.allUsers.useInfiniteQuery({}, {
-        getNextPageParam: (lastPage) => lastPage.nextCursor
+        getNextPageParam: (lastPage) => lastPage.nextCursor,
+        trpc: { abortOnUnmount: true }
     })
 
     const allUsers = data?.pages.flatMap((page) => page.allUsers)
@@ -75,6 +76,7 @@ const DisplayQueryPosts: React.FC<DisplayQueryPostsProps> = ({ searchQuery }) =>
 
     const { data, isLoading, isError, hasNextPage, fetchNextPage } = api.post.getInfinitePost.useInfiniteQuery({ searchQuery }, {
         getNextPageParam: (lastPage) => lastPage.nextCursor,
+        trpc: { abortOnUnmount: true },
         staleTime: Infinity
     })
 

@@ -15,7 +15,8 @@ import StarOnGithub from '@/components/star-on-github'
 export default function page() {
 
   const { data, isLoading, isError, hasNextPage, fetchNextPage } = api.post.getInfinitePost.useInfiniteQuery({}, {
-    getNextPageParam: (lastPage) => lastPage.nextCursor
+    getNextPageParam: (lastPage) => lastPage.nextCursor,
+    trpc: { abortOnUnmount: true }
   })
 
   const allPosts = data?.pages.flatMap((page) => page.posts)
