@@ -173,7 +173,7 @@ const DisplayInsight: React.FC<DisplayInsightProps> = ({ id }) => {
                                 </span>
                             </div>
                         </Link>
-                        <FollowButton variant='default' author={userData.user} className='text-[14px]' />
+                        <FollowButton variant='outline' author={userData.user} className='text-[14px] px-6' />
                     </div>
                 </div>
             ))}

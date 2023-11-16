@@ -61,7 +61,8 @@ const UserActionCard: React.FC<UserCardProps> = ({
                             </div>
                         </Link>
                         <FollowButton
-                            variant='default'
+                            className='text-[14px] px-6'
+                            variant='outline'
                             author={{
                                 id,
                                 image,

@@ -8,13 +8,13 @@ import {
     AvatarImage,
     AvatarFallback,
 } from '@/components/ui/avatar'
-import { Button } from '@/components/ui/button'
 import { cn } from '@/lib/utils'
 import { useDebounce } from '@/hooks/use-debounce'
 import { api } from '@/trpc/react'
 import { usePathname, useRouter } from 'next/navigation'
 import Username from '@/components/user/user-username'
 import Link from 'next/link'
+import FollowButton from '@/components/buttons/follow-button'
 
 export default function SearchContainer() {
     const router = useRouter()
@@ -26,7 +26,7 @@ export default function SearchContainer() {
         <>
             {searchValue !== '' && <div className="fixed inset-0 z-[50] bg-background/70 backdrop-blur-sm data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0" />}
 
-            <div className={cn('absolute rounded-2xl  border border-border bg-primary-foreground  max-w-xl w-full mb-3 transition-transform duration-300 z-[999]', {
+            <div className={cn('absolute rounded-2xl  border border-border bg-primary-foreground  max-w-xl w-full mb-3 transition-transform duration-300 z-[80]', {
                 'scale-105 bg-background dark:bg-primary-foreground': searchValue !== '',
                 'scale-100': searchValue === '',
             })}>
@@ -86,7 +86,6 @@ const DisplaySearchedResults: React.FC<DisplaySearchedResultsProps> = ({ debounc
     }
 
     if (data?.length === 0) return
-
     return (
         <>
             {data?.map((user, index) => (
@@ -116,11 +115,10 @@ const DisplaySearchedResults: React.FC<DisplaySearchedResultsProps> = ({ debounc
                                 </span>
                             </div>
                         </Link>
-                        <Button
-                            className='px-6  rounded-xl focus:bg-transparent hover:bg-transparent'
-                            variant={'outline'}>
-                            Follow
-                        </Button>
+                        <FollowButton
+                            className='text-[14px] px-6'
+                            variant='outline'
+                            author={{ ...user }} />
                     </div>
                 </div>
             ))}

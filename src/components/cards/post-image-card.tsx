@@ -24,13 +24,13 @@ const PostImageCard: React.FC<PostImageCardProps> = ({ image }) => {
             <Image
                 loading="lazy"
                 src={image ?? ''}
-                width={500}
-                height={500}
+                width={630}
+                height={630}
                 alt="Will add alt-text soon!"
                 onClick={() => {
                     setImageUrl(image)
                 }}
-                className='object-contain max-h-[520px] w-fit  rounded-[12px]' />
+                className='object-contain max-h-[520px] w-max  rounded-[12px]' />
         </div>
     )
 }

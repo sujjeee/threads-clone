@@ -45,9 +45,7 @@ const PostCard: React.FC<PostCardProps> = ({
 
     const { replyCount } = count
 
-    const isRepostedByMe = reposts.some((user) =>
-        user?.userId || user?.userId === loggedUser?.id
-    );
+    const isRepostedByMe = reposts.some(repost => repost.userId === loggedUser?.id);
 
     const getPostReplies = replies?.map((reply) => ({
         id: reply.author.id,
