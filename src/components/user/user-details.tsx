@@ -38,8 +38,6 @@ const UserProfile: React.FC<UserProfileInfoProps> = (props) => {
 
     const segments = path.split('/');
     const lastSegment = segments[segments.length - 1];
-    console.log('testing stuffd', lastSegment)
-    console.log('testing baseurl', basePath)
 
     return (
         <div className=" z-[10] mt-4 flex w-full flex-col space-y-4">
