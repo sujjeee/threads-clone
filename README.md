@@ -14,12 +14,14 @@ This is an open source **threads-clone** build with ***`create-t3-app`*** and  e
 ## Tech Stack
 
 - **Framework:** [Next.js](https://nextjs.org)
+- **Language:** [Typescript](https://www.typescriptlang.org/docs/)
 - **Styling:** [Tailwind CSS](https://tailwindcss.com)
 - **User Management:** [Clerk](https://clerk.com)
 - **ORM:** [Prisma ORM](https://www.prisma.io/)
 - **UI Components:** [shadcn/ui](https://ui.shadcn.com)
 - **File Uploads:** [uploadthing](https://uploadthing.com)
 - **Typesafe APIs:** [tRPC](https://trpc.io)
+- **Hosting:** [Vercel](https://vercel.com/)
 
 ## Key Features
 
