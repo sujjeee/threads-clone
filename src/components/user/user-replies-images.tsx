@@ -36,7 +36,7 @@ const UserRepliesImages: React.FC<UserRepliesImagesProps> = ({ author }) => {
                 </div>
             )}
 
-            {author?.length === 3 && (
+            {author?.length >= 3 && (
                 <div className='relative w-[48px] h-9 left-0 top-2 '>
 
                     <img

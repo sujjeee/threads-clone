@@ -1,6 +1,7 @@
 import { useUser } from '@clerk/nextjs'
 import React from 'react'
 import { Separator } from '@/components/ui/separator'
+import { Avatar, AvatarFallback, AvatarImage } from './ui/avatar'
 
 const CreateWithInput: React.FC = ({ }) => {
     const { user } = useUser()
@@ -9,13 +10,15 @@ const CreateWithInput: React.FC = ({ }) => {
         <div className='flex flex-col w-full select-none'>
             <div className='flex w-full my-4'>
                 <div className='w-full flex select-none'>
-                    <img
-                        src={user?.imageUrl}
-                        width={36}
-                        height={36}
-                        alt="Account Avatar"
-                        className="rounded-full mr-4"
-                    />
+                    <Avatar className="rounded-full outline outline-1 outline-border h-9 w-9 mr-4">
+                        <AvatarImage
+                            src={user?.imageUrl}
+                            alt={user?.username ?? ''}
+                            className='object-cover' />
+                        <AvatarFallback>
+                            {user?.username?.slice(0, 2).toUpperCase()}
+                        </AvatarFallback>
+                    </Avatar>
                     <input
                         className=" resize-none bg-transparent w-full placeholder:text-[#777777] outline-none placeholder:text-[15px]"
                         placeholder="Start a thread..."

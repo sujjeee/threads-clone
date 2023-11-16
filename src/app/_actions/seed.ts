@@ -5,8 +5,32 @@ import { currentUser } from "@clerk/nextjs";
 import { faker } from "@faker-js/faker"
 import { NotificationType } from "@prisma/client";
 
+export async function checkAdmin() {
+
+    const user = await currentUser()
+
+    const res = await db.user.findUnique({
+        where: {
+            id: user?.id,
+            isAdmin: true,
+            verified: true
+        },
+        select: {
+            username: true
+        }
+    });
+
+    if (!res) return { success: false }
+
+    return { success: true };
+}
 
 export async function createFakeUsers() {
+
+    const isAdmin = await checkAdmin()
+
+    if (!isAdmin) return null
+
     const usersToCreate = [];
 
     for (let i = 1; i <= 100; i++) {
@@ -38,6 +62,10 @@ export async function createFakeUsers() {
 
 export async function getUsersId() {
 
+    const isAdmin = await checkAdmin()
+
+    if (!isAdmin) return null
+
     const alldata = await db.user.findMany({
         where: {
             verified: false
@@ -52,7 +80,18 @@ export async function getUsersId() {
 }
 
 export async function createFakePost() {
+
+
+    const isAdmin = await checkAdmin()
+
+    if (!isAdmin) return null
+
     const userIds = await getUsersId();
+
+    if (!userIds) {
+        return { success: false, error: 'User information not available.' };
+    }
+
 
     const posts = [];
     for (const userId of userIds) {
@@ -70,8 +109,18 @@ export async function createFakePost() {
 }
 
 export async function createFakeNotifications() {
+
+    const isAdmin = await checkAdmin()
+
+    if (!isAdmin) return null
+
     const user = await currentUser();
     const userIds = await getUsersId();
+
+    if (!userIds) {
+        return { success: false, error: 'User information not available.' };
+    }
+
 
     const notifications = [];
     for (const userId of userIds) {
@@ -92,6 +141,10 @@ export async function createFakeNotifications() {
 
 
 export async function deleteFakeUsers() {
+
+    const isAdmin = await checkAdmin()
+
+    if (!isAdmin) return null
 
     const alldata = await db.user.deleteMany({
         where: {
