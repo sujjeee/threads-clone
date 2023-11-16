@@ -116,7 +116,7 @@ export default function AccountSetupForm({ username }: { username: string }) {
 
 
     return (
-        <div className='mx-auto flex flex-col gap-6 justify-center w-full max-w-lg items-center h-[95vh]'>
+        <div className='mx-auto flex flex-col gap-6 justify-center w-full max-w-lg items-center h-[95vh] px-6'>
             {!showPrivacyPage
                 ? (
                     <Form {...form}>
@@ -144,14 +144,15 @@ export default function AccountSetupForm({ username }: { username: string }) {
                                                     </div>
                                                 </div>
                                             </div>
-                                            <div className='h-12 w-12'>
-                                                <Avatar className=" h-full w-full relative overflow-visible">
-                                                    <AvatarImage src={user?.imageUrl} alt="Avatar" className='rounded-full' />
-                                                    <AvatarFallback>
-                                                        <User2 className='h-5 w-5' />
-                                                    </AvatarFallback>
-                                                </Avatar>
-                                            </div>
+                                            <Avatar className="rounded-full outline outline-1 outline-border h-12 w-12 ">
+                                                <AvatarImage
+                                                    src={user?.imageUrl}
+                                                    alt={user?.username ?? ''}
+                                                    className='object-cover' />
+                                                <AvatarFallback>
+                                                    <User2 className='h-5 w-5' />
+                                                </AvatarFallback>
+                                            </Avatar>
                                         </div>
                                         <Label htmlFor="bio">Bio</Label>
                                         <div className='flex gap-2 '>
@@ -196,7 +197,7 @@ export default function AccountSetupForm({ username }: { username: string }) {
                         <h2 className="scroll-m-20 tracking-wide text-4xl font-bold">
                             Privacy
                         </h2>
-                        <span className="leading-7 text-muted-foreground ">
+                        <span className="leading-7 text-muted-foreground text-center ">
                             Your privacy can be different on Threads and Instagarm.
                         </span>
 
