@@ -37,7 +37,7 @@ export function emailToUsername(user: UserResource | User | null) {
 export function formatURL(originalURL: string) {
   const parsedUrl = new URL(originalURL);
   const domain = parsedUrl.hostname;
-  const firstPath = parsedUrl.pathname.split('/')[1] || '';
+  const firstPath = parsedUrl.pathname.split('/')[1] ?? '';
 
   return `${domain}${firstPath ? `/${firstPath}` : ''}`;
 }

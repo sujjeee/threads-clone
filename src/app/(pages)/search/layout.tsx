@@ -9,7 +9,7 @@ export const metadata: Metadata = {
     title: "Search",
 }
 
-export default async function SearchLayout({ children }: PagesLayoutProps) {
+export default function SearchLayout({ children }: PagesLayoutProps) {
     return (
         <>
             {children}

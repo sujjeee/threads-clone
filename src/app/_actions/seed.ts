@@ -55,9 +55,9 @@ export async function createFakePost() {
     const userIds = await getUsersId();
 
     const posts = [];
-    for (let i = 0; i < userIds.length; i++) {
+    for (const userId of userIds) {
         const newPost = {
-            authorId: userIds[i] as string,
+            authorId: userId,
             text: faker.lorem.sentence(),
         };
 
@@ -66,21 +66,19 @@ export async function createFakePost() {
 
     await db.post.createMany({ data: posts });
 
-    return { success: true }
-
+    return { success: true };
 }
 
 export async function createFakeNotifications() {
-    const user = await currentUser()
+    const user = await currentUser();
     const userIds = await getUsersId();
 
     const notifications = [];
-    for (let i = 0; i < userIds.length; i++) {
-
+    for (const userId of userIds) {
         const newNotification = {
             type: NotificationType.LIKE,
             message: '"Your message here"',
-            senderUserId: userIds[i] as string,
+            senderUserId: userId,
             receiverUserId: user?.id,
         };
 
@@ -89,9 +87,9 @@ export async function createFakeNotifications() {
 
     await db.notification.createMany({ data: notifications });
 
-    return { success: true }
-
+    return { success: true };
 }
+
 
 export async function deleteFakeUsers() {
 

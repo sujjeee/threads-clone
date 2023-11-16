@@ -9,7 +9,7 @@ export const metadata: Metadata = {
     title: "Activity",
 }
 
-export default async function ActivityLayout({ children }: PagesLayoutProps) {
+export default function ActivityLayout({ children }: PagesLayoutProps) {
     return (
         <>
             {children}

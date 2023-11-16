@@ -11,7 +11,7 @@ import {
 import { toast } from 'sonner';
 import { Icons } from '@/components/icons';
 
-export default function page() {
+const SeedPage: React.FC = ({ }) => {
 
     const [isLoading, setIsLoading] = React.useState<string | null>(null);
 
@@ -133,3 +133,5 @@ export default function page() {
         </div>
     )
 }
+
+export default SeedPage
