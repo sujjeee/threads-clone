@@ -18,8 +18,11 @@ export function TRPCReactProvider(props: {
   const [queryClient] = useState(() => new QueryClient({
     defaultOptions: {
       queries: {
-        staleTime: Infinity,
         cacheTime: Infinity,
+        staleTime: 60 * 1000,
+        refetchInterval: 60 * 1000,
+        refetchIntervalInBackground: true,
+        keepPreviousData: true
       },
     },
   }));
