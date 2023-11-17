@@ -16,7 +16,9 @@ export default function page() {
 
   const { data, isLoading, isError, hasNextPage, fetchNextPage } = api.post.getInfinitePost.useInfiniteQuery({}, {
     getNextPageParam: (lastPage) => lastPage.nextCursor,
-    trpc: { abortOnUnmount: true }
+    trpc: { abortOnUnmount: true },
+    staleTime: 10 * 60 * 1000
+
   })
 
   const allPosts = data?.pages.flatMap((page) => page.posts)

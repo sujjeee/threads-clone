@@ -8,7 +8,7 @@ import { usePathname, useRouter } from 'next/navigation'
 import { cn } from '@/lib/utils'
 import { api } from '@/trpc/react'
 import { toast } from 'sonner'
-import { useUploadThing } from '@/lib/uploadthing'
+import { generateReactHelpers } from "@uploadthing/react/hooks"
 import useFileStore from '@/store/fileStore'
 import usePost from '@/store/post'
 import Trigger from '@/components/trigger'
@@ -17,6 +17,7 @@ import CreatePostInput from '@/components/create-post-input'
 import Link from 'next/link'
 import { Check } from 'lucide-react'
 import NSFWFilter from 'nsfw-filter';
+import type { OurFileRouter } from "@/app/api/uploadthing/core"
 import {
     Dialog,
     DialogContent,
@@ -34,16 +35,17 @@ interface CreatePostCardProps {
     quoteInfo?: Pick<PostCardProps, 'id' | 'text' | 'author'> & { createdAt?: Date }
 }
 
+const { useUploadThing } = generateReactHelpers<OurFileRouter>()
+
 const CreatePostCard: React.FC<CreatePostCardProps> = ({ variant, replyThreadInfo, quoteInfo }) => {
     const router = useRouter()
     const path = usePathname()
-    const { postPrivacy } = usePost();
 
+    const { postPrivacy } = usePost();
     const { selectedFile, setSelectedFile, isSelectedImageSafe } = useFileStore();
+    const { startUpload } = useUploadThing("postImage")
 
     const [isOpen, setIsOpen] = React.useState(false)
-
-    const { startUpload } = useUploadThing("postMedia")
 
     const [threadData, setThreadData] = React.useState({
         privacy: postPrivacy,

@@ -19,8 +19,7 @@ export function TRPCReactProvider(props: {
     defaultOptions: {
       queries: {
         cacheTime: Infinity,
-        staleTime: 60 * 1000,
-        refetchInterval: 60 * 1000,
+        staleTime: 10 * 60 * 1000,
         refetchIntervalInBackground: true,
         keepPreviousData: true
       },

@@ -113,7 +113,15 @@ export default function AccountSetupForm({ username }: { username: string }) {
         setShowPrivacyPage(true)
     }
 
+    function getFullName(firstName: string, lastName: string) {
 
+        if (!lastName || lastName === undefined || lastName === null || lastName === '') {
+            return firstName;
+        }
+
+        return `${firstName} ${lastName}`
+
+    }
 
     return (
         <div className='mx-auto flex flex-col gap-6 justify-center w-full max-w-lg items-center h-[95vh] px-6'>
@@ -140,7 +148,7 @@ export default function AccountSetupForm({ username }: { username: string }) {
                                                     <Lock className="h-4 w-4 text-[#4D4D4D]" />
                                                     <div className="flex-grow overflow-hidden outline-none text-[15px] text-accent-foreground break-words tracking-wide w-full select-none"
                                                     >
-                                                        {`${user?.firstName} ${user?.lastName}${" "}(${userAccountData?.username})`}
+                                                        {`${getFullName(user?.firstName ?? '', user?.lastName ?? '')} ${"(" + userAccountData?.username + ")"}`}
                                                     </div>
                                                 </div>
                                             </div>
