@@ -16,6 +16,7 @@ import PostPrivacyMenu from '@/components/menus/post-privacy-menu'
 import CreatePostInput from '@/components/create-post-input'
 import Link from 'next/link'
 import { Check } from 'lucide-react'
+import NSFWFilter from 'nsfw-filter';
 import {
     Dialog,
     DialogContent,
@@ -99,6 +100,18 @@ const CreatePostCard: React.FC<CreatePostCardProps> = ({ variant, replyThreadInf
 
 
     async function handleMutation() {
+        const checkUploadedImage = selectedFile[0]
+
+        if (checkUploadedImage) {
+            const isSafe = await NSFWFilter.isSafe(checkUploadedImage);
+
+            console.log("is safe image this ", isSafe)
+            if (!isSafe) {
+                toast.error("Your post is not work-safe. Please revise it.")
+                return
+            }
+        }
+
         const imgRes = await startUpload(selectedFile)
 
         const promise = replyThreadInfo
@@ -143,7 +156,7 @@ const CreatePostCard: React.FC<CreatePostCardProps> = ({ variant, replyThreadInf
                             Posted
                         </div>
                         <Link
-                            href={`/${data.createPost.author.username}/post/${data.createPost.id}`}
+                            href={`/${data?.createPost.author.username}/post/${data?.createPost.id}`}
                             className='hover:text-blue-900'>
                             View
                         </Link>

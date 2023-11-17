@@ -1,7 +1,6 @@
 "use client"
 
 import React from 'react'
-import NSFWFilter from 'nsfw-filter';
 import useFileStore from '@/store/fileStore';
 import { X } from 'lucide-react'
 import Username from '@/components/user/user-username';
@@ -13,11 +12,11 @@ import { Icons } from '@/components/icons';
 import { Button } from '@/components/ui/button';
 import type { ParentPostInfo } from '@/types';
 import PostQuoteCard from '@/components/cards/post-quote-card';
+import PostImageCard from '@/components/cards/post-image-card';
 import {
     useDropzone,
     type Accept,
 } from "react-dropzone";
-import PostImageCard from '@/components/cards/post-image-card';
 
 interface CreatePostInputProps {
     isOpen: boolean
@@ -33,12 +32,9 @@ const CreatePostInput: React.FC<CreatePostInputProps> = ({
     quoteInfo
 }) => {
     const { user } = useUser()
-    const { setSelectedFile, setIsSelectedImageSafe } = useFileStore();
+    const { setSelectedFile } = useFileStore();
 
     const [inputValue, setInputValue] = React.useState('')
-    const [file, setFile] = React.useState<File[] | null>()
-
-    // const [isSafeImage, setIsSafeImage] = React.useState(false)
 
     const handleResizeTextareaChange = (event: React.ChangeEvent<HTMLTextAreaElement>) => {
         const newValue = event.target.value;
@@ -62,34 +58,9 @@ const CreatePostInput: React.FC<CreatePostInputProps> = ({
         setPreviewURL(previewURL)
 
         setSelectedFile(acceptedFiles);
-        setFile(acceptedFiles)
 
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [maxSize]);
-
-    React.useEffect(() => {
-        const checkImageSafety = async () => {
-            if (file && file.length > 0) {
-                const checkUploadedImage = file[0];
-
-                if (checkUploadedImage) {
-                    try {
-                        const isSafe = await NSFWFilter.isSafe(checkUploadedImage);
-                        // setIsSafeImage(isSafe);
-                        setIsSelectedImageSafe(isSafe);
-                        setSelectedFile(file);
-                    } catch (error) {
-                        console.error('Error checking image safety:', error);
-                    }
-                }
-            }
-        };
-
-        void checkImageSafety();
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [file]);
-
-
 
     const accept: Accept = {
         "image/*": [],
