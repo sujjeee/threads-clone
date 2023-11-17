@@ -22,7 +22,7 @@ const FollowButton: React.FC<FollowButtonProps> = ({ variant, author, className 
     const { user: loggedUser } = useUser()
 
     const isSameUser = author.id === loggedUser?.id
-    const isFollowedByMe = author.followers.some((user) => user.id === loggedUser?.id)
+    const isFollowedByMe = author.followers?.some((user) => user.id === loggedUser?.id)
 
     const followUpdate = React.useRef({
         isFollowedByMe,

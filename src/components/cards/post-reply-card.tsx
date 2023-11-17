@@ -66,7 +66,7 @@ const PostReplyCard: React.FC<PostReplyCardProps> = ({ postInfo, parentPosts }) 
 
     const { replyCount } = count
 
-    const isRepostedByMe = reposts.some(repost => repost.userId === loggedUser?.id);
+    const isRepostedByMe = reposts?.some(repost => repost.userId === loggedUser?.id);
 
     const [likeCount, setLikeCount] = React.useState(count.likeCount)
 

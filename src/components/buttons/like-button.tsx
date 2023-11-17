@@ -17,7 +17,7 @@ const LikeButton: React.FC<LikeButtonProps> = ({ likeInfo, onLike }) => {
     const { user: loggedUser } = useUser()
 
     const { count, id, likes } = likeInfo
-    const isLikedByMe = likes.some((like) => like.userId === loggedUser?.id)
+    const isLikedByMe = likes?.some((like) => like.userId === loggedUser?.id)
 
     const likeUpdate = React.useRef({
         isLikedByMe,

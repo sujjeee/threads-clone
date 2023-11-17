@@ -46,7 +46,7 @@ const PostParentCard: React.FC<PostCardProps> = ({
 
     const { replyCount } = count
 
-    const isRepostedByMe = reposts.some(repost => repost.userId === loggedUser?.id);
+    const isRepostedByMe = reposts?.some(repost => repost.userId === loggedUser?.id);
 
     const getThreadReplies = replies?.map((reply) => ({
         id: reply.author.id,
