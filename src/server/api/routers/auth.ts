@@ -27,7 +27,19 @@ export const authRouter = createTRPCRouter({
 
             const email = getUserEmail(user)
             const username = await generateUsername(user) ?? emailToUsername(user)
-            const fullname = `${user?.firstName} ${user?.lastName}`
+
+
+            function getFullName(firstName: string, lastName: string) {
+
+                if (!lastName || lastName === undefined || lastName === null || lastName === '') {
+                    return firstName;
+                }
+
+                return `${firstName} ${lastName}`
+
+            }
+
+            const fullname = getFullName(user?.firstName ?? '', user?.lastName ?? '')
 
             const dbUser = await ctx.db.user.findUnique({
                 where: {
