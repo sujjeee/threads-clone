@@ -2,7 +2,9 @@
 
 This is an open source **threads-clone** build with ***`create-t3-app`*** and  everything new in Next.js 13 and 14.
 
-[![Demo video](./public/threads.png)](./public/screenshots/threads-clone.mp4)
+<video width="100%" >
+  <source src="./public/screenshots/threads-clone.mp4" type="video/mp4">
+</video>
 
 ## Tech Stack
 
