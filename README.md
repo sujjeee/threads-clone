@@ -2,9 +2,14 @@
 
 This is an open source **threads-clone** build with ***`create-t3-app`*** and  everything new in Next.js 13 and 14.
 
-<video width="100%" >
-  <source src="./public/screenshots/threads-clone.mp4" type="video/mp4">
-</video>
+|1. Feed Page |2. Search Page |
+|:---:|:---:|
+| ![Feed Page](./public/screenshots/feed-page.png) | ![Search Page](./public/screenshots/search-page.png)|
+| 3. Reply Card | 4. Notifications Page | 
+| ![Reply Card](./public/screenshots/reply-card.png) | ![Notifications Page](./public/screenshots/notification-page.png)|
+| 5. Post Info Page | 6. Profile Page |
+| ![Post Info Page](./public/screenshots/post-info-page.png) | ![Profile Page](./public/screenshots/profile-page.png)|
+
 
 ## Tech Stack
 
