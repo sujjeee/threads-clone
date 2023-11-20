@@ -13,7 +13,7 @@ import StarOnGithub from '@/components/star-on-github'
 import useDialog from '@/store/dialog'
 import CreateWithInput from '@/components/create-with-input'
 
-export default function page() {
+const HomePage: React.FC = () => {
 
   const { setOpenDialog } = useDialog()
 
@@ -61,3 +61,5 @@ export default function page() {
     </>
   )
 }
+
+export default HomePage

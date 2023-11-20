@@ -1,4 +1,4 @@
-import { ParentPostInfo } from '@/types';
+import type { ParentPostInfo } from '@/types';
 import { create } from 'zustand';
 
 interface ToggleState {
