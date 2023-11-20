@@ -4,15 +4,18 @@ import React from 'react'
 import { api } from '@/trpc/react'
 import PostCard from '@/components/cards/post-card'
 import { Icons } from '@/components/icons'
-import CreatePostCard from '@/components/cards/create-post-card'
 import Loading from '@/app/(pages)/loading'
 import Error from '@/app/error'
 import InfiniteScroll from 'react-infinite-scroll-component'
 import { Separator } from '@/components/ui/separator'
 import { cn } from '@/lib/utils'
 import StarOnGithub from '@/components/star-on-github'
+import useDialog from '@/store/dialog'
+import CreateWithInput from '@/components/create-with-input'
 
 export default function page() {
+
+  const { setOpenDialog } = useDialog()
 
   const { data, isLoading, isError, hasNextPage, fetchNextPage } = api.post.getInfinitePost.useInfiniteQuery({}, {
     getNextPageParam: (lastPage) => lastPage.nextCursor,
@@ -29,7 +32,7 @@ export default function page() {
   return (
     <>
       <div className='w-full sm:flex hidden '>
-        <CreatePostCard variant='home' />
+        <CreateWithInput onClick={() => setOpenDialog(true)} />
       </div>
       <InfiniteScroll
         dataLength={allPosts?.length ?? 0}

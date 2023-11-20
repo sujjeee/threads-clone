@@ -10,8 +10,8 @@ import { Icons } from '@/components/icons';
 import { cn } from '@/lib/utils';
 import { api } from '@/trpc/react';
 import { toast } from 'sonner';
-import CreatePostCard from '@/components/cards/create-post-card';
 import type { AuthorInfoProps } from '@/types';
+import QuoteButton from '@/components/buttons/quote-button';
 
 interface RepostButtonProps {
     id: string
@@ -28,7 +28,6 @@ const RepostButton: React.FC<RepostButtonProps> = ({
     createdAt,
     isRepostedByMe
 }) => {
-
     const repostUpdate = React.useRef({
         isRepostedByMe,
     });
@@ -89,8 +88,7 @@ const RepostButton: React.FC<RepostButtonProps> = ({
                 </DropdownMenuItem>
                 <DropdownMenuSeparator className=' h-[1.2px] my-0' />
                 <div className='focus:bg-transparent px-4 tracking-normal select-none font-semibold py-3 cursor-pointer text-[15px] rounded-none active:bg-primary-foreground  w-full justify-between'>
-                    <CreatePostCard
-                        variant='quote'
+                    <QuoteButton
                         quoteInfo={{
                             text,
                             id,

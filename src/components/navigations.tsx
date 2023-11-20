@@ -32,7 +32,7 @@ export default function Navigation() {
                     )}
                 />
             </Link>
-            <CreatePostCard variant='create' />
+            <CreatePostCard />
             <Link href={'/activity'} className='hover:bg-primary p-4  sm:py-5 sm:px-8  rounded-lg transform transition-all duration-150 ease-out hover:scale-100 active:scale-90 flex items-center justify-center w-full'>
                 <Icons.activity
                     className={cn(

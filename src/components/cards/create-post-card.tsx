@@ -5,13 +5,11 @@ import { Icons } from '@/components/icons'
 import { Button } from '@/components/ui/button'
 import { Card } from '@/components/ui/card'
 import { usePathname, useRouter } from 'next/navigation'
-import { cn } from '@/lib/utils'
 import { api } from '@/trpc/react'
 import { toast } from 'sonner'
 import { generateReactHelpers } from "@uploadthing/react/hooks"
 import useFileStore from '@/store/fileStore'
 import usePost from '@/store/post'
-import Trigger from '@/components/trigger'
 import PostPrivacyMenu from '@/components/menus/post-privacy-menu'
 import CreatePostInput from '@/components/create-post-input'
 import Link from 'next/link'
@@ -23,29 +21,34 @@ import {
     DialogContent,
     DialogTrigger
 } from '@/components/ui/dialog'
-import type {
-    ParentPostInfo,
-    PostCardProps,
-    TriggerVariant
-} from '@/types'
-
-interface CreatePostCardProps {
-    variant: TriggerVariant;
-    replyThreadInfo?: ParentPostInfo;
-    quoteInfo?: Pick<PostCardProps, 'id' | 'text' | 'author'> & { createdAt?: Date }
-}
+import useDialog from '@/store/dialog'
+import CreateButton from '@/components/buttons/create-button'
 
 const { useUploadThing } = generateReactHelpers<OurFileRouter>()
 
-const CreatePostCard: React.FC<CreatePostCardProps> = ({ variant, replyThreadInfo, quoteInfo }) => {
+const CreatePostCard: React.FC = ({ }) => {
     const router = useRouter()
     const path = usePathname()
 
-    const { postPrivacy } = usePost();
-    const { selectedFile, setSelectedFile, isSelectedImageSafe } = useFileStore();
-    const { startUpload } = useUploadThing("postImage")
+    const {
+        openDialog,
+        setOpenDialog,
+        replyPostInfo,
+        setReplyPostInfo,
+        quoteInfo,
+        setQuoteInfo,
+    } = useDialog()
 
-    const [isOpen, setIsOpen] = React.useState(false)
+
+    const {
+        selectedFile,
+        setSelectedFile,
+        isSelectedImageSafe
+    } = useFileStore();
+
+    const { postPrivacy } = usePost();
+
+    const { startUpload } = useUploadThing("postImage")
 
     const [threadData, setThreadData] = React.useState({
         privacy: postPrivacy,
@@ -61,22 +64,16 @@ const CreatePostCard: React.FC<CreatePostCardProps> = ({ variant, replyThreadInf
 
     const trpcUtils = api.useUtils();
 
-    const backupText = React.useRef('')
-
     const { isLoading, mutateAsync: createThread } = api.post.createPost.useMutation({
-        onMutate: ({ text }) => {
-            backupText.current = text
-
+        onMutate: ({ }) => {
             setThreadData({
                 ...threadData,
                 text: '',
             });
-
             // TODO: Add new optimistic update, old one is not working
-
         },
         onError: () => {
-            toast.error("PostCallbackError: Something went wrong!")
+            toast.error("PostingError: Something went wrong!")
         },
         onSettled: async () => {
             await trpcUtils.post.getInfinitePost.invalidate()
@@ -86,7 +83,7 @@ const CreatePostCard: React.FC<CreatePostCardProps> = ({ variant, replyThreadInf
 
     const { isLoading: isReplying, mutateAsync: replyToPost } = api.post.replyToPost.useMutation({
         onError: (err) => {
-            toast.error("PostCallbackError: Something went wrong!")
+            toast.error("ReplyingError: Something went wrong!")
             if (err.data?.code === 'UNAUTHORIZED') {
                 router.push('/login')
             }
@@ -116,13 +113,13 @@ const CreatePostCard: React.FC<CreatePostCardProps> = ({ variant, replyThreadInf
 
         const imgRes = await startUpload(selectedFile)
 
-        const promise = replyThreadInfo
+        const promise = replyPostInfo
             ? replyToPost({
                 text: JSON.stringify(threadData.text, null, 2),
-                postId: replyThreadInfo.id,
+                postId: replyPostInfo.id,
                 imageUrl: imgRes ? imgRes[0]?.url : undefined,
                 privacy: threadData.privacy,
-                postAuthor: replyThreadInfo.author.id
+                postAuthor: replyPostInfo.author.id
             })
             : createThread({
                 text: JSON.stringify(threadData.text, null, 2),
@@ -136,9 +133,7 @@ const CreatePostCard: React.FC<CreatePostCardProps> = ({ variant, replyThreadInf
     }
 
     function handleCreateThread() {
-
-        setIsOpen(false)
-
+        setOpenDialog(false)
         const promise = handleMutation()
 
         toast.promise(promise, {
@@ -176,44 +171,42 @@ const CreatePostCard: React.FC<CreatePostCardProps> = ({ variant, replyThreadInf
         });
     };
 
-    const createVarient = variant !== 'reply'
-
     React.useEffect(() => {
-        if (!isOpen) {
+        if (!openDialog) {
             setThreadData({
                 privacy: postPrivacy,
                 text: '',
             });
             setSelectedFile([])
+            setReplyPostInfo(null)
+            setQuoteInfo(null)
         }
         // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [isOpen]);
+    }, [openDialog]);
 
     return (
-        <Dialog open={isOpen} onOpenChange={setIsOpen}>
-            <DialogTrigger className={cn({
-                "w-full": createVarient
-            })}>
-                <Trigger variant={variant} />
+        <Dialog open={openDialog} onOpenChange={setOpenDialog}>
+            <DialogTrigger>
+                <CreateButton />
             </DialogTrigger>
             <DialogContent className='border-none bg-transparent sm:max-w-[668px] max-w-lg w-full shadow-none select-none outline-none'>
                 <h1 className='w-full text-center font-bold mb-2 text-white'>
-                    {createVarient
-                        ? <>New thread</>
-                        : <>Reply</>
+                    {replyPostInfo
+                        ? <>Reply</>
+                        : <>New thread</>
                     }
                 </h1>
                 <Card className="ring-offset-0 border-none ring-1 ring-[#393939] bg-background shadow-2xl dark:bg-[#181818] rounded-2xl ">
                     <div className='overflow-y-auto no-scrollbar p-6 max-h-[70vh] '>
-                        {replyThreadInfo &&
+                        {replyPostInfo &&
                             <CreatePostInput
-                                isOpen={isOpen}
+                                isOpen={openDialog}
                                 onTextareaChange={handleFieldChange}
-                                replyThreadInfo={replyThreadInfo}
+                                replyThreadInfo={replyPostInfo}
                             />
                         }
                         <CreatePostInput
-                            isOpen={isOpen}
+                            isOpen={openDialog}
                             onTextareaChange={handleFieldChange}
                             quoteInfo={quoteInfo}
                         />

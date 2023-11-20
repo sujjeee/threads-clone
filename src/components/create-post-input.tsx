@@ -20,9 +20,9 @@ import {
 
 interface CreatePostInputProps {
     isOpen: boolean
-    replyThreadInfo?: ParentPostInfo
+    replyThreadInfo?: ParentPostInfo | null
     onTextareaChange: (textValue: string) => void;
-    quoteInfo?: Pick<ParentPostInfo, 'id' | 'text' | 'author'> & { createdAt?: Date }
+    quoteInfo?: Pick<ParentPostInfo, 'id' | 'text' | 'author'> & { createdAt?: Date } | null
 }
 
 const CreatePostInput: React.FC<CreatePostInputProps> = ({

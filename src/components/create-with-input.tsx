@@ -1,13 +1,13 @@
 import { useUser } from '@clerk/nextjs'
 import React from 'react'
 import { Separator } from '@/components/ui/separator'
-import { Avatar, AvatarFallback, AvatarImage } from './ui/avatar'
+import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
 
-const CreateWithInput: React.FC = ({ }) => {
+const CreateWithInput: React.FC<React.HTMLAttributes<HTMLDivElement>> = ({ ...props }) => {
     const { user } = useUser()
 
     return (
-        <div className='flex flex-col w-full select-none'>
+        <div className='flex flex-col w-full select-none' {...props}>
             <div className='flex w-full my-4'>
                 <div className='w-full flex select-none'>
                     <Avatar className="rounded-full outline outline-1 outline-border h-9 w-9 mr-4">

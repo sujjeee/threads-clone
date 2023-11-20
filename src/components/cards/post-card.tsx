@@ -6,7 +6,6 @@ import { Plus } from 'lucide-react'
 import { cn, formatTimeAgo } from '@/lib/utils'
 import { useUser } from '@clerk/nextjs'
 import type { PostCardProps } from '@/types'
-import CreatePostCard from '@/components/cards/create-post-card'
 import UserRepliesImages from '@/components/user/user-replies-images'
 import ProfileInfoCard from '@/components/cards/user-profile-card'
 import PostActionMenu from '@/components/menus/post-action-menu'
@@ -27,6 +26,7 @@ import {
     DialogContent,
     DialogTrigger,
 } from "@/components/ui/dialog"
+import ReplyButton from '@/components/buttons/reply-button'
 
 const PostCard: React.FC<PostCardProps> = ({
     id,
@@ -130,15 +130,13 @@ const PostCard: React.FC<PostCardProps> = ({
                                     }}
                                     onLike={handleLikeClick}
                                 />
-                                <CreatePostCard
-                                    variant='reply'
+                                <ReplyButton
                                     replyThreadInfo={{
                                         id,
                                         text,
                                         images: images,
                                         author: { ...author }
-                                    }}
-                                />
+                                    }} />
                                 <RepostButton
                                     id={id}
                                     text={text}
