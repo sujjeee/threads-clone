@@ -1,37 +1,33 @@
-import MobileNavbar from "@/components/layouts/mobile-navbar"
-import SiteHeader from "@/components/layouts/site-header"
-import { db } from "@/server/db"
-import { currentUser } from "@clerk/nextjs"
-import { redirect } from "next/navigation"
+import MobileNavbar from "@/components/layouts/mobile-navbar";
+import SiteHeader from "@/components/layouts/site-header";
+import { getUserEmail } from "@/lib/utils";
+import { db } from "@/server/db";
+import { currentUser } from "@clerk/nextjs";
+import { redirect } from "next/navigation";
 
 interface PagesLayoutProps {
-    children: React.ReactNode
+  children: React.ReactNode;
 }
 
 export default async function PagesLayout({ children }: PagesLayoutProps) {
+  const user = await currentUser();
 
-    const user = await currentUser()
+  if (!user) redirect("/login");
 
-    if (!user) redirect('/login')
+  const dbUser = await db.user.findUnique({
+    where: {
+      id: user?.id,
+      email: getUserEmail(user),
+    },
+  });
 
-    const dbUser = await db.user.findUnique({
-        where: {
-            id: user?.id
-        },
-        select: {
-            verified: true
-        }
-    })
+  if (!dbUser) redirect("/account?origin=/");
 
-    if (!dbUser) redirect('/account?origin=/')
-
-    return (
-        <>
-            <SiteHeader />
-            <main className="container max-w-[620px] px-4 sm:px-6">
-                {children}
-            </main>
-            <MobileNavbar />
-        </>
-    )
+  return (
+    <>
+      <SiteHeader />
+      <main className="container max-w-[620px] px-4 sm:px-6">{children}</main>
+      <MobileNavbar />
+    </>
+  );
 }
